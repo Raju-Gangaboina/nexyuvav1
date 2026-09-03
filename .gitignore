@@ -1,0 +1,47 @@
+# envs
+.env
+.env.local
+*.env
+
+# python
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# node
+node_modules/
+.next/
+tsconfig.tsbuildinfo
+
+# logs
+*.log
+logs/
+
+# uploads / generated
+backend/uploads/
+backend/data/*.db
+
+# scratch/debug scripts
+backend/_check_*.py
+backend/_debug_*.py
+backend/_e2e_timing.py
+backend/_joblib_timing.py
+backend/_redis_timing.py
+backend/_time_new_db.py
+backend/_enable_vector.py
+backend/_find_daimond_fe.py
+backend/_list_orgs2.py
+
+# test artifacts
+backend/*test*.docx
+backend/*test*.pdf
+backend/cache_test_*
+backend/cert_test_*
+backend/verify_*
+backend/server_*.log
+backend/uvicorn_*.log
+
+# OS
+.DS_Store
+Thumbs.db

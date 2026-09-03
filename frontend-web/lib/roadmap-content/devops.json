@@ -1,0 +1,306 @@
+{
+  "Linux Basics": {
+    "description": "openSUSE is a Linux-based operating system known for its stability, versatility, and focus on user-friendly system management. It offers two main distributions: openSUSE Leap, a stable, enterprise-grade version with regular point releases, and openSUSE Tumbleweed, a rolling release version with the latest software updates. OpenSUSE is widely used by developers, system administrators, and enterprise environments due to its robust package management via Zypper and YaST (Yet another Setup Tool), which simplifies system configuration. It also supports a wide range of hardware and offers strong community-driven support.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "openSUSE Linux Website",
+        "url": "https://www.opensuse.org/"
+      },
+      {
+        "type": "official",
+        "label": "openSUSE Documentation",
+        "url": "https://en.opensuse.org/Main_Page"
+      },
+      {
+        "type": "article",
+        "label": "Unofficial openSUSE Getting Started Guide",
+        "url": "https://opensuse-guide.org/"
+      },
+      {
+        "type": "video",
+        "label": "OpenSuSE - You Should Try It",
+        "url": "https://www.youtube.com/watch?v=CZwAgf3f8CM"
+      }
+    ],
+    "sourceSlug": "suse-linux"
+  },
+  "Networking": {
+    "description": "Networking and protocols refer to the rules and systems that allow computers and servers to communicate with each other over a network. Networking involves the hardware and software used to connect machines, such as routers, switches, and firewalls, while protocols like HTTP, TCP/IP, DNS, and SSH act as standardized languages that define how data is packaged, sent, and received. Understanding these concepts is essential for ensuring that applications can interact reliably, securely, and efficiently within an infrastructure.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit the Dedicated Network Engineer Roadmap",
+        "url": "https://roadmap.sh/network-engineer"
+      },
+      {
+        "type": "video",
+        "label": "DNS and How does it Work?",
+        "url": "https://www.youtube.com/watch?v=Wj0od2ag5sk"
+      },
+      {
+        "type": "video",
+        "label": "SSH vs SSL vs TLS",
+        "url": "https://www.youtube.com/watch?v=k3rFFLmQCuY"
+      }
+    ],
+    "sourceSlug": "networking--protocols"
+  },
+  "Git": {
+    "description": "Git is a distributed version control system that tracks changes in source code during software development. It allows multiple developers to work on the same project simultaneously by maintaining a history of modifications, enabling easy collaboration, branching, and merging of code. Every developer has a full copy of the project history on their local machine, which ensures data integrity and allows for offline work.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit Dedicated Git & GitHub Roadmap",
+        "url": "https://roadmap.sh/git-github"
+      },
+      {
+        "type": "course",
+        "label": "Why use Git? (Interactive Lesson)",
+        "url": "https://inter-git.com/lessons/introduction"
+      },
+      {
+        "type": "article",
+        "label": "Git by Example - Learn Version Control with Bite-sized Lessons",
+        "url": "https://antonz.org/git-by-example/"
+      },
+      {
+        "type": "video",
+        "label": "Git & GitHub Crash Course For Beginners",
+        "url": "https://www.youtube.com/watch?v=vA5TTz6BXhY"
+      }
+    ],
+    "sourceSlug": "git"
+  },
+  "A Scripting Language": {
+    "description": "Learning a programming language is a valuable skill in today's world, opening doors to various opportunities, including automation, web development, data analysis, and more. Choosing the right language depends on your specific goals and interests. For beginners, Python is often recommended due to its easy-to-read syntax and wide range of applications. Learning a programming language is a rewarding journey. Start with a language that interests you and explore!",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Guide to Picking a Language for DevOps",
+        "url": "https://cs.fyi/guide/programming-language-for-devops"
+      }
+    ],
+    "sourceSlug": "learn-a-programming-language"
+  },
+  "Docker": {
+    "description": "A Docker Swarm is a group of either physical or virtual machines that are running the Docker application and that have been configured to join together in a cluster. Once a group of machines have been clustered together, you can still run the Docker commands that you're used to, but they will now be carried out by the machines in your cluster. The activities of the cluster are controlled by a swarm manager, and machines that have joined the cluster are referred to as nodes.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Docker Swarm Documentation",
+        "url": "https://docs.docker.com/engine/swarm/"
+      },
+      {
+        "type": "article",
+        "label": "Tutorial: Manage Docker Swarm with Portainer",
+        "url": "https://thenewstack.io/tutorial-manage-docker-swarm-with-portainer/"
+      },
+      {
+        "type": "article",
+        "label": "Tutorial: Create a Docker Swarm with Persistent Storage Using GlusterFS",
+        "url": "https://thenewstack.io/tutorial-create-a-docker-swarm-with-persistent-storage-using-glusterfs/"
+      },
+      {
+        "type": "video",
+        "label": "Docker Swarm | Introduction | Step By Step Examples",
+        "url": "https://www.youtube.com/watch?v=Xaea-XnJTJU"
+      },
+      {
+        "type": "feed",
+        "label": "Explore top posts about Docker",
+        "url": "https://app.daily.dev/tags/docker?ref=roadmapsh"
+      }
+    ],
+    "sourceSlug": "docker-swarm"
+  },
+  "CI/CD": {
+    "description": "CI/CD tools automate the process of building, testing, and deploying software. CI (Continuous Integration) focuses on automatically integrating code changes and running tests, while CD (Continuous Delivery/Deployment) takes that further by automating the release of validated code to staging or production environments.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "CI vs CD",
+        "url": "https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment"
+      },
+      {
+        "type": "article",
+        "label": "What is CI/CD?",
+        "url": "https://www.redhat.com/en/topics/devops/what-is-ci-cd"
+      },
+      {
+        "type": "video",
+        "label": "DevOps CI/CD Explained in 100 Seconds",
+        "url": "https://www.youtube.com/watch?v=scEDHsr3APg"
+      },
+      {
+        "type": "video",
+        "label": "CI/CD In 5 Minutes",
+        "url": "https://www.youtube.com/watch?v=42UP1fxi2SY"
+      }
+    ],
+    "sourceSlug": "devops/ci--cd-tools"
+  },
+  "Cloud Fundamentals": {
+    "description": "Alibaba Cloud is a global cloud computing platform that provides a comprehensive suite of services, including elastic computing, database management, networking, and security solutions. It operates a vast infrastructure of data centers worldwide, allowing businesses to deploy applications, store data, and scale their resources on demand. Users can access these services through a pay-as-you-go model, utilizing tools like Elastic Compute Service (ECS) for virtual servers and Object Storage Service (OSS) for scalable data storage.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Alibaba Cloud",
+        "url": "https://www.alibabacloud.com/"
+      },
+      {
+        "type": "official",
+        "label": "Getting Started with Alibaba Cloud",
+        "url": "https://www.alibabacloud.com/getting-started"
+      }
+    ],
+    "sourceSlug": "alibaba-cloud"
+  },
+  "Infrastructure as Code": {
+    "description": "Monitoring refers to the practice of making the performance and status of infrastructure visible. This section contains common tools used for monitoring. This is a very vendor-heavy space, use caution when studying materials exclusively from a given product or project, as there are many conflicting opinions and strategies in use. There is no single solution for the most substantially complex internet-facing applications, so understanding the pros and cons of these tools will be useful in helping you plan how to monitor a system for a given goal.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Best Practices to Optimize Infrastructure Monitoring within DevOps Teams",
+        "url": "https://thenewstack.io/best-practices-to-optimize-infrastructure-monitoring-within-devops-teams/"
+      },
+      {
+        "type": "article",
+        "label": "Seven Steps to Effective Cloud Native Infrastructure Monitoring",
+        "url": "https://thenewstack.io/seven-steps-to-effective-cloud-native-infrastructure-monitoring/"
+      },
+      {
+        "type": "video",
+        "label": "Infrastructure Monitoring Basics with Telegraf, Grafana and InfluxDB",
+        "url": "https://www.youtube.com/watch?v=ESub4SAKouI"
+      }
+    ],
+    "sourceSlug": "infrastructure-monitoring"
+  },
+  "Kubernetes": {
+    "description": "Kubernetes is an open-source container orchestration platform originally developed by Google. It automates the deployment, scaling, and management of containerized applications across clusters of nodes, and has become the de facto standard for running containers in production environments.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit Dedicated Kubernetes Roadmap",
+        "url": "https://roadmap.sh/kubernetes"
+      },
+      {
+        "type": "official",
+        "label": "Kubernetes Website",
+        "url": "https://kubernetes.io/"
+      },
+      {
+        "type": "opensource",
+        "label": "kubernetes/kubernetes",
+        "url": "https://github.com/kubernetes/kubernetes"
+      },
+      {
+        "type": "article",
+        "label": "Kubernetes: An Overview",
+        "url": "https://thenewstack.io/kubernetes-an-overview/"
+      }
+    ],
+    "sourceSlug": "kubernetes"
+  },
+  "Monitoring": {
+    "description": "Monitoring refers to the practice of making the performance and status of infrastructure visible. This section contains common tools used for monitoring. This is a very vendor-heavy space, use caution when studying materials exclusively from a given product or project, as there are many conflicting opinions and strategies in use. There is no single solution for the most substantially complex internet-facing applications, so understanding the pros and cons of these tools will be useful in helping you plan how to monitor a system for a given goal.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Best Practices to Optimize Infrastructure Monitoring within DevOps Teams",
+        "url": "https://thenewstack.io/best-practices-to-optimize-infrastructure-monitoring-within-devops-teams/"
+      },
+      {
+        "type": "article",
+        "label": "Seven Steps to Effective Cloud Native Infrastructure Monitoring",
+        "url": "https://thenewstack.io/seven-steps-to-effective-cloud-native-infrastructure-monitoring/"
+      },
+      {
+        "type": "video",
+        "label": "Infrastructure Monitoring Basics with Telegraf, Grafana and InfluxDB",
+        "url": "https://www.youtube.com/watch?v=ESub4SAKouI"
+      }
+    ],
+    "sourceSlug": "infrastructure-monitoring"
+  },
+  "Configuration Management": {
+    "description": "Configuration Management is the process of systematically handling changes to a system in a way that ensures it maintains its integrity over time. It involves automating the setup, maintenance, and versioning of software and infrastructure settings to ensure that environments remain consistent across development, testing, and production.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is Configuration Management?",
+        "url": "https://www.atlassian.com/microservices/microservices-architecture/configuration-management"
+      },
+      {
+        "type": "article",
+        "label": "What is configuration management? - RedHat",
+        "url": "https://www.redhat.com/en/topics/automation/what-is-configuration-management"
+      },
+      {
+        "type": "video",
+        "label": "Why You Need to Learn Configuration Management",
+        "url": "https://www.youtube.com/watch?v=9In7ysQJGBs"
+      }
+    ],
+    "sourceSlug": "configuration-management"
+  },
+  "Secrets Management": {
+    "description": "Artifact management refers to the storage, versioning, and distribution of build artifacts, such as compiled binaries, container images, libraries, and packages, produced during the software development lifecycle. A dedicated artifact repository ensures that build outputs are reliably stored, traceable, and available for deployment across different environments.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What are Artifacts - Oracle",
+        "url": "https://docs.oracle.com/en-us/iaas/Content/devops/using/artifacts.htm"
+      },
+      {
+        "type": "article",
+        "label": "What is an Artifact - Atlassian",
+        "url": "https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/"
+      },
+      {
+        "type": "video",
+        "label": "Learn about GitLab Artifacts and Cache",
+        "url": "https://www.youtube.com/watch?v=gEfsCU-Sj1g"
+      }
+    ],
+    "sourceSlug": "artifact-management"
+  },
+  "Service Mesh": {
+    "description": "A service mesh is a dedicated infrastructure layer that manages communication between microservices in a distributed application. It provides features like load balancing, service discovery, encryption, observability, and traffic management, allowing services to communicate securely and efficiently. By abstracting network-related concerns from the application code, a service mesh enhances reliability and security while simplifying the management of microservice interactions. Popular service mesh implementations include Istio, Linkerd, and Consul.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Whats a Service Mesh?",
+        "url": "https://www.redhat.com/en/topics/microservices/what-is-a-service-mesh"
+      },
+      {
+        "type": "article",
+        "label": "The Latest News About Service Mesh (TNS)",
+        "url": "https://thenewstack.io/category/service-mesh/"
+      },
+      {
+        "type": "video",
+        "label": "Istio & Service Mesh - Simply Explained in 15 mins",
+        "url": "https://www.youtube.com/watch?v=16fgzklcF7Y"
+      }
+    ],
+    "sourceSlug": "service-mesh"
+  },
+  "Multi-Cloud Strategy": {
+    "description": "Cloud providers provide a layer of APIs to abstract infrastructure and provision it based on security and billing boundaries. The cloud runs on servers in data centers, but the abstractions cleverly give the appearance of interacting with a single “platform” or large application. The ability to quickly provision, configure, and secure resources with cloud providers has been key to both the tremendous success and complexity of modern DevOps.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Cloud Service Provider",
+        "url": "https://www.techtarget.com/searchitchannel/definition/cloud-service-provider-cloud-provider"
+      },
+      {
+        "type": "article",
+        "label": "What are Cloud Providers?",
+        "url": "https://www.redhat.com/en/topics/cloud-computing/what-are-cloud-providers"
+      }
+    ],
+    "sourceSlug": "devops/cloud-providers"
+  }
+}

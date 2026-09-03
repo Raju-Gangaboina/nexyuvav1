@@ -1,0 +1,25 @@
+
+> nexyuva-backend@1.0.0 dev
+> tsx watch src/index.ts
+
+C:\Users\rajuy\Downloads\nexyuva_complete_v1\nexyuva\backend-node\src\auth.ts:10
+  throw new Error('JWT_SECRET_KEY is not set (backend-node/.env) -- must match the FastAPI backend value.');
+        ^
+
+Error: JWT_SECRET_KEY is not set (backend-node/.env) -- must match the FastAPI backend value.
+    at jwt (C:\Users\rajuy\Downloads\nexyuva_complete_v1\nexyuva\backend-node\src\auth.ts:10:9)
+    at Object.<anonymous> (C:\Users\rajuy\Downloads\nexyuva_complete_v1\nexyuva\backend-node\src\auth.ts:40:17)
+    at Module._compile (node:internal/modules/cjs/loader:1761:14)
+    at Object.transformer (C:\Users\rajuy\Downloads\nexyuva_complete_v1\nexyuva\backend-node\node_modules\tsx\dist\register-BoI6-WNn.cjs:9:3252)
+    at Module.load (node:internal/modules/cjs/loader:1481:32)
+    at Module._load (node:internal/modules/cjs/loader:1300:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.require (node:internal/modules/cjs/loader:1504:12)
+    at require (node:internal/modules/helpers:152:16)
+
+Node.js v24.13.0
+2:47:11 pm [tsx] change in ./src\index.ts Rerunning...
+◇ injected env (3) from ..\backend\.env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+NexYuva backend listening on http://localhost:4000

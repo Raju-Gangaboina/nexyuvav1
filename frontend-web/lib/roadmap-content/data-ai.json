@@ -1,0 +1,194 @@
+{
+  "Excel/Google Sheets": {
+    "description": "Excel is a powerful tool utilized by data analysts worldwide to store, manipulate, and analyze data. It offers a vast array of features such as pivot tables, graphs and a powerful suite of formulas and functions to help sift through large sets of data. A data analyst uses Excel to perform a wide range of tasks, from simple data entry and cleaning, to more complex statistical analysis and predictive modeling. Proficiency in Excel is often a key requirement for a data analyst, as its versatility and ubiquity make it an indispensable tool in the field of data analysis.",
+    "resources": [
+      {
+        "type": "course",
+        "label": "Microsoft Excel Course",
+        "url": "https://support.microsoft.com/en-us/office/excel-video-training-9bc05390-e94c-46af-a5b3-d7c22f6990bb"
+      }
+    ],
+    "sourceSlug": "data-analyst/analysis--reporting-with-excel"
+  },
+  "SQL": {
+    "description": "Basic SQL syntax consists of straightforward commands that allow users to interact with a relational database. The core commands include `SELECT` for querying data, `INSERT INTO` for adding new records, `UPDATE` for modifying existing data, and `DELETE` for removing records. Queries can be filtered using `WHERE`, sorted with `ORDER BY`, and data from multiple tables can be combined using `JOIN`. These commands form the foundation of SQL, enabling efficient data manipulation and retrieval within a database.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "SQL Tutorial - Mode",
+        "url": "https://mode.com/sql-tutorial/"
+      },
+      {
+        "type": "article",
+        "label": "SQL Tutorial",
+        "url": "https://www.sqltutorial.org/"
+      }
+    ],
+    "sourceSlug": "sql/basic-sql-syntax"
+  },
+  "Statistics Basics": {
+    "description": "Measures of central tendency describe the center or typical value of a dataset. The three main measures are mean (arithmetic average), median (middle value), and mode (most frequent value). The choice between them depends on the data's distribution and whether outliers are present. Dispersion measures how spread out values are in a dataset. High dispersion means values vary widely; low dispersion means they cluster close to the center. Range, variance, and standard deviation are the primary measures of dispersion.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Measures of central tendency",
+        "url": "https://www.abs.gov.au/statistics/understanding-statistics/statistical-terms-and-concepts/measures-central-tendency"
+      },
+      {
+        "type": "video",
+        "label": "Understanding Central Tendency",
+        "url": "https://www.youtube.com/watch?v=n_sSVhHBdj4"
+      },
+      {
+        "type": "article",
+        "label": "What is dispersion?",
+        "url": "https://www.investopedia.com/terms/d/dispersion.asp"
+      },
+      {
+        "type": "video",
+        "label": "Statistics 101 - Measures of Dispersion",
+        "url": "https://www.youtube.com/watch?v=goXdWMZxlqM"
+      }
+    ],
+    "sourceSlug": "data-analyst/central-tendency, data-analyst/dispersion"
+  },
+  "Python or R": {
+    "description": "Programming extends the analytical capabilities of a data analyst beyond what spreadsheet tools can handle. Python and R are the two most common languages used in data analysis for data manipulation, statistical modeling, and visualization. Choosing one and learning it well is the foundation for working with large datasets and building repeatable analyses.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Python Data Science Handbook",
+        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/"
+      },
+      {
+        "type": "article",
+        "label": "How to Become a Data Analyst with No Experience: My Advice",
+        "url": "https://roadmap.sh/data-analyst/how-to-become"
+      }
+    ],
+    "sourceSlug": "data-analyst/learn-a-programming-lang"
+  },
+  "Data Visualization": {
+    "description": "Big data concepts describe the properties and challenges of working with very large datasets. The three Vs (volume, velocity, variety) capture the main dimensions: how much data there is, how fast it arrives, and how many formats it comes in. Understanding these concepts helps in choosing appropriate storage and processing technologies.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "An Introduction to Big Data Concepts and Terminology",
+        "url": "https://www.digitalocean.com/community/tutorials/an-introduction-to-big-data-concepts-and-terminology"
+      },
+      {
+        "type": "article",
+        "label": "An Introduction to Big Data Concepts",
+        "url": "https://www.suse.com/c/rancher_blog/an-introduction-to-big-data-concepts/"
+      }
+    ],
+    "sourceSlug": "big-data-concepts"
+  },
+  "Data Cleaning": {
+    "description": "Big data concepts describe the properties and challenges of working with very large datasets. The three Vs (volume, velocity, variety) capture the main dimensions: how much data there is, how fast it arrives, and how many formats it comes in. Understanding these concepts helps in choosing appropriate storage and processing technologies.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "An Introduction to Big Data Concepts and Terminology",
+        "url": "https://www.digitalocean.com/community/tutorials/an-introduction-to-big-data-concepts-and-terminology"
+      },
+      {
+        "type": "article",
+        "label": "An Introduction to Big Data Concepts",
+        "url": "https://www.suse.com/c/rancher_blog/an-introduction-to-big-data-concepts/"
+      }
+    ],
+    "sourceSlug": "big-data-concepts"
+  },
+  "A/B Testing": {
+    "description": "Hypothesis testing is a statistical method for evaluating whether observed data provides enough evidence to support or reject a claim about a population. It involves defining a null hypothesis, choosing a significance level, computing a test statistic, and comparing it to a critical value or p-value. Common tests include t-tests, chi-square tests, and ANOVA.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Hypothesis Testing - 4 Step",
+        "url": "https://www.investopedia.com/terms/h/hypothesistesting.asp"
+      }
+    ],
+    "sourceSlug": "hypothesis-testing"
+  },
+  "Dashboarding Tools": {
+    "description": "Tableau is a leading business intelligence and data visualization platform. It allows analysts to connect to data sources and build interactive dashboards and visualizations with a drag-and-drop interface. Tableau is widely used in business settings for self-service analytics and sharing insights with non-technical stakeholders. Power BI is Microsoft's business intelligence platform for creating interactive reports and dashboards. It integrates tightly with the Microsoft ecosystem, including Excel, Azure, and SQL Server. Power BI is widely adopted in organizations already using Microsoft tools for reporting and data sharing across teams.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Tableau",
+        "url": "https://www.tableau.com/en-gb"
+      },
+      {
+        "type": "video",
+        "label": "What is Tableau?",
+        "url": "https://www.youtube.com/watch?v=NLCzpPRCc7U"
+      },
+      {
+        "type": "official",
+        "label": "Power BI",
+        "url": "https://www.microsoft.com/en-us/power-platform/products/power-bi"
+      },
+      {
+        "type": "video",
+        "label": "Power BI for beginners",
+        "url": "https://www.youtube.com/watch?v=NNSHu0rkew8"
+      }
+    ],
+    "sourceSlug": "data-analyst/tableau, data-analyst/power-bi"
+  },
+  "ETL Basics": {
+    "description": "Data Transformation, also known as Data Wrangling, is an essential part of a Data Analyst's role. This process involves the conversion of data from a raw format into another format to make it more appropriate and valuable for a variety of downstream purposes such as analytics. Data Analysts transform data to make the data more suitable for analysis, ensure accuracy, and to improve data quality. The right transformation techniques can give the data a structure, multiply its value, and enhance the accuracy of the analytics performed by serving meaningful results.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is data transformation?",
+        "url": "https://www.qlik.com/us/data-management/data-transformation"
+      }
+    ],
+    "sourceSlug": "data-analyst/data-transformation"
+  },
+  "Intro to Machine Learning": {
+    "description": "Machine learning is the field of building systems that learn from data to make predictions or decisions. For data analysts, understanding ML provides tools to tackle problems that go beyond traditional statistical methods, such as classifying text, detecting anomalies, and building recommendation systems. Analysts typically apply ML algorithms rather than build them from scratch.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit the Dedicated Machine Learning Roadmap",
+        "url": "https://roadmap.sh/machine-learning"
+      }
+    ],
+    "sourceSlug": "machine-learning"
+  },
+  "Big Data Tools": {
+    "description": "Big data concepts describe the properties and challenges of working with very large datasets. The three Vs (volume, velocity, variety) capture the main dimensions: how much data there is, how fast it arrives, and how many formats it comes in. Understanding these concepts helps in choosing appropriate storage and processing technologies.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "An Introduction to Big Data Concepts and Terminology",
+        "url": "https://www.digitalocean.com/community/tutorials/an-introduction-to-big-data-concepts-and-terminology"
+      },
+      {
+        "type": "article",
+        "label": "An Introduction to Big Data Concepts",
+        "url": "https://www.suse.com/c/rancher_blog/an-introduction-to-big-data-concepts/"
+      }
+    ],
+    "sourceSlug": "big-data-concepts"
+  },
+  "Storytelling with Data": {
+    "description": "Big data concepts describe the properties and challenges of working with very large datasets. The three Vs (volume, velocity, variety) capture the main dimensions: how much data there is, how fast it arrives, and how many formats it comes in. Understanding these concepts helps in choosing appropriate storage and processing technologies.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "An Introduction to Big Data Concepts and Terminology",
+        "url": "https://www.digitalocean.com/community/tutorials/an-introduction-to-big-data-concepts-and-terminology"
+      },
+      {
+        "type": "article",
+        "label": "An Introduction to Big Data Concepts",
+        "url": "https://www.suse.com/c/rancher_blog/an-introduction-to-big-data-concepts/"
+      }
+    ],
+    "sourceSlug": "big-data-concepts"
+  }
+}

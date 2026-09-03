@@ -1,0 +1,105 @@
+[
+  {
+    "id": "fs_e1",
+    "difficulty": "easy",
+    "question": "What does REST stand for in the context of web APIs?",
+    "options": [
+      "Representational State Transfer",
+      "Remote Execution State Transfer",
+      "Rapid Endpoint Style Testing",
+      "Resource Exchange Standard Transport"
+    ],
+    "correct_index": 0
+  },
+  {
+    "id": "fs_e2",
+    "difficulty": "easy",
+    "question": "Which HTTP method is typically used to create a new resource?",
+    "options": ["GET", "POST", "DELETE", "HEAD"],
+    "correct_index": 1
+  },
+  {
+    "id": "fs_e3",
+    "difficulty": "easy",
+    "question": "What does JSON stand for?",
+    "options": [
+      "Java Standard Object Notation",
+      "JavaScript Object Notation",
+      "Joined Script Object Naming",
+      "JavaScript Ordered Node"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "fs_m1",
+    "difficulty": "medium",
+    "question": "In a typical full-stack app, what is the main purpose of an environment variable like `DATABASE_URL`?",
+    "options": [
+      "It styles the frontend UI",
+      "It configures how the backend connects to the database without hardcoding credentials in source code",
+      "It sets the browser's cache duration",
+      "It defines CSS breakpoints"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "fs_m2",
+    "difficulty": "medium",
+    "question": "What is CORS (Cross-Origin Resource Sharing) primarily designed to control?",
+    "options": [
+      "Whether a database allows concurrent writes",
+      "Whether a browser allows a web page from one origin to request resources from a different origin",
+      "How CSS is compiled at build time",
+      "How many API calls a server can make per minute"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "fs_m3",
+    "difficulty": "medium",
+    "question": "What is the primary benefit of using JWTs (JSON Web Tokens) for authentication?",
+    "options": [
+      "They store the user's password in plaintext for convenience",
+      "They let a server verify a request's identity/claims without a database lookup on every request, since the token itself is signed",
+      "They automatically encrypt the entire HTTP request body",
+      "They replace the need for HTTPS"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "fs_h1",
+    "difficulty": "hard",
+    "question": "In a typical three-tier web app, why is client-side-only validation not sufficient for security?",
+    "options": [
+      "Client-side validation is always slower than server-side validation",
+      "A request can bypass the browser entirely (e.g. via curl or a modified client), so the server must independently re-validate any input it trusts",
+      "Browsers don't support JavaScript validation",
+      "It's sufficient — server-side validation is redundant"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "fs_h2",
+    "difficulty": "hard",
+    "question": "What problem does database connection pooling solve?",
+    "options": [
+      "It encrypts data at rest",
+      "It reuses a limited set of open database connections across requests instead of opening/closing a new one per request, avoiding the overhead and connection-limit exhaustion of doing so",
+      "It automatically shards a database across servers",
+      "It converts SQL queries into REST endpoints"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "fs_h3",
+    "difficulty": "hard",
+    "question": "What is a race condition in the context of a web application handling concurrent requests?",
+    "options": [
+      "A CSS animation that runs too fast",
+      "A bug where the outcome depends on the unpredictable timing/ordering of concurrent operations, often producing incorrect results under load",
+      "A server that responds faster than the client can render",
+      "An error that only happens during a code deployment"
+    ],
+    "correct_index": 1
+  }
+]

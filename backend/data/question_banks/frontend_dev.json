@@ -1,0 +1,95 @@
+[
+  {
+    "id": "fe_e1",
+    "difficulty": "easy",
+    "question": "Which HTML tag is used to link an external CSS file?",
+    "options": ["<style>", "<link>", "<script>", "<css>"],
+    "correct_index": 1
+  },
+  {
+    "id": "fe_e2",
+    "difficulty": "easy",
+    "question": "In CSS, which property controls the space between an element's content and its border?",
+    "options": ["margin", "padding", "spacing", "border-gap"],
+    "correct_index": 1
+  },
+  {
+    "id": "fe_e3",
+    "difficulty": "easy",
+    "question": "In JavaScript, which keyword declares a variable that cannot be reassigned?",
+    "options": ["var", "let", "const", "static"],
+    "correct_index": 2
+  },
+  {
+    "id": "fe_m1",
+    "difficulty": "medium",
+    "question": "In React, what does the `useEffect` hook let a component do?",
+    "options": [
+      "Define reusable CSS classes",
+      "Run side effects (data fetching, subscriptions, DOM updates) after render",
+      "Create a new React root",
+      "Replace the need for props"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "fe_m2",
+    "difficulty": "medium",
+    "question": "What is the CSS Box Model, in order from innermost to outermost?",
+    "options": [
+      "Border, padding, content, margin",
+      "Content, padding, border, margin",
+      "Margin, border, padding, content",
+      "Content, margin, padding, border"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "fe_m3",
+    "difficulty": "medium",
+    "question": "What does `flex: 1` do to a flex item?",
+    "options": [
+      "Fixes its width to 1px",
+      "Lets it grow and shrink to fill available space in the flex container",
+      "Removes it from the flex layout",
+      "Sets its z-index to 1"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "fe_h1",
+    "difficulty": "hard",
+    "question": "Why do React lists need a stable `key` prop on each item?",
+    "options": [
+      "It's required for CSS styling to apply",
+      "It helps React's reconciliation algorithm correctly identify which items changed, were added, or removed",
+      "It sets the tab order for accessibility",
+      "It's only used for SEO"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "fe_h2",
+    "difficulty": "hard",
+    "question": "What is 'hydration' in the context of server-side rendered (SSR) React apps?",
+    "options": [
+      "Compressing the JS bundle before sending it to the browser",
+      "Attaching event listeners and React's internal state to server-rendered HTML already in the DOM",
+      "Refreshing the page automatically on a timer",
+      "Converting CSS into inline styles"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "fe_h3",
+    "difficulty": "hard",
+    "question": "What does the CSS `will-change` property primarily help the browser do?",
+    "options": [
+      "Validate form input before submit",
+      "Hint that a property is about to animate, so the browser can optimize rendering (e.g. promote to its own layer) ahead of time",
+      "Enforce a strict content security policy",
+      "Automatically pick a fallback font"
+    ],
+    "correct_index": 1
+  }
+]

@@ -1,0 +1,90 @@
+[
+  {
+    "id": "py_e1",
+    "difficulty": "easy",
+    "question": "What does `len([1, 2, 3])` return?",
+    "options": ["2", "3", "4", "Error"],
+    "correct_index": 1
+  },
+  {
+    "id": "py_e2",
+    "difficulty": "easy",
+    "question": "Which keyword defines a function in Python?",
+    "options": ["func", "def", "function", "lambda"],
+    "correct_index": 1
+  },
+  {
+    "id": "py_e3",
+    "difficulty": "easy",
+    "question": "What is the output of `type([])`?",
+    "options": ["<class 'list'>", "<class 'tuple'>", "<class 'dict'>", "<class 'set'>"],
+    "correct_index": 0
+  },
+  {
+    "id": "py_m1",
+    "difficulty": "medium",
+    "question": "What does the `yield` keyword do in Python?",
+    "options": [
+      "Terminates a function immediately",
+      "Turns a function into a generator that produces values lazily",
+      "Raises an exception",
+      "Imports a module"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "py_m2",
+    "difficulty": "medium",
+    "question": "What is a decorator in Python?",
+    "options": [
+      "A type of loop",
+      "A function that modifies the behavior of another function",
+      "A built-in data structure",
+      "A way to declare constants"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "py_m3",
+    "difficulty": "medium",
+    "question": "What does `*args` allow a function to accept?",
+    "options": [
+      "Only keyword arguments",
+      "A variable number of positional arguments",
+      "Exactly one argument",
+      "No arguments"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "py_h1",
+    "difficulty": "hard",
+    "question": "What is the time complexity of dictionary key lookup in CPython, on average?",
+    "options": ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
+    "correct_index": 2
+  },
+  {
+    "id": "py_h2",
+    "difficulty": "hard",
+    "question": "What does Python's Global Interpreter Lock (GIL) primarily prevent?",
+    "options": [
+      "Multiple processes from running",
+      "Multiple native threads from executing Python bytecode simultaneously in one process",
+      "Recursive function calls",
+      "Memory leaks"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "py_h3",
+    "difficulty": "hard",
+    "question": "In async/await code, what does `await asyncio.gather(*tasks)` do?",
+    "options": [
+      "Runs tasks sequentially, waiting for each to finish",
+      "Runs tasks concurrently and waits for all of them to complete",
+      "Cancels all tasks",
+      "Creates a new event loop"
+    ],
+    "correct_index": 1
+  }
+]

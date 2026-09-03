@@ -1,0 +1,428 @@
+{
+  "A Language": {
+    "description": "Web development divides into Frontend (HTML, CSS, JavaScript) and Backend Development. Backend uses server-side languages like Python, Java, or Node.js, complemented by databases, frameworks, and web servers for website functionality. Choose a language based on project needs and preferences.",
+    "resources": [],
+    "sourceSlug": "pick-a-backend-language"
+  },
+  "Data Structures & Algorithms": {
+    "description": "The five main types of basic data structures are: **Arrays**, **Linked Lists**, **Stacks**, **Queues**, and **Hash Tables**. *   **Arrays** are static data structures that store elements of the same type in contiguous memory locations. *   **Linked Lists** are dynamic data structures that store elements in individual nodes, with each node pointing to the next. *   **Stacks** follow the Last-In-First-Out principle (LIFO) and primarily assist in function calls in most programming languages. *   **Queues** operate on the First-In-First-Out principle (FIFO) and are commonly used in task scheduling. *   Lastly, **Hash Tables** store key-value pairs allowing for fast insertion, deletion, and search operations.",
+    "resources": [],
+    "sourceSlug": "datastructures-and-algorithms/basic-data-structures"
+  },
+  "Version Control": {
+    "description": "Version Control Systems (VCS) manage and track code changes over time, enabling efficient collaboration. Record file changes, allow reverting to previous versions, and maintain modification history. Can be centralized (Subversion) or distributed (Git, Mercurial) for collaboration and code integrity.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit Dedicated Git & GitHub Roadmap",
+        "url": "https://roadmap.sh/git-github"
+      },
+      {
+        "type": "course",
+        "label": "Why version control? (Interactive Lesson)",
+        "url": "https://inter-git.com/lessons/introduction"
+      },
+      {
+        "type": "article",
+        "label": "What is version control?",
+        "url": "https://www.atlassian.com/git/tutorials/what-is-version-control"
+      },
+      {
+        "type": "video",
+        "label": "What is a Version Control System and why you should always use it",
+        "url": "https://www.youtube.com/watch?v=IeXhYROClZk"
+      }
+    ],
+    "sourceSlug": "version-control-systems"
+  },
+  "OS & Networking Basics": {
+    "description": "The Internet is a global network of interconnected computers using TCP/IP protocols. Requests travel through ISPs to DNS servers for domain-to-IP translation, then are routed across networks via routers to destination servers. Enables dynamic, decentralized global communication. HTTP (Hypertext Transfer Protocol) transmits hypertext over the web using a request-response model. Defines message formatting and server-browser communication. Stateless protocol where each request is independent. Forms the foundation of web communication, often used with HTTPS for encryption.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "How does the Internet Work?",
+        "url": "https://cs.fyi/guide/how-does-internet-work"
+      },
+      {
+        "type": "article",
+        "label": "The Internet Explained",
+        "url": "https://www.vox.com/2014/6/16/18076282/the-internet"
+      },
+      {
+        "type": "video",
+        "label": "How does the internet work? (Full Course)",
+        "url": "https://www.youtube.com/watch?v=zN8YNNHcaZc"
+      },
+      {
+        "type": "course",
+        "label": "Full HTTP Networking Course",
+        "url": "https://www.youtube.com/watch?v=2JYT5f2isg4"
+      },
+      {
+        "type": "article",
+        "label": "What is HTTP?",
+        "url": "https://www.cloudflare.com/en-gb/learning/ddos/glossary/hypertext-transfer-protocol-http/"
+      },
+      {
+        "type": "article",
+        "label": "HTTP/3 From A To Z: Core Concepts",
+        "url": "https://www.smashingmagazine.com/2021/08/http3-core-concepts-part1/"
+      },
+      {
+        "type": "video",
+        "label": "HTTP/1 to HTTP/2 to HTTP/3",
+        "url": "https://www.youtube.com/watch?v=a-sBfyiXysI"
+      }
+    ],
+    "sourceSlug": "backend/how-does-the-internet-work, backend/what-is-http"
+  },
+  "A Web Framework": {
+    "description": "Web servers handle client requests and serve web content like HTML pages and images. Process HTTP/HTTPS requests, interact with databases, and send responses. Popular servers include Apache, Nginx, and IIS. Essential for hosting websites, managing traffic, and providing SSL/TLS security.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is a Web Server? - Mozilla",
+        "url": "https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_is_a_web_server"
+      },
+      {
+        "type": "article",
+        "label": "What is a Web Server?",
+        "url": "https://www.hostinger.co.uk/tutorials/what-is-a-web-server"
+      },
+      {
+        "type": "video",
+        "label": "Web Server Concepts and Examples",
+        "url": "https://youtu.be/9J1nJOivdyw"
+      }
+    ],
+    "sourceSlug": "learn-about-web-servers"
+  },
+  "REST API Design": {
+    "description": "REST API is an architectural style using standard HTTP methods (GET, POST, PUT, DELETE) to interact with URI-represented resources. It's stateless, requiring complete request information, uses HTTP status codes, and typically communicates via JSON/XML. Popular for simplicity and scalability.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is a REST API?",
+        "url": "https://www.redhat.com/en/topics/api/what-is-a-rest-api"
+      },
+      {
+        "type": "article",
+        "label": "Best practices for RESTful web API design",
+        "url": "https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design"
+      },
+      {
+        "type": "article",
+        "label": "Learn REST: A RESTful Tutorial",
+        "url": "https://restapitutorial.com/"
+      },
+      {
+        "type": "video",
+        "label": "REST API Best Practices – REST Endpoint Design",
+        "url": "https://www.youtube.com/watch?v=1Wl-rtew1_E"
+      }
+    ],
+    "sourceSlug": "backend/rest"
+  },
+  "Relational Databases": {
+    "description": "Relational databases organize data into structured tables with rows and columns, using SQL for querying. Enforce data integrity through keys and constraints, handle complex queries and transactions efficiently. Examples: MySQL, PostgreSQL, Oracle. Used for structured data storage and strong consistency.",
+    "resources": [
+      {
+        "type": "course",
+        "label": "Databases and SQL",
+        "url": "https://www.edx.org/course/databases-5-sql"
+      },
+      {
+        "type": "article",
+        "label": "Relational Databases",
+        "url": "https://www.ibm.com/cloud/learn/relational-databases"
+      },
+      {
+        "type": "article",
+        "label": "Intro To Relational Databases",
+        "url": "https://www.udacity.com/course/intro-to-relational-databases--ud197"
+      },
+      {
+        "type": "video",
+        "label": "What is Relational Database",
+        "url": "https://youtu.be/OqjJjpjDRLc"
+      }
+    ],
+    "sourceSlug": "relational-databases"
+  },
+  "ORMs": {
+    "description": "ORM (Object-Relational Mapping) allows developers to interact with databases using object-oriented concepts. Maps database tables to classes and rows to objects, eliminating raw SQL queries. Simplifies data manipulation and improves maintainability. Popular ORMs: Hibernate (Java), Entity Framework (.NET), SQLAlchemy (Python).",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is an ORM, how does it work, and how should I use one?",
+        "url": "https://stackoverflow.com/a/1279678"
+      },
+      {
+        "type": "article",
+        "label": "What is an ORM",
+        "url": "https://www.freecodecamp.org/news/what-is-an-orm-the-meaning-of-object-relational-mapping-database-tools/"
+      },
+      {
+        "type": "video",
+        "label": "Why Use an ORM?",
+        "url": "https://www.youtube.com/watch?v=vHt2LC1EM3Q"
+      }
+    ],
+    "sourceSlug": "orms"
+  },
+  "Authentication": {
+    "description": "API authentication verifies client identity to ensure only authorized access to resources. Common methods include API keys, OAuth 2.0, JWT, and basic auth. It protects data, prevents unauthorized access, enables usage tracking, and provides granular control over API resources.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Basic Authentication",
+        "url": "https://roadmap.sh/guides/basic-authentication"
+      },
+      {
+        "type": "article",
+        "label": "Session Based Authentication",
+        "url": "https://roadmap.sh/guides/session-based-authentication"
+      },
+      {
+        "type": "article",
+        "label": "Token Based Authentication",
+        "url": "https://roadmap.sh/guides/token-authentication"
+      },
+      {
+        "type": "article",
+        "label": "JWT Authentication",
+        "url": "https://roadmap.sh/guides/jwt-authentication"
+      },
+      {
+        "type": "article",
+        "label": "OAuth - Open Authorization",
+        "url": "https://roadmap.sh/guides/oauth"
+      },
+      {
+        "type": "article",
+        "label": "SSO - Single Sign On",
+        "url": "https://roadmap.sh/guides/sso"
+      }
+    ],
+    "sourceSlug": "authentication"
+  },
+  "Caching": {
+    "description": "Caching is a technique used to store copies of data in a temporary storage location so that future requests for that data can be served faster. This temporary storage, known as a cache, can be located closer to the request source than the original data source, reducing latency and improving application performance. By retrieving data from the cache instead of the original source, applications can respond more quickly and efficiently.",
+    "resources": [
+      {
+        "type": "course",
+        "label": "Redis University - Introduction to Redis Data Structures",
+        "url": "https://redis.io/university/courses/ru101/"
+      },
+      {
+        "type": "article",
+        "label": "What is caching?",
+        "url": "https://www.cloudflare.com/en-gb/learning/cdn/what-is-caching/"
+      },
+      {
+        "type": "article",
+        "label": "Top Caching Strategies Explained",
+        "url": "https://blog.bytebytego.com/p/top-caching-strategies"
+      },
+      {
+        "type": "video",
+        "label": "Caching Complete Tutorial for Beginners",
+        "url": "https://www.youtube.com/watch?v=1XJG34mewts"
+      }
+    ],
+    "sourceSlug": "caching"
+  },
+  "Message Queues": {
+    "description": "Message brokers facilitate communication between distributed systems by routing and delivering messages. Enable asynchronous messaging, decoupling producers from consumers. Include features like queuing, load balancing, persistence, and acknowledgment. Popular examples: Kafka, RabbitMQ, ActiveMQ.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What are Message Brokers?",
+        "url": "https://www.ibm.com/topics/message-brokers"
+      },
+      {
+        "type": "video",
+        "label": "Introduction to Message Brokers",
+        "url": "https://www.youtube.com/watch?v=57Qr9tk6Uxc"
+      },
+      {
+        "type": "video",
+        "label": "Kafka vs RabbitMQ",
+        "url": "https://www.youtube.com/watch?v=_5mu7lZz5X4"
+      }
+    ],
+    "sourceSlug": "message-brokers"
+  },
+  "NoSQL Databases": {
+    "description": "NoSQL databases handle unstructured, semi-structured, or rapidly changing data with flexible schemas. Four types: Document stores (MongoDB, CouchDB), Key-value stores (Redis, Riak), Column-family (Cassandra, HBase), and Graph databases (Neo4j, Neptune). Used for high scalability, flexibility, and performance applications.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "NoSQL Explained",
+        "url": "https://www.mongodb.com/nosql-explained"
+      },
+      {
+        "type": "video",
+        "label": "How do NoSQL Databases work",
+        "url": "https://www.youtube.com/watch?v=0buKQHokLK8"
+      },
+      {
+        "type": "video",
+        "label": "SQL vs NoSQL Explained",
+        "url": "https://www.youtube.com/watch?v=ruz-vK8IesE"
+      }
+    ],
+    "sourceSlug": "nosql-databases"
+  },
+  "API Testing": {
+    "description": "Functional testing ensures software meets functional requirements through black box testing. Testers provide input and compare expected vs actual output without understanding source code. Contrasts with non-functional testing (performance, load, scalability).",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Playwright - End-to-End Testing Documentation",
+        "url": "https://playwright.dev/docs/intro"
+      },
+      {
+        "type": "article",
+        "label": "What is Functional Testing?",
+        "url": "https://www.guru99.com/functional-testing.html"
+      },
+      {
+        "type": "article",
+        "label": "Functional Testing: What It Is and How to Do It Right",
+        "url": "https://www.atlassian.com/continuous-delivery/software-testing/functional-testing"
+      },
+      {
+        "type": "video",
+        "label": "Functional Testing vs Non-Functional Testing",
+        "url": "https://www.youtube.com/watch?v=NgQT7miTP9M"
+      }
+    ],
+    "sourceSlug": "functional-testing"
+  },
+  "Containerization": {
+    "description": "Docker is an open-source platform that automates the deployment, scaling, and management of applications using containerization technology. It enables developers to package applications with all their dependencies into standardized units called containers, ensuring consistent behavior across different environments. Docker provides a lightweight alternative to full machine virtualization, using OS-level virtualization to run multiple isolated systems on a single host. Its ecosystem includes tools for building, sharing, and running containers, such as Docker Engine, Docker Hub, and Docker Compose. Docker has become integral to modern DevOps practices, facilitating microservices architectures, continuous integration/deployment pipelines, and efficient resource utilization in both development and production environments.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit Dedicated Docker Roadmap",
+        "url": "https://roadmap.sh/docker"
+      },
+      {
+        "type": "course",
+        "label": "DevOps with Docker",
+        "url": "https://courses.mooc.fi/org/uh-cs/courses/devops-with-docker"
+      },
+      {
+        "type": "official",
+        "label": "Docker Documentation",
+        "url": "https://docs.docker.com/"
+      },
+      {
+        "type": "video",
+        "label": "Docker Tutorial",
+        "url": "https://www.youtube.com/watch?v=RqTEHSBrYFw"
+      }
+    ],
+    "sourceSlug": "devops/docker"
+  },
+  "Microservices": {
+    "description": "Microservices architecture structures applications as loosely coupled, independently deployable services focused on specific business capabilities. Communicate via HTTP or messaging. Enables scalability, flexibility, diverse technologies, and continuous deployment but adds complexity in communication and orchestration.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Pattern: Microservice Architecture",
+        "url": "https://microservices.io/patterns/microservices.html"
+      },
+      {
+        "type": "article",
+        "label": "What is Microservices?",
+        "url": "https://smartbear.com/solutions/microservices/"
+      },
+      {
+        "type": "article",
+        "label": "Microservices 101",
+        "url": "https://thenewstack.io/microservices-101/"
+      },
+      {
+        "type": "video",
+        "label": "Microservices explained in 5 minutes",
+        "url": "https://www.youtube.com/watch?v=lL_j7ilk7rc"
+      }
+    ],
+    "sourceSlug": "microservices"
+  },
+  "GraphQL APIs": {
+    "description": "GraphQL is Facebook's query language for APIs, allowing clients to request exactly the data they need. Uses a single endpoint with schema-defined data structure, reducing over-fetching and under-fetching. More flexible than REST for complex applications with diverse platform needs.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit Dedicated GraphQL Roadmap",
+        "url": "https://roadmap.sh/graphql"
+      },
+      {
+        "type": "official",
+        "label": "GraphQL",
+        "url": "https://graphql.org/"
+      },
+      {
+        "type": "video",
+        "label": "Tutorial - GraphQL Explained in 100 Seconds",
+        "url": "https://www.youtube.com/watch?v=eIQh02xuVw4"
+      }
+    ],
+    "sourceSlug": "graphql"
+  },
+  "System Design": {
+    "description": "Availability patterns are established architectural approaches used to ensure a system remains operational and accessible to users, even in the face of failures or unexpected events. These patterns focus on minimizing downtime and maintaining a consistent level of service by incorporating redundancy, fault tolerance, and recovery mechanisms into the system's design. They provide a structured way to address potential points of failure and ensure business continuity. In-memory caches such as Memcached and Redis are key-value stores between your application and your data storage. Since the data is held in RAM, it is much faster than typical databases where data is stored on disk. RAM is more limited than disk, so [cache invalidation](https://en.wikipedia.org/wiki/Cache_algorithms) algorithms such as [least recently used (LRU)](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_\\(LRU\\)) can help invalidate 'cold' entries and keep 'hot' data in RAM. Redis has the following additional features: *   Persistence option *   Built-in data structures such as sorted sets and lists Generally, you should try to avoid file-based caching, as it makes cloning and auto-scaling more difficult.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "High Availability in System Design – 15 Strategies for Always-On Systems",
+        "url": "https://www.designgurus.io/blog/high-availability-system-design-basics"
+      },
+      {
+        "type": "article",
+        "label": "System Design: Availability Patterns",
+        "url": "https://dev.to/decoders_lord/system-design-availability-patterns-104i"
+      },
+      {
+        "type": "video",
+        "label": "Design Patterns for High Availability: What gets you 99.999% uptime?",
+        "url": "https://www.youtube.com/watch?v=LdvduBxZRLs"
+      },
+      {
+        "type": "opensource",
+        "label": "Intro to Application Caching",
+        "url": "https://github.com/donnemartin/system-design-primer#application-caching"
+      }
+    ],
+    "sourceSlug": "system-design/availability-patterns, system-design/application-caching"
+  },
+  "Observability": {
+    "description": "Observability monitors system internal state through external outputs like metrics, logs, and traces. Involves collecting, analyzing, and visualizing data for performance insights, anomaly detection, and troubleshooting. Enables proactive management and rapid issue response.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "DataDog Docs",
+        "url": "https://docs.datadoghq.com/"
+      },
+      {
+        "type": "article",
+        "label": "Sentry Docs",
+        "url": "https://docs.sentry.io/"
+      },
+      {
+        "type": "article",
+        "label": "Observability and Instrumentation: What They Are and Why They Matter",
+        "url": "https://newrelic.com/blog/best-practices/observability-instrumentation"
+      },
+      {
+        "type": "video",
+        "label": "What is observability?",
+        "url": "https://www.youtube.com/watch?v=--17See0KHs"
+      }
+    ],
+    "sourceSlug": "observability"
+  }
+}

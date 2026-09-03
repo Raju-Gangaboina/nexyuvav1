@@ -1,0 +1,562 @@
+{
+  "How the Web Works": {
+    "description": "DNS (Domain Name System) translates human-readable domain names into IP addresses through a global, decentralized server network. Enables easy internet navigation by converting names like [www.example.com](http://www.example.com) to numeric addresses browsers can connect to.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is DNS?",
+        "url": "https://www.cloudflare.com/en-gb/learning/dns/what-is-dns/"
+      },
+      {
+        "type": "article",
+        "label": "Mess with DNS - DNS Playground",
+        "url": "https://messwithdns.net/"
+      },
+      {
+        "type": "article",
+        "label": "How DNS works (comic)",
+        "url": "https://howdns.works/"
+      },
+      {
+        "type": "video",
+        "label": "DNS and How does it Work?",
+        "url": "https://www.youtube.com/watch?v=Wj0od2ag5sk"
+      }
+    ],
+    "sourceSlug": "dns-and-how-it-works"
+  },
+  "HTML": {
+    "description": "The `<template>` HTML element holds hidden content for later use by JavaScript. Acts as a reusable blueprint for creating dynamic page elements. Enables efficient content templating and component-based development patterns in web applications.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Using Templates and Slots - MDN",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_templates_and_slots"
+      },
+      {
+        "type": "feed",
+        "label": "Explore top posts about HTML",
+        "url": "https://app.daily.dev/tags/html?ref=roadmapsh"
+      }
+    ],
+    "sourceSlug": "html-templates"
+  },
+  "CSS": {
+    "description": "Modern CSS creates responsive designs using media queries, flexible typography, CSS-in-JS, and frameworks like Tailwind. Features CSS Logical Properties for internationalization and CSS Houdini for custom styling. Goals: performance, maintainability, and accessible designs across all devices.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit the Dedicated CSS Roadmap",
+        "url": "https://roadmap.sh/css"
+      },
+      {
+        "type": "article",
+        "label": "Modern CSS: A Comprehensive Guide",
+        "url": "https://moderncss.dev/"
+      },
+      {
+        "type": "article",
+        "label": "CSS-Tricks: Modern CSS",
+        "url": "https://css-tricks.com/modern-css/"
+      }
+    ],
+    "sourceSlug": "css-frameworks"
+  },
+  "JavaScript": {
+    "description": "JavaScript is a versatile programming language that makes websites interactive. Runs in browsers, servers (Node.js), and desktop applications. Features dynamic typing, event-driven programming, and constant evolution. Essential for modern web development across frontend and backend.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit Dedicated JavaScript Roadmap",
+        "url": "https://roadmap.sh/javascript"
+      },
+      {
+        "type": "article",
+        "label": "The Modern JavaScript Tutorial",
+        "url": "https://javascript.info/"
+      },
+      {
+        "type": "article",
+        "label": "Build 30 Javascript projects in 30 days",
+        "url": "https://javascript30.com/"
+      }
+    ],
+    "sourceSlug": "javascript"
+  },
+  "Git & GitHub": {
+    "description": "Git is a distributed version control system tracking code changes and enabling collaborative development. Features branching, merging, and complete project history. Allows offline work with local repositories. Fast, flexible, and the most popular VCS for software projects.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit Dedicated Git & GitHub Roadmap",
+        "url": "https://roadmap.sh/git-github"
+      },
+      {
+        "type": "course",
+        "label": "Why use Git? (Interactive Lesson)",
+        "url": "https://inter-git.com/lessons/introduction"
+      },
+      {
+        "type": "article",
+        "label": "Tutorial: Git for Absolutely Everyone",
+        "url": "https://thenewstack.io/tutorial-git-for-absolutely-everyone/"
+      },
+      {
+        "type": "video",
+        "label": "Git & GitHub Crash Course For Beginners",
+        "url": "https://www.youtube.com/watch?v=SWYqp7iY_Tc"
+      }
+    ],
+    "sourceSlug": "git"
+  },
+  "Responsive & Accessible UI": {
+    "description": "Website accessibility ensures sites are usable by everyone, including people with disabilities. Involves alt text for images, keyboard navigation, color contrast, and captions. Benefits all users, supports legal compliance, and expands audience reach.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Accessibility for Developers by Google",
+        "url": "https://web.dev/accessibility"
+      },
+      {
+        "type": "video",
+        "label": "Complete Playlist on Accessibility",
+        "url": "https://youtube.com/playlist?list=PLNYkxOF6rcICWx0C9LVWWVqvHlYJyqw7g"
+      }
+    ],
+    "sourceSlug": "frontend/accessibility"
+  },
+  "A Framework": {
+    "description": "Web frameworks are development toolkits providing libraries, structure, rules, and tools for building applications. Different frameworks offer varying features based on project needs. Popular examples include React, Angular, and Vue, each with unique strengths and capabilities.",
+    "resources": [
+      {
+        "type": "video",
+        "label": "15 Crazy New JS Framework Features You Don't Know Yet",
+        "url": "https://www.youtube.com/watch?v=466U-2D86bc"
+      },
+      {
+        "type": "video",
+        "label": "Which JS Framework is Best?",
+        "url": "https://www.youtube.com/watch?v=cuHDQhDhvPE"
+      }
+    ],
+    "sourceSlug": "learn-a-framework"
+  },
+  "Package Managers": {
+    "description": "Package managers automate software package installation, updates, and dependency management. Examples include npm (JavaScript), pip (Python), and yarn. Enable code sharing, reuse, and consistent project setups. Essential for modern development workflows and team collaboration.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "PNPM: The Faster, More Performant NPM",
+        "url": "https://pnpm.io/"
+      },
+      {
+        "type": "official",
+        "label": "Yarn - Getting Started",
+        "url": "https://yarnpkg.com/en/docs/getting-started"
+      },
+      {
+        "type": "article",
+        "label": "An Absolute Beginners Guide to Using npm",
+        "url": "https://nodesource.com/blog/an-absolute-beginners-guide-to-using-npm/"
+      },
+      {
+        "type": "video",
+        "label": "NPM Crash Course",
+        "url": "https://www.youtube.com/watch?v=jHDhaSSKmB0"
+      }
+    ],
+    "sourceSlug": "package-managers"
+  },
+  "Build Tools": {
+    "description": "Module bundlers combine multiple JavaScript files into optimized bundles for browsers. Handle dependencies, code transformation, and splitting for performance. Examples: Webpack, Rollup, Parcel. Enable modern JavaScript features, improve load times, and streamline development workflows.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Rollup Bundler",
+        "url": "https://rollupjs.org/"
+      },
+      {
+        "type": "official",
+        "label": "Webpack Website",
+        "url": "https://webpack.js.org/"
+      },
+      {
+        "type": "article",
+        "label": "The Complete JavaScript Module Bundlers Guide",
+        "url": "https://snipcart.com/blog/javascript-module-bundler"
+      },
+      {
+        "type": "video",
+        "label": "Module Bundlers Explained",
+        "url": "https://www.youtube.com/watch?v=5IG4UmULyoA"
+      }
+    ],
+    "sourceSlug": "frontend/module-bundlers"
+  },
+  "TypeScript": {
+    "description": "TypeScript is a strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Official Website",
+        "url": "https://www.typescriptlang.org/"
+      },
+      {
+        "type": "article",
+        "label": "The TypeScript Handbook",
+        "url": "https://www.typescriptlang.org/docs/handbook/intro.html"
+      },
+      {
+        "type": "video",
+        "label": "TypeScript for Beginners",
+        "url": "https://www.youtube.com/watch?v=BwuLxPH8IDs"
+      },
+      {
+        "type": "feed",
+        "label": "Explore top posts about TypeScript",
+        "url": "https://app.daily.dev/tags/typescript?ref=roadmapsh"
+      }
+    ],
+    "sourceSlug": "react/typescript"
+  },
+  "CSS Frameworks": {
+    "description": "Modern CSS creates responsive designs using media queries, flexible typography, CSS-in-JS, and frameworks like Tailwind. Features CSS Logical Properties for internationalization and CSS Houdini for custom styling. Goals: performance, maintainability, and accessible designs across all devices.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit the Dedicated CSS Roadmap",
+        "url": "https://roadmap.sh/css"
+      },
+      {
+        "type": "article",
+        "label": "Modern CSS: A Comprehensive Guide",
+        "url": "https://moderncss.dev/"
+      },
+      {
+        "type": "article",
+        "label": "CSS-Tricks: Modern CSS",
+        "url": "https://css-tricks.com/modern-css/"
+      }
+    ],
+    "sourceSlug": "css-frameworks"
+  },
+  "State Management": {
+    "description": "Application state management is the process of maintaining knowledge of an application's inputs across multiple related data flows that form a complete business transaction -- or a session -- to understand the condition of the app at any given moment. In computer science, an input is information put into the program by the user and state refers to the condition of an application according to its stored inputs -- saved as variables or constants. State can also be described as the collection of preserved information that forms a complete session.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is State Management?",
+        "url": "https://www.techtarget.com/searchapparchitecture/definition/state-management"
+      },
+      {
+        "type": "article",
+        "label": "Overview of State in React",
+        "url": "https://www.robinwieruch.de/react-state/"
+      }
+    ],
+    "sourceSlug": "react/state-management"
+  },
+  "Routing": {
+    "description": "Routing is an essential concept in Single Page Applications (SPA). When your application is divided into separated logical sections, and all of them are under their own URL, your users can easily share links among each other.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "How to use Routing in React JS: A Comprehensive Guide.",
+        "url": "https://blog.logrocket.com/react-router-v6-guide/"
+      },
+      {
+        "type": "video",
+        "label": "React Router 6 – Tutorial for Beginners.",
+        "url": "https://www.youtube.com/watch?v=59IXY5IDrBA"
+      }
+    ],
+    "sourceSlug": "react/routers"
+  },
+  "Testing": {
+    "description": "Testing verifies software functionality and quality through unit, integration, functional, UI/UX, performance, security, accessibility, and compatibility testing. Modern approaches use automated tools, CI/CD pipelines, TDD, and BDD methodologies. Early bug detection improves application reliability.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "The Different Types of Software Tests",
+        "url": "https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing"
+      },
+      {
+        "type": "video",
+        "label": "How to Test Web Applications - dotJS 2024",
+        "url": "https://www.youtube.com/watch?v=l3qjQpYBR8c"
+      }
+    ],
+    "sourceSlug": "testing"
+  },
+  "Browser DevTools": {
+    "description": "DevTools are a set of web developer tools built directly into web browsers. They allow you to inspect and debug HTML, CSS, and JavaScript, monitor network activity, analyze performance bottlenecks, and more. By using DevTools, frontend developers can understand how their code is executed in the browser and identify areas for optimization.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What are browser developer tools?",
+        "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Tools_and_setup/What_are_browser_developer_tools"
+      },
+      {
+        "type": "article",
+        "label": "What are Developer Tools?",
+        "url": "https://aws.amazon.com/what-is/developer-tools/"
+      },
+      {
+        "type": "article",
+        "label": "Google DevTools",
+        "url": "https://developer.chrome.com/docs/devtools"
+      },
+      {
+        "type": "video",
+        "label": "Understand Browser Dev Tools Network Tab (and avoid these mistakes...)",
+        "url": "https://www.youtube.com/watch?v=2CC0fugc_2o"
+      }
+    ],
+    "sourceSlug": "devtools-usage"
+  },
+  "Working with APIs": {
+    "description": "Web APIs are interfaces provided by web browsers that allow JavaScript code to interact with the browser environment and the wider web. These APIs provide access to functionalities like manipulating the Document Object Model (DOM), handling user input, making network requests, managing browser history, and accessing device hardware like the camera or microphone. They essentially bridge the gap between JavaScript and the capabilities of the browser and the underlying operating system.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Web APIs",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API"
+      },
+      {
+        "type": "article",
+        "label": "Web APIs - Introduction",
+        "url": "https://www.w3schools.com/js/js_api_intro.asp"
+      },
+      {
+        "type": "video",
+        "label": "What is a Web API?",
+        "url": "https://www.youtube.com/watch?v=_7rT-ixivWU"
+      }
+    ],
+    "sourceSlug": "web-apis"
+  },
+  "Web Performance": {
+    "description": "Performance, in the context of web development, refers to how quickly and efficiently a website or web application loads and responds to user interactions. It encompasses various aspects like loading times, rendering speed, and overall responsiveness. Optimizing performance ensures a smooth and enjoyable user experience, leading to increased engagement and satisfaction.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Web performance",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Performance"
+      },
+      {
+        "type": "article",
+        "label": "9 Essential Strategies for Web Performance Optimization",
+        "url": "https://www.shopify.com/enterprise/blog/web-performance-optimization"
+      },
+      {
+        "type": "video",
+        "label": "The ultimate guide to web performance",
+        "url": "https://www.youtube.com/watch?v=0fONene3OIA"
+      },
+      {
+        "type": "video",
+        "label": "Frontend System Design: The 2025 Web Performance Roadmap",
+        "url": "https://www.youtube.com/watch?v=KUdqbIHn8Ic"
+      }
+    ],
+    "sourceSlug": "performance"
+  },
+  "Accessibility (a11y)": {
+    "description": "Website accessibility ensures sites are usable by everyone, including people with disabilities. Involves alt text for images, keyboard navigation, color contrast, and captions. Benefits all users, supports legal compliance, and expands audience reach.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Accessibility for Developers by Google",
+        "url": "https://web.dev/accessibility"
+      },
+      {
+        "type": "video",
+        "label": "Complete Playlist on Accessibility",
+        "url": "https://youtube.com/playlist?list=PLNYkxOF6rcICWx0C9LVWWVqvHlYJyqw7g"
+      }
+    ],
+    "sourceSlug": "accessibility"
+  },
+  "Frontend Security": {
+    "description": "Web security protects websites from cyber threats through HTTPS/TLS, XSS/SQL injection/CSRF prevention, CSP, secure authentication, input validation, and regular updates. Involves understanding OWASP Top Ten vulnerabilities, access controls, secure coding practices, and threat awareness for comprehensive protection.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "OWASP Website",
+        "url": "https://owasp.org/"
+      },
+      {
+        "type": "article",
+        "label": "OWASP Cheatsheets",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/AJAX_Security_Cheat_Sheet.html"
+      },
+      {
+        "type": "article",
+        "label": "Content Security Policy (CSP)",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP"
+      },
+      {
+        "type": "video",
+        "label": "OWASP ZAP Step-by-Step Tutorial",
+        "url": "https://www.youtube.com/playlist?list=PLH8n_ayg-60J9i3nsLybper-DR3zJw6Z5"
+      }
+    ],
+    "sourceSlug": "web-security"
+  },
+  "Authentication in the Browser": {
+    "description": "Authentication strategies verify a user's identity to grant access. Common methods include Basic Auth (username/password), Session-based (server remembers login), Token-based (like JWT, a secure digital key), OAuth (for third-party access like \"Login with Google\"), and SSO (Single Sign-On, one login for many apps). Knowing these helps choose the right security for your app.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Basic Authentication",
+        "url": "https://roadmap.sh/guides/basic-authentication"
+      },
+      {
+        "type": "article",
+        "label": "Session Based Authentication",
+        "url": "https://roadmap.sh/guides/session-based-authentication-visually-explained"
+      },
+      {
+        "type": "article",
+        "label": "Token Based Authentication",
+        "url": "https://roadmap.sh/guides/token-authentication"
+      },
+      {
+        "type": "article",
+        "label": "JWT Authentication",
+        "url": "https://roadmap.sh/guides/jwt-authentication"
+      },
+      {
+        "type": "article",
+        "label": "OAuth",
+        "url": "https://roadmap.sh/guides/oauth"
+      },
+      {
+        "type": "article",
+        "label": "SSO - Single Sign On",
+        "url": "https://roadmap.sh/guides/sso"
+      }
+    ],
+    "sourceSlug": "frontend/auth-strategies"
+  },
+  "GraphQL Clients": {
+    "description": "GraphQL is Facebook's query language for APIs allowing clients to request exactly the data needed. Reduces over-fetching and under-fetching compared to REST. Ideal for mobile applications, complex APIs, and rapidly changing requirements with strong typing.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit Dedicated GraphQL Roadmap",
+        "url": "https://roadmap.sh/graphql"
+      },
+      {
+        "type": "official",
+        "label": "Introduction to GraphQL",
+        "url": "https://graphql.org/learn/"
+      },
+      {
+        "type": "article",
+        "label": "Introduction to GraphQL",
+        "url": "https://thenewstack.io/introduction-to-graphql/"
+      },
+      {
+        "type": "video",
+        "label": "GraphQL Course for Beginners",
+        "url": "https://www.youtube.com/watch?v=ed8SzALpx1Q"
+      }
+    ],
+    "sourceSlug": "graphql"
+  },
+  "SSR & SSG": {
+    "description": "Static Site Generators (SSGs) build websites as pre-generated HTML files from content and templates. Make sites fast, secure, and easy to host. Examples: Jekyll, Hugo, Eleventy. Ideal for blogs, documentation, and content-focused sites with excellent performance.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is a Static Site Generator?",
+        "url": "https://www.cloudflare.com/learning/performance/static-site-generator/"
+      },
+      {
+        "type": "article",
+        "label": "Get Back to Basics With Static Website Generators",
+        "url": "https://thenewstack.io/get-back-basics-static-website-generators/"
+      },
+      {
+        "type": "video",
+        "label": "What is a static site generator",
+        "url": "https://www.youtube.com/watch?v=Qms4k6y7OgI"
+      }
+    ],
+    "sourceSlug": "ssg"
+  },
+  "PWAs": {
+    "description": "Progressive Web Apps (PWAs) are web applications behaving like native apps using HTML, CSS, JavaScript. Feature offline functionality, push notifications, home screen installation, and service workers for caching. Cross-platform, discoverable, and cost-effective alternative to native apps.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Learn PWA",
+        "url": "https://web.dev/learn/pwa/"
+      },
+      {
+        "type": "article",
+        "label": "MDN - Progressive Web Apps",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/"
+      },
+      {
+        "type": "video",
+        "label": "Progressive Web Apps in 2024",
+        "url": "https://www.youtube.com/watch?v=3ODP6tTpjqA"
+      }
+    ],
+    "sourceSlug": "pwas"
+  },
+  "Design Systems": {
+    "description": "A design system is a structured collection of reusable components, guidelines, standards, and best practices that ensure consistency across an application's visual design and user experience. It typically includes typography, colors, spacing, icons, UI components, interaction patterns, and documentation on how to use everything correctly.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit the Dedicated Design System Roadmap",
+        "url": "https://roadmap.sh/design-system"
+      },
+      {
+        "type": "article",
+        "label": "Design system 101: What is a design system?",
+        "url": "https://www.figma.com/blog/design-systems-101-what-is-a-design-system/"
+      },
+      {
+        "type": "article",
+        "label": "Design Systems 101",
+        "url": "https://www.nngroup.com/articles/design-systems-101/"
+      },
+      {
+        "type": "video",
+        "label": "Welcome to design systems - Lesson 1 : Introduction to design systems",
+        "url": "https://www.youtube.com/watch?v=YLo6g58vUm0"
+      }
+    ],
+    "sourceSlug": "design-systems"
+  },
+  "CI/CD & Deployment": {
+    "description": "Deployment is the process of making a website or web application available for users to access on the internet. It involves taking the code, assets (like images and fonts), and configuration files and placing them on a server or hosting platform. This process often includes steps like bundling the code, optimizing assets for performance, and configuring the server to properly serve the application.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "A Beginner’s Guide To Web Deployment",
+        "url": "https://medium.com/devjavu/a-beginners-guide-to-web-deployment-b4ce704fe097"
+      },
+      {
+        "type": "article",
+        "label": "Deploying frontend applications — the fun way",
+        "url": "https://hackernoon.com/deploying-frontend-applications-the-fun-way-bc3f69e15331"
+      },
+      {
+        "type": "article",
+        "label": "Top 5 Platforms to Deploy Your Frontend Projects",
+        "url": "https://strapi.io/blog/top-platforms-for-frontend-projects"
+      },
+      {
+        "type": "video",
+        "label": "How To Deploy a Website (to the internet)",
+        "url": "https://www.youtube.com/watch?v=NBrQp6-721c"
+      }
+    ],
+    "sourceSlug": "deployment"
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "Cloud Concepts": {
+    "description": "Amazon Web Services (AWS) offers various cloud-based deployment models to cater to varying business needs, including Public, Private, and Hybrid clouds. A **Public Cloud** is a model where the service provider offers resources, such as applications and storage, available to the general public over the internet. Resources may be free, or sold on a pay-per-usage model. On the other hand, a **Private Cloud** is a type of cloud computing that delivers similar advantages to public cloud, including scalability and self-service, but through a proprietary architecture dedicated to a single organization. Unlike public clouds, which deliver services to multiple organizations, a private cloud is dedicated to the needs and goals of a single entity. Lastly, a **Hybrid Cloud** is a solution that combines a private cloud with one or more public cloud services, with proprietary software enabling communication between each distinct service.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Types of Cloud Computing",
+        "url": "https://www.redhat.com/en/topics/cloud-computing/public-cloud-vs-private-cloud-and-hybrid-cloud"
+      },
+      {
+        "type": "article",
+        "label": "Selecting the right cloud for workloads",
+        "url": "https://docs.aws.amazon.com/whitepapers/latest/public-sector-cloud-transformation/selecting-the-right-cloud-for-workloads-differences-between-public-private-and-hybrid.html"
+      }
+    ],
+    "sourceSlug": "public-vs-private-vs-hybrid-cloud"
+  },
+  "Networking Basics": {
+    "description": "Computer networking is the practice of connecting computers and devices to share data and resources. It involves the use of protocols like TCP/IP for communication, hardware such as routers and switches for directing traffic, and various network topologies (e.g., star, mesh, bus) for organizing connections. Networks can be categorized by size and scope, from small local area networks (LANs) to wide area networks (WANs) that span large geographical areas. Key concepts include IP addressing, subnetting, DNS for name resolution, and network security measures. Understanding networking basics is crucial for managing data flow, troubleshooting connectivity issues, and ensuring efficient communication in modern computing environments.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Networking basics - What you need to know",
+        "url": "https://www.cisco.com/c/en/us/solutions/small-business/resource-center/networking/networking-basics.html"
+      },
+      {
+        "type": "video",
+        "label": "Computer Networking in 100 seconds",
+        "url": "https://www.youtube.com/watch?v=keeqnciDVOo"
+      },
+      {
+        "type": "video",
+        "label": "Computer Networks: Crash Course Computer Science #28",
+        "url": "https://www.youtube.com/watch?v=3QhU9jd03a0"
+      }
+    ],
+    "sourceSlug": "cyber-security/basics-of-computer-networking"
+  },
+  "Linux Fundamentals": {
+    "description": "Linux Navigation Basics is about using simple commands to move around and manage files on your computer. For example, `cd` lets you go into different folders, `ls` shows you what files and folders are inside, and `pwd` tells you where you are currently. These commands help you easily find and organize your files.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Linux Filesystem Navigation Basics",
+        "url": "https://linuxconfig.org/filesystem-basics"
+      },
+      {
+        "type": "article",
+        "label": "Linux Navigation and File Management",
+        "url": "https://www.digitalocean.com/community/tutorials/basic-linux-navigation-and-file-management"
+      },
+      {
+        "type": "article",
+        "label": "Basic Navigation Commands: cd, ls, and pwd",
+        "url": "https://www.linuxbash.sh/post/basic-navigation-commands-cd-ls-and-pwd"
+      }
+    ],
+    "sourceSlug": "linux/basic-commands"
+  },
+  "EC2": {
+    "description": "Amazon Elastic Compute Cloud (EC2) is a web service that provides secure, resizable compute capacity in the cloud. It is designed to make web-scale cloud computing easier for developers. EC2’s simple web service interface allows you to obtain and configure capacity with minimal friction. EC2 enables you to scale your compute capacity, develop and deploy applications faster, and run applications on AWS's reliable computing environment. You have the control of your computing resources and can access various configurations of CPU, Memory, Storage, and Networking capacity for your instances.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "EC2 - User Guide",
+        "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html"
+      },
+      {
+        "type": "video",
+        "label": "Introduction to Amazon EC2",
+        "url": "https://www.youtube.com/watch?v=eaicwmnSdCs"
+      }
+    ],
+    "sourceSlug": "ec2"
+  },
+  "S3": {
+    "description": "Amazon S3 (Simple Storage Service) is an object storage service offered by Amazon Web Services (AWS). It provides scalable, secure and durable storage on the internet. Designed for storing and retrieving any amount of data from anywhere on the web, it is a key tool for many companies in the field of data storage, including mobile applications, websites, backup and restore, archive, enterprise applications, IoT devices, and big data analytics.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "S3",
+        "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html"
+      }
+    ],
+    "sourceSlug": "aws/s3"
+  },
+  "VPC": {
+    "description": "Amazon VPC (Virtual Private Cloud) is a service that lets you launch AWS resources in a logically isolated virtual network that you define. It provides advanced security features such as security groups and network access control lists to enable inbound and outbound filtering at the instance and subnet level. Additionally, you can create a Hardware Virtual Private Network (VPN) connection between your corporate datacenter and your VPC to leverage the AWS cloud as an extension of your corporate datacenter.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "VPC",
+        "url": "https://aws.amazon.com/vpc/"
+      },
+      {
+        "type": "video",
+        "label": "AWS VPC Beginner to Advanced uses",
+        "url": "https://www.youtube.com/watch?v=g2JOHLHh4rI"
+      }
+    ],
+    "sourceSlug": "vpc"
+  },
+  "IAM": {
+    "description": "IAM, or Identity and Access Management, in AWS is a service that enables you to manage access to AWS services and resources securely. It allows you to create and manage AWS users and groups, and use permissions to allow and deny their access to AWS resources. The service includes features like shared access to your AWS account, granular permissions, identity federation (including active directory integration), multi-factor authentication (MFA), and providing temporary access for users, among others. IAM is a universal system, meaning it's globally accessible and does not depend on specific regions.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "IAM - User Guide",
+        "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html"
+      }
+    ],
+    "sourceSlug": "iam"
+  },
+  "Lambda": {
+    "description": "AWS Lambda is a serverless computing service that runs code in response to events and automatically manages the computing resources required by that code. It lets us run applications and services without thinking about servers. You can execute your back-end application code, run code in response to HTTP requests using Amazon API Gateway, or call your functions using API calls made using AWS SDKs. AWS Lambda automatically scales your applications in response to incoming requests. AWS Lambda supports Java, Go, PowerShell, Node.js, C#, Python, and Ruby code, and provides a Runtime API which allows you to use any additional programming languages to author your functions.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "AWS Lambda",
+        "url": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html"
+      }
+    ],
+    "sourceSlug": "lambda"
+  },
+  "RDS": {
+    "description": "Amazon RDS (Relational Database Service) is a web service from Amazon Web Services. It's designed to simplify the setup, operation, and scaling of relational databases in the cloud. This service provides cost-efficient, resizable capacity for an industry-standard relational database and manages common database administration tasks. RDS supports six database engines: Amazon Aurora, PostgreSQL, MySQL, MariaDB, Oracle Database, and SQL Server. These engines give you the ability to run instances ranging from 5GB to 6TB of memory, accommodating your specific use case. It also ensures the database is up-to-date with the latest patches, automatically backs up your data and offers encryption at rest and in transit.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Amazon RDS",
+        "url": "https://aws.amazon.com/rds/"
+      }
+    ],
+    "sourceSlug": "rds"
+  },
+  "Load Balancing": {
+    "description": "Elastic Load Balancing (ELB) is a load-balancing service for Amazon Web Services (AWS) deployments. It automatically distributes incoming application traffic and scales resources to meet traffic demands. ELB helps to ensure that the incoming traffic is spread evenly across your Amazon EC2 instances, making your application more highly available and fault-tolerant. It supports routing and load balancing for HTTP/HTTPS, and TCP traffic. There are three types of load balancers that ELB offers - Application Load Balancer (ideal for HTTP and HTTPS traffic), Network Load Balancer (best for TCP traffic where extreme performance is required) and Classic Load Balancer (provides basic load balancing across multiple Amazon EC2 instances).",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Elastic Load Balancers",
+        "url": "https://aws.amazon.com/elasticloadbalancing/"
+      }
+    ],
+    "sourceSlug": "elastic-load-balancers"
+  },
+  "High Availability": {
+    "description": "AWS Auto Scaling is a service that automatically scales resources to meet the demands of your applications. It uses policies, health status, and schedules to determine when to add more instances, ensuring that your application always has the right amount of capacity. AWS Auto Scaling can scale resources across multiple services and manage the scaling process in real time. It optimizes for cost and performance, and with the help of Amazon CloudWatch, it adjusts capacity based on the demand patterns of your workloads. Elastic Load Balancing (ELB) is a load-balancing service for Amazon Web Services (AWS) deployments. It automatically distributes incoming application traffic and scales resources to meet traffic demands. ELB helps to ensure that the incoming traffic is spread evenly across your Amazon EC2 instances, making your application more highly available and fault-tolerant. It supports routing and load balancing for HTTP/HTTPS, and TCP traffic. There are three types of load balancers that ELB offers - Application Load Balancer (ideal for HTTP and HTTPS traffic), Network Load Balancer (best for TCP traffic where extreme performance is required) and Classic Load Balancer (provides basic load balancing across multiple Amazon EC2 instances).",
+    "resources": [
+      {
+        "type": "official",
+        "label": "AWS Autoscaling",
+        "url": "https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html"
+      },
+      {
+        "type": "official",
+        "label": "Elastic Load Balancers",
+        "url": "https://aws.amazon.com/elasticloadbalancing/"
+      }
+    ],
+    "sourceSlug": "aws/auto-scaling, aws/elastic-load-balancers"
+  },
+  "Cost Optimization": {
+    "description": "Amazon EC2 provides several purchasing options to fit different workload needs. The **On-Demand** option allows clients to pay for compute capacity per hour with no long-term commitments. **Reserved Instances** provide a significant discount compared to On-Demand pricing and are ideal for applications required steady state usage. **Spot Instances** allow clients to bid for unused Amazon EC2 capacity and can provide significant savings if flexibility is possible in starting and stopping times. **Dedicated Hosts** are physical EC2 servers dedicated to specific clients, suitable for regulatory requirements and licenses which do not support multi-tenant virtualization, and **Savings Plans** offer reduced rates for committing to a consistent amount of usage for 1 or 3 years.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Purchasing Options",
+        "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html"
+      }
+    ],
+    "sourceSlug": "aws/purchasing-options"
+  },
+  "AWS Certification": {
+    "description": "AWS Global Infrastructure refers to the layout of AWS regions and availability zones around the world. A region is a geographical area, each consisting of two or more availability zones (AZs) which are engineered to be isolated from failures in other AZs. AZs provide inexpensive, low-latency network connectivity to other AZs in the same region. In addition to the regions and AZs, AWS also includes edge locations for content delivery and regional edge caches, enhancing user experience by reducing latency. AWS currently operates in many geographic regions around the world.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "AWS Global Infrastructure",
+        "url": "https://aws.amazon.com/about-aws/global-infrastructure/?p=ngi&loc=0"
+      },
+      {
+        "type": "official",
+        "label": "AWS Regions / Availability Zones",
+        "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html"
+      }
+    ],
+    "sourceSlug": "aws-global-infrastructure"
+  }
+}

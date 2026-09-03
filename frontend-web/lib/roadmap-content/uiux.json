@@ -1,0 +1,173 @@
+{
+  "Design Principles": {
+    "description": "Behavior Design is an approach that combines elements of psychology, neuroscience, and design principles to understand and influence human behaviors. The goal behind behavior design is to make it easier for users to accomplish their goals or desired actions within a product, service, or system.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Behavior Design",
+        "url": "https://www.interaction-design.org/literature/topics/behavioral-design"
+      }
+    ],
+    "sourceSlug": "behavior-design"
+  },
+  "Color & Typography": {
+    "description": "Color establishes brand identity and visual hierarchy in design systems. A comprehensive color system should organize colors logically, meet WCAG accessibility standards, support light/dark themes, create semantic categories, establish systematic naming, balance brand expression with function, and provide multiple formats. Typography establishes hierarchy, readability, and brand personality. An effective system should develop harmonious scales using mathematical ratios, choose appropriate typefaces, implement fluid typography, establish consistent line-heights, define font weight hierarchy, ensure accessibility compliance, and provide clear usage guidelines.",
+    "resources": [],
+    "sourceSlug": "design-system/color, design-system/typography"
+  },
+  "Sketching": {
+    "description": "Sketching is the practice of quickly drawing rough visual representations of an idea, often by hand, to explore layout and interaction concepts before committing to a digital tool. Its low fidelity makes it fast to produce and easy to discard, which encourages exploring many directions rather than over-investing in one idea too early. Sketches typically feed into more refined wireframes once a direction starts to take shape.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Start the development process right with product design sketching",
+        "url": "https://www.autodesk.com/solutions/product-design-sketching"
+      }
+    ],
+    "sourceSlug": "product-design/sketching"
+  },
+  "Figma": {
+    "description": "[Figma](https://www.figma.com/) is a powerful and versatile web-based design tool that allows designers, developers, and stakeholders to collaborate on UI and UX projects in real-time. It's an excellent choice for creating wireframes and high-fidelity prototypes and supports vector editing, responsive design, and team collaboration.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Figma",
+        "url": "https://figma.com"
+      },
+      {
+        "type": "video",
+        "label": "Free Figma UX Design UI Essentials Course",
+        "url": "https://youtu.be/kbZejnPXyLM?si=W9oY5j_6AcSuHfq2"
+      }
+    ],
+    "sourceSlug": "figma"
+  },
+  "Wireframing": {
+    "description": "Wireframing is the process of creating simplified, low-fidelity layouts of a screen that show structure and placement of elements without detailed visual design. It focuses attention on functionality and flow rather than color, typography, or imagery. Wireframes are often used to get early feedback and alignment before investing time in higher-fidelity design work.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is wireframing?",
+        "url": "https://www.figma.com/resource-library/what-is-wireframing/"
+      },
+      {
+        "type": "video",
+        "label": "Figma Wireframe Tutorial for Beginners",
+        "url": "https://www.youtube.com/watch?v=iyrEStiTZh0"
+      }
+    ],
+    "sourceSlug": "product-design/wireframing"
+  },
+  "Prototyping": {
+    "description": "Prototyping is the stage where a design idea is turned into a testable representation, ranging from low-fidelity wireframes to interactive high-fidelity mockups. It lets designers and stakeholders evaluate layout, flow, and interaction before development begins. Tools like Figma, Sketch, and Adobe XD are commonly used to build prototypes at this stage.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is prototyping",
+        "url": "https://www.figma.com/resource-library/what-is-prototyping/"
+      }
+    ],
+    "sourceSlug": "prototyping"
+  },
+  "User Research": {
+    "description": "Creating user personas means building fictional but research-based profiles that represent the key user types a product serves. Each persona typically includes goals, frustrations, behaviors, and context drawn from interviews, surveys, or analytics rather than guesswork. Personas give a team a shared reference point when making design decisions instead of relying on personal assumptions.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Personas – A Simple Introduction",
+        "url": "https://www.interaction-design.org/literature/article/personas-why-and-how-you-should-use-them"
+      },
+      {
+        "type": "article",
+        "label": "Personas Make Users Memorable for Product Team Members",
+        "url": "https://www.nngroup.com/articles/persona/"
+      },
+      {
+        "type": "video",
+        "label": "Personas in UX",
+        "url": "https://youtube.com/playlist?list=PLJOFJ3Ok_ids-oEPCltCVtmdDOXiyttpq&si=v7ZaI65bQNTfXKHJ"
+      }
+    ],
+    "sourceSlug": "create-user-personas"
+  },
+  "Usability Testing": {
+    "description": "Incremental A/B testing compares two versions of a design that differ by a single, small change, showing each version to a separate group of users and measuring which performs better. Because only one variable changes at a time, teams can clearly attribute any difference in outcome to that specific change. It is commonly used to validate individual design decisions before rolling them out to all users.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "The Distinct Roles of Incrementality Testing and A/B Testing",
+        "url": "https://lifesight.io/blog/incrementality-vs-ab-testing/"
+      },
+      {
+        "type": "article",
+        "label": "What’s the Difference Between A/B Testing and Incrementality Testing?",
+        "url": "https://www.measured.com/faq/whats-the-difference-between-a-b-testing-and-incrementality-testing/"
+      }
+    ],
+    "sourceSlug": "incremental-ab-testing"
+  },
+  "Personas & Journey Maps": {
+    "description": "Creating user personas means building fictional but research-based profiles that represent the key user types a product serves. Each persona typically includes goals, frustrations, behaviors, and context drawn from interviews, surveys, or analytics rather than guesswork. Personas give a team a shared reference point when making design decisions instead of relying on personal assumptions.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Personas – A Simple Introduction",
+        "url": "https://www.interaction-design.org/literature/article/personas-why-and-how-you-should-use-them"
+      },
+      {
+        "type": "article",
+        "label": "Personas Make Users Memorable for Product Team Members",
+        "url": "https://www.nngroup.com/articles/persona/"
+      },
+      {
+        "type": "video",
+        "label": "Personas in UX",
+        "url": "https://youtube.com/playlist?list=PLJOFJ3Ok_ids-oEPCltCVtmdDOXiyttpq&si=v7ZaI65bQNTfXKHJ"
+      }
+    ],
+    "sourceSlug": "ux-design/create-user-personas"
+  },
+  "Design Systems": {
+    "description": "Behavior Design is an approach that combines elements of psychology, neuroscience, and design principles to understand and influence human behaviors. The goal behind behavior design is to make it easier for users to accomplish their goals or desired actions within a product, service, or system.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Behavior Design",
+        "url": "https://www.interaction-design.org/literature/topics/behavioral-design"
+      }
+    ],
+    "sourceSlug": "behavior-design"
+  },
+  "Interaction Design": {
+    "description": "Behavior Design is an approach that combines elements of psychology, neuroscience, and design principles to understand and influence human behaviors. The goal behind behavior design is to make it easier for users to accomplish their goals or desired actions within a product, service, or system.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Behavior Design",
+        "url": "https://www.interaction-design.org/literature/topics/behavioral-design"
+      }
+    ],
+    "sourceSlug": "behavior-design"
+  },
+  "Dev Handoff": {
+    "description": "Design handoff is the process of transferring finished design work to engineers in a clear, usable format, including specifications for spacing, colors, and behavior. A well-executed handoff reduces back-and-forth questions and the risk of implementation not matching the intended design. Tools that link directly to design files with specs and assets have made this process faster than manually writing out documentation.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Design Handoff to Developers: How to Stay True to Your Original Vision",
+        "url": "https://www.qt.io/software-insights/design-handoff-to-developers-how-to-stay-true-to-your-original-vision"
+      },
+      {
+        "type": "article",
+        "label": "Design Handoffs",
+        "url": "https://ixdf.org/literature/topics/design-handoffs"
+      },
+      {
+        "type": "video",
+        "label": "How to handoff your designs to Engineering",
+        "url": "https://www.youtube.com/watch?v=PK8dLpwSqbw"
+      }
+    ],
+    "sourceSlug": "product-design/design-handoff"
+  }
+}

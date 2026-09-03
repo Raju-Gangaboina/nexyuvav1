@@ -1,0 +1,105 @@
+[
+  {
+    "id": "pa_e1",
+    "difficulty": "easy",
+    "question": "In Agile/Scrum, what is a 'sprint'?",
+    "options": [
+      "A single bug-fix commit",
+      "A fixed, time-boxed period (commonly 1-4 weeks) during which a defined set of work is completed",
+      "A meeting held once per quarter",
+      "The final release of a product"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "pa_e2",
+    "difficulty": "easy",
+    "question": "What is the primary purpose of a daily stand-up meeting in Scrum?",
+    "options": [
+      "To assign performance ratings",
+      "For each team member to briefly share progress, plans, and blockers so the team stays aligned",
+      "To conduct final product sign-off",
+      "To review the entire product backlog line by line"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "pa_e3",
+    "difficulty": "easy",
+    "question": "What is a 'user story' in product/project management?",
+    "options": [
+      "A formal legal document",
+      "A short, plain-language description of a feature from the end user's perspective and the value it provides them",
+      "A bug report",
+      "A quarterly financial report"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "pa_m1",
+    "difficulty": "medium",
+    "question": "What does the acronym MVP stand for in product management, and what does it mean?",
+    "options": [
+      "Most Valuable Player — the top-performing team member",
+      "Minimum Viable Product — the smallest version of a product that delivers real value and lets you learn from real users",
+      "Maximum Verified Performance — a load-testing benchmark",
+      "Modular Version Protocol — an API versioning scheme"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "pa_m2",
+    "difficulty": "medium",
+    "question": "What is the main purpose of a RACI matrix in project management?",
+    "options": [
+      "To track project budget spend over time",
+      "To clarify who is Responsible, Accountable, Consulted, and Informed for each task, reducing ambiguity in a project with many stakeholders",
+      "To schedule sprint retrospectives",
+      "To measure code quality metrics"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "pa_m3",
+    "difficulty": "medium",
+    "question": "In prioritization frameworks like MoSCoW, what does the 'S' typically stand for?",
+    "options": ["Scheduled", "Should have", "Skipped", "Signed-off"],
+    "correct_index": 1
+  },
+  {
+    "id": "pa_h1",
+    "difficulty": "hard",
+    "question": "Why might a product team deliberately choose to ship a feature to only 10% of users first (a staged/canary rollout) instead of 100% at once?",
+    "options": [
+      "It's always cheaper in infrastructure cost",
+      "It limits the blast radius of an unexpected problem and lets the team validate real usage data/metrics before a full rollout",
+      "It's required by law in most jurisdictions",
+      "It has no real benefit over a full rollout"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "pa_h2",
+    "difficulty": "hard",
+    "question": "In a retrospective, what distinguishes an effective action item from a vague one?",
+    "options": [
+      "Effective action items are always assigned to the most senior person",
+      "An effective action item is specific, has a clear owner, and is checked in a future retro — a vague one ('communicate better') has no owner or way to verify it happened",
+      "Vague action items are actually preferred, since they allow flexibility",
+      "Action items are optional and rarely tracked in real teams"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "pa_h3",
+    "difficulty": "hard",
+    "question": "When two stakeholders disagree on priority for the next sprint, what is generally the most effective first step for a product/project analyst?",
+    "options": [
+      "Let the more senior stakeholder decide automatically, regardless of reasoning",
+      "Ground the discussion in shared data (user impact, business goals, effort estimate) rather than opinions, to find an objective basis for the tradeoff",
+      "Escalate immediately to executive leadership without discussion",
+      "Add both items to the sprint regardless of capacity"
+    ],
+    "correct_index": 1
+  }
+]

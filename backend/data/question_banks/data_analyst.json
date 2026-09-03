@@ -1,0 +1,105 @@
+[
+  {
+    "id": "da_e1",
+    "difficulty": "easy",
+    "question": "In SQL, which clause is used to filter rows before aggregation?",
+    "options": ["HAVING", "WHERE", "GROUP BY", "ORDER BY"],
+    "correct_index": 1
+  },
+  {
+    "id": "da_e2",
+    "difficulty": "easy",
+    "question": "In pandas, what does `df.head()` do?",
+    "options": [
+      "Returns the last 5 rows",
+      "Returns the first 5 rows by default",
+      "Returns column names",
+      "Sorts the dataframe"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "da_e3",
+    "difficulty": "easy",
+    "question": "What does a bar chart typically compare?",
+    "options": [
+      "Correlation between two continuous variables",
+      "Categorical values against a numeric measure",
+      "Distribution of a single continuous variable",
+      "Time-series trends only"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "da_m1",
+    "difficulty": "medium",
+    "question": "In SQL, what's the difference between `WHERE` and `HAVING`?",
+    "options": [
+      "There is no difference",
+      "WHERE filters rows before grouping; HAVING filters groups after aggregation",
+      "HAVING is used only with SELECT *",
+      "WHERE only works with numeric columns"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "da_m2",
+    "difficulty": "medium",
+    "question": "What does a correlation coefficient close to 0 indicate?",
+    "options": [
+      "A strong positive relationship",
+      "A strong negative relationship",
+      "Little to no linear relationship",
+      "The data is invalid"
+    ],
+    "correct_index": 2
+  },
+  {
+    "id": "da_m3",
+    "difficulty": "medium",
+    "question": "In pandas, what does `df.groupby('col').mean()` do?",
+    "options": [
+      "Removes duplicate rows",
+      "Groups rows by 'col' and computes the mean of other numeric columns per group",
+      "Sorts the dataframe by 'col'",
+      "Drops the 'col' column"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "da_h1",
+    "difficulty": "hard",
+    "question": "What is a common consequence of high multicollinearity in a regression model?",
+    "options": [
+      "Improved prediction accuracy",
+      "Unstable and hard-to-interpret coefficient estimates",
+      "Faster model training",
+      "It has no practical effect"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "da_h2",
+    "difficulty": "hard",
+    "question": "What does a p-value of 0.03 typically suggest in a hypothesis test at alpha=0.05?",
+    "options": [
+      "Strong evidence to accept the null hypothesis",
+      "Statistically significant evidence to reject the null hypothesis",
+      "The test is invalid",
+      "The sample size was too small"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "da_h3",
+    "difficulty": "hard",
+    "question": "In a window function like `RANK() OVER (PARTITION BY dept ORDER BY salary DESC)`, what does PARTITION BY do?",
+    "options": [
+      "Filters out rows with null salary",
+      "Restarts the ranking calculation independently within each department group",
+      "Sorts the entire table by department",
+      "Removes duplicate departments"
+    ],
+    "correct_index": 1
+  }
+]

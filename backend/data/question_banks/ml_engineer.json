@@ -1,0 +1,100 @@
+[
+  {
+    "id": "ml_e1",
+    "difficulty": "easy",
+    "question": "In supervised learning, what does the training data include that unsupervised learning data does not?",
+    "options": ["Numeric features", "Labels/target values", "A validation set", "Missing values"],
+    "correct_index": 1
+  },
+  {
+    "id": "ml_e2",
+    "difficulty": "easy",
+    "question": "Which Python library is most commonly used for array/matrix operations in ML workflows?",
+    "options": ["pandas", "numpy", "requests", "flask"],
+    "correct_index": 1
+  },
+  {
+    "id": "ml_e3",
+    "difficulty": "easy",
+    "question": "What is 'overfitting' in machine learning?",
+    "options": [
+      "When a model trains too quickly",
+      "When a model learns the training data too well, including its noise, and performs poorly on new/unseen data",
+      "When a dataset has too few features",
+      "When a model uses too little memory"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "ml_m1",
+    "difficulty": "medium",
+    "question": "Why is a train/test split (or cross-validation) necessary when evaluating a model?",
+    "options": [
+      "To make training run faster",
+      "To estimate how the model performs on data it hasn't seen, rather than reporting a misleadingly optimistic score on the data it memorized",
+      "It's only needed for deep learning models, not classical ML",
+      "To reduce the size of the dataset for storage"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "ml_m2",
+    "difficulty": "medium",
+    "question": "What does a confusion matrix show for a classification model?",
+    "options": [
+      "The model's training time per epoch",
+      "The counts of true positives, true negatives, false positives, and false negatives for its predictions",
+      "The correlation between input features",
+      "The learning rate schedule used during training"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "ml_m3",
+    "difficulty": "medium",
+    "question": "What is the main purpose of a validation set separate from the test set?",
+    "options": [
+      "To tune hyperparameters and select a model without contaminating the final, untouched test-set evaluation",
+      "To store backup copies of the training data",
+      "It's the same thing as the test set with a different name",
+      "To visualize the raw input images"
+    ],
+    "correct_index": 0
+  },
+  {
+    "id": "ml_h1",
+    "difficulty": "hard",
+    "question": "Why might accuracy be a misleading metric on a highly imbalanced classification dataset (e.g. 99% negative class)?",
+    "options": [
+      "Accuracy can't be computed on imbalanced data at all",
+      "A model that always predicts the majority class can score ~99% accuracy while being useless at detecting the minority class — precision/recall/F1 or AUC are more informative here",
+      "Accuracy only works for regression problems",
+      "Imbalanced datasets always cause training to fail"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "ml_h2",
+    "difficulty": "hard",
+    "question": "What is the bias-variance tradeoff describing?",
+    "options": [
+      "The tradeoff between GPU cost and CPU cost during training",
+      "The tension between a model being too simple to capture patterns (high bias/underfitting) versus too sensitive to training-data noise (high variance/overfitting)",
+      "The choice between supervised and unsupervised learning",
+      "The tradeoff between dataset size and feature count"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "ml_h3",
+    "difficulty": "hard",
+    "question": "In a RandomForest, why does using an ensemble of many decision trees typically generalize better than a single deep decision tree?",
+    "options": [
+      "Ensembles always train faster than a single tree",
+      "Averaging predictions across many trees trained on different bootstrapped samples/feature subsets reduces variance, since individual trees' overfitting tends to average out",
+      "RandomForests don't actually use decision trees internally",
+      "A single tree can never fit training data well, so an ensemble is required"
+    ],
+    "correct_index": 1
+  }
+]

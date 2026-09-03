@@ -1,0 +1,13 @@
+[
+  {"id": "py_e1", "difficulty": "easy", "question": "What does len([1,2,3]) return?", "options": ["2", "3", "4", "Error"], "correct_index": 1},
+  {"id": "py_e2", "difficulty": "easy", "question": "Which keyword defines a function in Python?", "options": ["func", "def", "function", "lambda"], "correct_index": 1},
+  {"id": "py_e3", "difficulty": "easy", "question": "What is the output of type([])?", "options": ["<class 'list'>", "<class 'array'>", "<class 'tuple'>", "<class 'dict'>"], "correct_index": 0},
+  {"id": "py_e4", "difficulty": "easy", "question": "Which symbol is used for comments in Python?", "options": ["//", "#", "--", "/*"], "correct_index": 1},
+  {"id": "py_m1", "difficulty": "medium", "question": "What does a Python decorator do?", "options": ["Deletes a function", "Wraps a function to modify its behavior", "Only formats docstrings", "Compiles Python to C"], "correct_index": 1},
+  {"id": "py_m2", "difficulty": "medium", "question": "What is the time complexity of a dictionary lookup on average?", "options": ["O(n)", "O(log n)", "O(1)", "O(n^2)"], "correct_index": 2},
+  {"id": "py_m3", "difficulty": "medium", "question": "What does the 'yield' keyword do?", "options": ["Ends a function", "Turns a function into a generator", "Raises an exception", "Imports a module"], "correct_index": 1},
+  {"id": "py_m4", "difficulty": "medium", "question": "Which of these is mutable in Python?", "options": ["tuple", "str", "list", "int"], "correct_index": 2},
+  {"id": "py_h1", "difficulty": "hard", "question": "What is the GIL in CPython?", "options": ["A memory allocator", "A lock ensuring only one thread executes Python bytecode at a time", "A garbage collector", "A type-checking system"], "correct_index": 1},
+  {"id": "py_h2", "difficulty": "hard", "question": "What does asyncio.gather do?", "options": ["Runs coroutines sequentially", "Runs coroutines concurrently and collects results", "Cancels all running tasks", "Blocks the event loop"], "correct_index": 1},
+  {"id": "py_h3", "difficulty": "hard", "question": "In Python's MRO (Method Resolution Order), what algorithm is used?", "options": ["Depth-first search", "C3 linearization", "Breadth-first search", "Topological sort only"], "correct_index": 1}
+]

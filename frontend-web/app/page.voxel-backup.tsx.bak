@@ -1,0 +1,905 @@
+'use client';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+
+/* ═══════════════════════════════════════════════════════════════
+   NEX YUVA — VOXEL AI OPERATING SYSTEM
+   Master UI Architecture v2.4
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Color System — Driven by CSS Variables for Smooth Light/Dark Mode ── */
+const C = {
+  blue:        'var(--blue)',
+  blueDeep:    'var(--blue-deep)',
+  blueMid:     'var(--blue-mid)',
+  blueDark:    'var(--blue-dark)',
+  blueAccent:  'var(--blue-accent)',
+  blueDim:     'var(--blue-dim)',
+  orange:      'var(--orange)',
+  orangeDeep:  'var(--orange-deep)',
+  orangeAccent:'var(--orange-accent)',
+  orangeDim:   'var(--orange-dim)',
+  white:       'var(--white)',
+  whiteDim:    'var(--white-dim)',
+  charcoal:    'var(--charcoal)',
+  muted:       'var(--muted)',
+  mutedSoft:   'var(--muted-soft)',
+  bg:          'var(--void)',
+  panel:       'var(--void-panel)',
+  panelSolid:  'var(--void-card)',
+  border:      'var(--px-border-color)',
+  borderHover: 'var(--px-border-hover-color)',
+  logoFilter:  'var(--logo-filter)',
+} as const;
+
+const SERIF = "'Cormorant Garamond', Georgia, serif";
+const MONO  = "'JetBrains Mono', monospace";
+const SANS  = "'Inter', system-ui, sans-serif";
+
+/* ══════════════════════════════════════════════════════════════
+   IMAGE BOOT SEQUENCE
+   ══════════════════════════════════════════════════════════════ */
+function ImageBootSequence({ onBootComplete, mode='dark' }: { onBootComplete: (startMs: number) => void; mode?: 'dark'|'light' }) {
+  const [phase, setPhase] = useState(0);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase(1), 200);
+    const t2 = setTimeout(() => setPhase(2), 1000);
+    const t3 = setTimeout(() => {
+      setPhase(3);
+      onBootComplete(0);
+    }, 1600);
+    
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [onBootComplete]);
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 999, background: C.bg,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      transition: 'opacity 0.6s ease, background-color 300ms ease',
+      opacity: phase >= 3 ? 0 : 1,
+      pointerEvents: phase >= 3 ? 'none' : 'auto',
+    }}>
+      <div style={{
+        opacity: phase >= 1 ? 1 : 0,
+        transform: phase >= 1 ? 'scale(1)' : 'scale(0.95)',
+        transition: 'all 0.8s cubic-bezier(0.25,0.1,0.25,1)',
+        filter: phase === 2 ? 'drop-shadow(0 0 20px rgba(43,127,212,0.4))' : 'none',
+      }}>
+        <Image src="/nexyuva-light-logo.png" alt="NexYuva" width={240} height={80} className="logo-dark-only"
+          style={{ objectFit:'contain', width:'auto', height:'auto', }} priority />
+        <Image src="/nexyuva-light-logo.png" alt="NexYuva" width={240} height={80} className="logo-light-only"
+          style={{ objectFit:'contain', width:'auto', height:'auto' }} priority />
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INTELLIGENT DIGITAL DUST BACKGROUND SYSTEM
+   Dark Mode: 95% White, 4% Govt Blue, 1% Govt Orange.
+   Light Mode: 95% Charcoal (#1E1E23), 4% Govt Blue, 1% Govt Orange.
+   Multi-plane depth, microscopic sharp voxels (1px-3px),
+   ultra-slow zero-gravity drift, subtle magnetic mouse response.
+   ══════════════════════════════════════════════════════════════ */
+function AmbientParticles({ mode='dark' }: { mode?: 'dark'|'light' }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animRef   = useRef<number>(0);
+  const mouseRef  = useRef<{ x: number; y: number }>({ x: -1000, y: -1000 });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    const resize = () => {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const count = Math.min(Math.floor((canvas.width * canvas.height) / 1100), 900);
+
+    interface VoxelDust {
+      x: number; y: number;
+      baseVx: number; baseVy: number;
+      vx: number; vy: number;
+      size: number;
+      depth: number;
+      color: string;
+      alpha: number;
+      targetAlpha: number;
+      life: number;
+      maxLife: number;
+    }
+
+    const isLight = mode === 'light';
+
+    const ps: VoxelDust[] = Array.from({ length: count }, () => {
+      const randType = Math.random();
+      let color = isLight ? 'rgba(30,30,35,1)' : 'rgba(232,230,225,1)';
+      let baseAlpha = isLight ? (0.04 + Math.random() * 0.10) : (0.10 + Math.random() * 0.22);
+
+      if (randType > 0.99) {
+        color = '#E8820A';
+        baseAlpha = 0.22 + Math.random() * 0.25;
+      } else if (randType > 0.95) {
+        color = '#2B7FD4';
+        baseAlpha = 0.12 + Math.random() * 0.20;
+      }
+
+      const sizeRand = Math.random();
+      const size = sizeRand > 0.95 ? 3 : sizeRand > 0.70 ? 2 : 1;
+      const depth = size === 3 ? 1.0 : size === 2 ? 0.7 : 0.4;
+      const speedScale = 0.015 * depth;
+
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        baseVx: (Math.random() - 0.5) * speedScale,
+        baseVy: (Math.random() - 0.5) * speedScale,
+        vx: (Math.random() - 0.5) * speedScale,
+        vy: (Math.random() - 0.5) * speedScale,
+        size,
+        depth,
+        color,
+        alpha: 0,
+        targetAlpha: baseAlpha,
+        life: Math.random() * 800,
+        maxLife: 600 + Math.random() * 1000,
+      };
+    });
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+
+      for (const p of ps) {
+        p.life++;
+        if (p.life > p.maxLife) {
+          p.life = 0;
+          p.x = Math.random() * canvas.width;
+          p.y = Math.random() * canvas.height;
+        }
+
+        const lr = p.life / p.maxLife;
+        const currentTargetAlpha = lr < 0.15 ? p.targetAlpha * (lr / 0.15) : lr > 0.85 ? p.targetAlpha * ((1 - lr) / 0.15) : p.targetAlpha;
+
+        const dx = p.x - mx;
+        const dy = p.y - my;
+        const distSq = dx * dx + dy * dy;
+        const maxDist = 110;
+
+        let extraAlpha = 0;
+        if (distSq < maxDist * maxDist && distSq > 4) {
+          const dist = Math.sqrt(distSq);
+          const force = (1 - dist / maxDist) * 0.18 * p.depth;
+          p.vx += (dx / dist) * force;
+          p.vy += (dy / dist) * force;
+          extraAlpha = (1 - dist / maxDist) * 0.15;
+        }
+
+        p.vx += (p.baseVx - p.vx) * 0.03;
+        p.vy += (p.baseVy - p.vy) * 0.03;
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        p.alpha += (currentTargetAlpha + extraAlpha - p.alpha) * 0.02;
+
+        if (p.alpha > 0.003) {
+          ctx.globalAlpha = Math.min(1, p.alpha);
+          ctx.fillStyle   = p.color;
+          ctx.fillRect(Math.floor(p.x), Math.floor(p.y), p.size, p.size);
+        }
+      }
+
+      ctx.globalAlpha = 1;
+      animRef.current = requestAnimationFrame(draw);
+    };
+
+    draw();
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [mode]);
+
+  return <canvas ref={canvasRef} style={{ position:'fixed', top:0, left:0, width:'100%', height:'100%', pointerEvents:'none', zIndex:0 }} />;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INDIA HERO ART
+   Blue circle + monument silhouette + tricolor wave + Ashoka Chakra,
+   built as SVG/CSS so it renders crisply in the light theme without
+   depending on a raster asset.
+   ══════════════════════════════════════════════════════════════ */
+function IndiaHeroArt() {
+  return (
+    <div style={{ position:'absolute', inset:0, width:'100%', height:'100%', overflow:'hidden' }} aria-hidden="true">
+      <Image src="/ooo.png" alt="" fill priority
+        sizes="(max-width: 768px) 100vw, 480px"
+        style={{ objectFit:'cover', objectPosition:'68% 42%' }} />
+    </div>
+  );
+}
+
+
+function VoxelCorner({ pos, size=16, color=C.blueAccent, depth=2 }: {
+  pos:'tl'|'tr'|'bl'|'br'; size?:number; color?:string; depth?:number;
+}) {
+  const top  = pos==='tl'||pos==='tr';
+  const left = pos==='tl'||pos==='bl';
+  return (
+    <>
+      {Array.from({length:depth}).map((_,i) => (
+        <div key={i} style={{
+          position:'absolute', pointerEvents:'none',
+          width: size-i*2, height: size-i*2, opacity: 1-i*0.32,
+          ...(pos==='tl'?{top:-1-i*2, left:-1-i*2}:{}),
+          ...(pos==='tr'?{top:-1-i*2, right:-1-i*2}:{}),
+          ...(pos==='bl'?{bottom:-1-i*2, left:-1-i*2}:{}),
+          ...(pos==='br'?{bottom:-1-i*2, right:-1-i*2}:{}),
+          borderTop:    top  ?`1px solid ${color}`:'none',
+          borderBottom: !top ?`1px solid ${color}`:'none',
+          borderLeft:   left ?`1px solid ${color}`:'none',
+          borderRight:  !left?`1px solid ${color}`:'none',
+        }} />
+      ))}
+      <div style={{
+        position:'absolute', width:5, height:5, background:color,
+        boxShadow:`${left?'':'-'}1px ${top?'':'-'}1px 0 ${color.replace(/[\d.]+\)$/,'0.35)')}`,
+        ...(pos==='tl'?{top:-3,left:-3}:{}),
+        ...(pos==='tr'?{top:-3,right:-3}:{}),
+        ...(pos==='bl'?{bottom:-3,left:-3}:{}),
+        ...(pos==='br'?{bottom:-3,right:-3}:{}),
+        pointerEvents:'none',
+      }} />
+    </>
+  );
+}
+
+function PxRuler({ length=60, color=C.whiteDim, vertical=false }: {
+  length?:number; color?:string; vertical?:boolean;
+}) {
+  return <div style={{
+    width: vertical?1:length, height: vertical?length:1, flexShrink:0,
+    background:`repeating-linear-gradient(${vertical?'180deg':'90deg'},${color} 0,${color} 3px,transparent 3px,transparent 7px)`,
+  }} />;
+}
+
+function VxDot({ size=4, color=C.blueAccent }: { size?:number; color?:string }) {
+  return <div style={{ width:size, height:size, background:color, boxShadow:`1px 1px 0 rgba(0,0,0,0.50)`, flexShrink:0 }} />;
+}
+
+function VxIcon({ pattern, color=C.blue, size=3 }: { pattern:number[][]; color?:string; size?:number }) {
+  return (
+    <div style={{ display:'inline-grid', gridTemplateColumns:`repeat(${pattern[0].length},${size}px)`, gap:1 }}>
+      {pattern.flat().map((c,i) => (
+        <div key={i} style={{ width:size, height:size, background:c?color:'transparent', opacity:c===2?0.45:1, boxShadow:c?'1px 1px 0 rgba(0,0,0,0.40)':'none' }} />
+      ))}
+    </div>
+  );
+}
+
+const ICONS = {
+  brain:  [[0,1,1,1,0],[1,0,1,0,1],[1,1,1,1,1],[1,0,1,0,1],[0,1,1,1,0]],
+  target: [[0,1,1,1,0],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+  chart:  [[1,0,0,0,0],[1,0,0,1,0],[1,0,1,1,0],[1,1,1,1,0],[1,1,1,1,1]],
+  shield: [[0,1,1,1,0],[1,1,1,1,1],[1,1,1,1,1],[0,1,1,1,0],[0,0,1,0,0]],
+  diamond:[[0,0,1,0,0],[0,1,0,1,0],[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0]],
+  grid:   [[1,0,1,0,1],[0,0,0,0,0],[1,0,1,0,1],[0,0,0,0,0],[1,0,1,0,1]],
+};
+
+function CountUp({ target, suffix='' }: { target:number; suffix?:string }) {
+  const [v, setV] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        let n=0; const step=target/55;
+        const id=setInterval(()=>{n+=step;if(n>=target){setV(target);clearInterval(id);}else setV(Math.floor(n));},22);
+        obs.disconnect();
+      }
+    },{threshold:0.3});
+    if(ref.current) obs.observe(ref.current);
+    return ()=>obs.disconnect();
+  },[target]);
+  return <span ref={ref}>{v.toLocaleString()}{suffix}</span>;
+}
+
+function FadeUp({ children, delay=0, style={} }: { children:React.ReactNode; delay?:number; style?:React.CSSProperties }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [vis,setVis] = useState(false);
+  useEffect(()=>{
+    const obs=new IntersectionObserver(([e])=>{ if(e.isIntersecting){setVis(true);obs.disconnect();} },{threshold:0.06});
+    if(ref.current) obs.observe(ref.current);
+    return ()=>obs.disconnect();
+  },[]);
+  return (
+    <div ref={ref} style={{ opacity:vis?1:0, transform:vis?'translateY(0)':'translateY(22px)', transition:`opacity 0.7s cubic-bezier(0.25,0.1,0.25,1) ${delay}ms,transform 0.7s cubic-bezier(0.25,0.1,0.25,1) ${delay}ms`, ...style }}>
+      {children}
+    </div>
+  );
+}
+
+function VxCard({ children, delay=0, accentColor=C.blueAccent }: {
+  children:React.ReactNode; delay?:number; accentColor?:string;
+}) {
+  const [hov,setHov]=useState(false);
+  return (
+    <FadeUp delay={delay} style={{height:'100%'}}>
+      <div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} style={{
+        position:'relative', background:C.panel,
+        border:`1px solid ${hov?C.borderHover:C.border}`, height:'100%',
+        boxShadow: hov
+          ? `1px 1px 0 ${C.blueDeep},2px 2px 0 ${C.blueMid},3px 3px 0 ${C.blueDark},4px 4px 0 rgba(0,0,0,0.35),5px 5px 0 rgba(0,0,0,0.18),6px 6px 0 rgba(0,0,0,0.09)`
+          : `1px 1px 0 ${C.blueDeep},2px 2px 0 ${C.blueMid},3px 3px 0 rgba(0,0,0,0.28),4px 4px 0 rgba(0,0,0,0.14)`,
+        transform:hov?'translate(-2px,-2px)':'translate(0,0)',
+        transition:'all 0.20s cubic-bezier(0.25,0.1,0.25,1)',
+      }}>
+        <VoxelCorner pos="tl" color={accentColor} size={18} depth={2} />
+        <VoxelCorner pos="br" color={accentColor.replace('0.20','0.10')} size={12} depth={1} />
+        {children}
+      </div>
+    </FadeUp>
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   MAIN LANDING PAGE
+   ══════════════════════════════════════════════════ */
+export default function LandingPage() {
+  const [mounted,   setMounted]   = useState(false);
+  const [bootDone,  setBootDone]  = useState(false);
+  const [uiPhase,   setUiPhase]   = useState(0);
+  const theme = 'light' as const; // dark mode removed — platform is light-only now
+
+  useEffect(() => {
+    setMounted(true);
+    document.documentElement.setAttribute('data-theme', 'light');
+  }, []);
+
+  const handleBootComplete = useCallback((_elapsed: number) => {
+    setBootDone(true);
+    const timers = [
+      setTimeout(() => setUiPhase(1), 60),
+      setTimeout(() => setUiPhase(2), 180),
+      setTimeout(() => setUiPhase(3), 320),
+      setTimeout(() => setUiPhase(4), 440),
+      setTimeout(() => setUiPhase(5), 640),
+      setTimeout(() => setUiPhase(6), 800),
+      setTimeout(() => setUiPhase(7), 980),
+    ];
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  const xStyle = (phase: number, extraDelay = 0): React.CSSProperties => ({
+    opacity: uiPhase >= phase ? 1 : 0,
+    transform: uiPhase >= phase ? 'translateY(0) scale(1)' : 'translateY(14px) scale(0.99)',
+    transition: `opacity 0.55s cubic-bezier(0.25,0.1,0.25,1) ${extraDelay}ms,transform 0.55s cubic-bezier(0.25,0.1,0.25,1) ${extraDelay}ms`,
+  });
+
+  const alive = uiPhase >= 7;
+
+  return (
+    <div style={{ background:C.bg, minHeight:'100vh', position:'relative', overflowX:'hidden', transition:'background-color 300ms ease, color 300ms ease' }}>
+
+      {mounted && !bootDone && <ImageBootSequence onBootComplete={handleBootComplete} mode={theme} />}
+      {bootDone && <AmbientParticles mode={theme} />}
+
+      {/* NAVBAR */}
+      <nav style={{ position:'fixed', top:0, left:0, right:0, zIndex:200, padding:'36px 48px 0', ...xStyle(1) }}>
+        <div className="h-20" style={{
+          maxWidth:1100, margin:'0 auto', height:92,
+          display:'flex', alignItems:'center', justifyContent:'space-between',
+          background:C.panel, border:`1px solid ${C.border}`, padding:'0 28px',
+          boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 ${C.blueMid},3px 3px 0 rgba(0,0,0,0.28),4px 4px 0 rgba(0,0,0,0.14)`,
+          position:'relative',
+          clipPath: uiPhase >= 1 ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)',
+          transition:'clip-path 0.5s cubic-bezier(0.25,0.1,0.25,1), background-color 300ms ease, border-color 300ms ease',
+        }}>
+          <VoxelCorner pos="tl" size={12} color={C.blueAccent} depth={1} />
+          <VoxelCorner pos="tr" size={12} color={C.blueAccent} depth={1} />
+          <VoxelCorner pos="bl" size={8}  color={C.border} depth={1} />
+          <VoxelCorner pos="br" size={8}  color={C.border} depth={1} />
+
+          <Link href="/" className="flex items-center gap-3 h-full" style={{ display:'flex', alignItems:'center', gap:14, height:'100%', textDecoration:'none', flexShrink:0 }}>
+            <Image src="/nexyuva-light-logo.png" alt="NexYuva" width={247} height={64}
+              className="logo-dark-only h-16 w-auto object-contain shrink-0"
+              style={{ height:64, width:'auto', objectFit:'contain', flexShrink:0, }} priority />
+            <Image src="/nexyuva-light-logo.png" alt="NexYuva" width={247} height={64}
+              className="logo-light-only h-16 w-auto object-contain shrink-0"
+              style={{ height:64, width:'auto', objectFit:'contain', flexShrink:0 }} priority />
+          </Link>
+
+          <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+            {['Features','How It Works','For Companies','Ministry'].map(label => (
+              <a key={label} href={`#${label.toLowerCase().replace(/ /g,'-')}`}
+                style={{ padding:'8px 16px', color:C.muted, fontFamily:MONO, fontSize:13, fontWeight:500,
+                  textDecoration:'none', letterSpacing:'0.04em', textTransform:'uppercase', transition:'color 0.15s ease' }}
+                onMouseEnter={e=>{(e.currentTarget as HTMLAnchorElement).style.color=C.white;}}
+                onMouseLeave={e=>{(e.currentTarget as HTMLAnchorElement).style.color=C.muted;}}
+              >{label}</a>
+            ))}
+          </div>
+
+          <div style={{ display:'flex', gap:10, alignItems:'center' }}>
+            <Link href="/login" style={{ padding:'8px 16px', color:C.muted, fontFamily:MONO, fontSize:13,
+              fontWeight:500, textDecoration:'none', letterSpacing:'0.04em', textTransform:'uppercase', transition:'color 0.15s ease' }}
+              onMouseEnter={e=>{(e.currentTarget as HTMLAnchorElement).style.color=C.white;}}
+              onMouseLeave={e=>{(e.currentTarget as HTMLAnchorElement).style.color=C.muted;}}
+            >Sign In</Link>
+            <Link href="/register" className="vx-btn-blue" style={{
+              padding:'10px 22px', background:C.blue, color:'#fff',
+              fontFamily:MONO, fontSize:13, fontWeight:600, textDecoration:'none',
+              border:`1px solid ${C.blue}`, letterSpacing:'0.04em', textTransform:'uppercase',
+            }}>Get Started</Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <section style={{ minHeight:'100vh', display:'flex', alignItems:'center',
+        position:'relative', zIndex:1, padding:'140px 48px 100px' }}>
+        <div style={{ maxWidth:1100, margin:'0 auto', width:'100%',
+          display:'grid', gridTemplateColumns:'1fr 480px', gap:60, alignItems:'center' }}>
+
+          <div>
+            <div style={{
+              display:'inline-flex', alignItems:'center', gap:8,
+              padding:'5px 14px', border:`1px solid rgba(43,127,212,0.12)`,
+              background:'rgba(43,127,212,0.03)', marginBottom:40, ...xStyle(2),
+            }}>
+              <VxDot size={4} color={C.blue} />
+              <span style={{ fontFamily:MONO, fontSize:10, fontWeight:500, color:C.blue, letterSpacing:'0.08em', textTransform:'uppercase' }}>
+                Ministry of Labour & Employment
+              </span>
+            </div>
+
+            <h1 style={{ fontFamily:SERIF, fontSize:'clamp(50px,5.5vw,78px)', fontWeight:600,
+              lineHeight:1.04, color:C.white, marginBottom:28, ...xStyle(2,60) }}>
+              India&rsquo;s Youth,<br />
+              <em style={{ color:C.blue, fontStyle:'italic' }}>Limitlessly</em><br />
+              Placed.
+            </h1>
+
+            <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:28, ...xStyle(2,120) }}>
+              <PxRuler length={48} color="rgba(43,127,212,0.22)" />
+              <VxDot size={5} color="rgba(43,127,212,0.28)" />
+              <PxRuler length={22} color="rgba(43,127,212,0.16)" />
+            </div>
+
+            <p style={{ fontSize:16, color:C.muted, lineHeight:1.85, maxWidth:430,
+              fontFamily:SANS, marginBottom:48, ...xStyle(2,180) }}>
+              NexYuva uses AI to match students with top internships under the
+              <span style={{ color:C.white, fontWeight:500 }}> PM Internship Scheme</span> — with
+              explainable recommendations, skill gap analysis, and a personal AI career guide.
+            </p>
+
+            <div style={{ display:'flex', alignItems:'center', gap:16, flexWrap:'wrap', ...xStyle(3) }}>
+              <Link href="/register" className="vx-btn-blue" style={{
+                padding:'14px 32px', background:C.blue, color:'#fff',
+                fontFamily:MONO, fontSize:12, fontWeight:600, textDecoration:'none',
+                border:`1px solid ${C.blue}`, letterSpacing:'0.03em', textTransform:'uppercase',
+                display:'inline-flex', alignItems:'center', gap:10,
+              }}>Apply for Internship <span style={{fontSize:14}}>→</span></Link>
+              <Link href="/login" style={{
+                padding:'14px 28px', background:'transparent', color:C.muted,
+                fontFamily:MONO, fontSize:12, fontWeight:500, textDecoration:'none',
+                textTransform:'uppercase', border:`1px solid ${C.border}`,
+                boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 ${C.blueMid},3px 3px 0 rgba(0,0,0,0.16)`,
+                transition:'all 0.15s', letterSpacing:'0.03em',
+                display:'inline-flex', alignItems:'center', gap:8,
+              }}>Company Portal</Link>
+            </div>
+          </div>
+
+          <div style={{ position:'relative', paddingBottom:20, display:'flex', justifyContent:'center' }}>
+            <div style={{
+              position:'relative', width:480, maxWidth:'100%', aspectRatio:'1/1',
+              opacity: uiPhase >= 4 ? 1 : 0, transition:'opacity 0.5s ease',
+            }}>
+              {/* Blue circle + monument + tricolor wave, procedural (no raster asset) */}
+              <IndiaHeroArt />
+
+              {/* PM portrait, masked into the top of the circle so it blends into the art */}
+              <div style={{
+                position:'absolute', top:'6%', left:'50%', transform:'translateX(-50%)',
+                width:'54%', height:'62%', overflow:'hidden',
+                borderRadius:'50% 50% 42% 42% / 50% 50% 30% 30%',
+                opacity: uiPhase >= 5 ? 1 : 0, transition:'opacity 0.7s ease',
+                boxShadow:'0 12px 40px rgba(18,41,107,0.35)',
+              }}>
+                <Image src="/pm-hero.jpg" alt="PM Narendra Modi" fill priority
+                  sizes="(max-width: 768px) 100vw, 300px"
+                  style={{ objectFit:'cover', objectPosition:'center 22%' }} />
+                <div style={{
+                  position:'absolute', inset:0,
+                  background:'linear-gradient(180deg, rgba(18,41,107,0) 60%, rgba(18,41,107,0.55) 100%)',
+                }} />
+              </div>
+
+              {/* Floating feature badge card, bottom of the art — mirrors the target layout */}
+              <div style={{
+                position:'absolute', left:'6%', right:'6%', bottom:'2%',
+                background:'#fff', border:`1px solid ${C.border}`, borderRadius:14,
+                padding:'18px 20px', display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:'14px 18px',
+                boxShadow:'0 16px 40px rgba(18,41,107,0.16), 0 2px 6px rgba(0,0,0,0.06)',
+                opacity: uiPhase >= 6 ? 1 : 0, transform: uiPhase >= 6 ? 'translateY(0)' : 'translateY(10px)',
+                transition:'opacity 0.5s ease, transform 0.5s ease',
+              }}>
+                {[
+                  { icon:'🎯', label:'AI Matching', sub:'Smart recommendations', color:C.blue },
+                  { icon:'📈', label:'Skill Gap Analysis', sub:'Identify & improve', color:C.orange },
+                  { icon:'💬', label:'AI Career Guide', sub:'Your personal mentor', color:C.blue },
+                  { icon:'✅', label:'Govt. Approved', sub:'Secure & official', color:'#2D7A5F' },
+                ].map(b => (
+                  <div key={b.label} style={{ display:'flex', alignItems:'flex-start', gap:8 }}>
+                    <span style={{ fontSize:16, lineHeight:1, flexShrink:0 }}>{b.icon}</span>
+                    <div style={{ minWidth:0 }}>
+                      <div style={{ fontFamily:SANS, fontSize:12, fontWeight:700, color:'#111', lineHeight:1.3 }}>{b.label}</div>
+                      <div style={{ fontFamily:SANS, fontSize:10.5, color:'#666', lineHeight:1.3 }}>{b.sub}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* STATISTICS */}
+      <section style={{ position:'relative', zIndex:1, padding:'0 48px 120px', ...xStyle(6) }}>
+        <div style={{ maxWidth:1100, margin:'0 auto' }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20, opacity:0.6 }}>
+            <span style={{ fontFamily:MONO, fontSize:9, color:C.muted, letterSpacing:'0.12em', textTransform:'uppercase' }}>// SYS.02_METRICS</span>
+            <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+              <PxRuler length={40} color="rgba(43,127,212,0.15)" />
+              <VxDot size={3} color={C.blue} />
+            </div>
+          </div>
+
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:16 }}>
+          {[
+            {target:10, suffix:'L+',  label:'Students Onboarded'},
+            {target:15, suffix:'K+',  label:'Internships Available'},
+            {target:500,suffix:'+',   label:'Partner Companies'},
+            {target:100,suffix:'%',   label:'Government Approved'},
+          ].map((s,i)=>(
+            <div key={s.label} style={{
+              position:'relative', background:C.panel,
+              border:`1px solid ${C.border}`, padding:'36px 24px', textAlign:'center',
+              boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 ${C.blueMid},3px 3px 0 rgba(0,0,0,0.26),4px 4px 0 rgba(0,0,0,0.13)`,
+              animation: alive ? `breathe ${7+i}s cubic-bezier(0.37,0,0.63,1) ${i*0.6}s infinite` : 'none',
+            }}>
+              <VoxelCorner pos="tl" size={12} color={C.blueAccent} depth={1} />
+              <VoxelCorner pos="br" size={8}  color="rgba(232,230,225,0.06)" depth={1} />
+              <div style={{ fontFamily:SERIF, fontSize:28, fontWeight:600, color:C.white, lineHeight:1.2, marginBottom:10 }}>
+                <CountUp target={s.target} suffix={s.suffix} />
+              </div>
+              <div style={{ fontFamily:MONO, fontSize:9, color:C.muted, letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:12 }}>{s.label}</div>
+              <div style={{ width:20, height:2, background:C.blueAccent, margin:'0 auto', boxShadow:`1px 1px 0 ${C.blueDeep}` }} />
+            </div>
+          ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURES */}
+      <section id="features" style={{ position:'relative', zIndex:1, padding:'0 48px 140px' }}>
+        <div style={{ maxWidth:1100, margin:'0 auto' }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:32, opacity:0.5 }}>
+            <span style={{ fontFamily:MONO, fontSize:9, color:C.muted, letterSpacing:'0.12em', textTransform:'uppercase' }}>// SYS.03_CAPABILITIES</span>
+            <PxRuler length={120} color="rgba(43,127,212,0.15)" />
+          </div>
+
+          <FadeUp>
+            <div style={{ marginBottom:72 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:24 }}>
+                <PxRuler length={28} color={C.blueAccent} />
+                <span style={{ fontFamily:MONO, fontSize:10, fontWeight:500, color:C.blue, letterSpacing:'0.08em',
+                  textTransform:'uppercase', padding:'4px 14px', border:`1px solid rgba(43,127,212,0.12)`,
+                  background:'rgba(43,127,212,0.02)', boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 rgba(0,0,0,0.20)` }}>Platform Modules</span>
+              </div>
+              <h2 style={{ fontFamily:SERIF, fontSize:52, fontWeight:600, color:C.white, lineHeight:1.08, marginBottom:16 }}>
+                Intelligent matching,<br /><em style={{ color:C.blue, fontStyle:'italic' }}>finally</em> done right.
+              </h2>
+              <p style={{ fontSize:15, color:C.muted, fontFamily:SANS, maxWidth:400, lineHeight:1.8 }}>Every recommendation is explainable. Every match is meaningful.</p>
+            </div>
+          </FadeUp>
+
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:18 }}>
+            {[
+              {icon:ICONS.brain,   title:'AI Skill Matching',  desc:'ML engine analyzing 40+ signals — skills, location, domain, academic background — for the most relevant internships.', delay:0,   accent:C.blueAccent},
+              {icon:ICONS.target,  title:'Explainable AI',     desc:'Every match includes a clear reason. Students see exactly which skills helped them qualify and what they need to grow.', delay:80,  accent:C.orangeAccent},
+              {icon:ICONS.chart,   title:'Skill Gap Analysis', desc:'Personalized learning roadmap updated in real time as your profile evolves, guided by live industry demand signals.', delay:160, accent:"rgba(232,230,225,0.10)"},
+              {icon:ICONS.diamond, title:'Career AI Guide',    desc:'Ask anything — from resume tips to interview prep. Our RAG-powered AI gives contextual guidance for your target role.', delay:0,   accent:C.blueAccent},
+              {icon:ICONS.shield,  title:'Ministry Dashboard', desc:'Real-time national analytics — state-wise placements, Tier-2/3 equity metrics, scheme ROI at a glance.', delay:80,  accent:C.orangeAccent},
+              {icon:ICONS.grid,    title:'Company Portal',     desc:'AI-ranked candidates, smart filtering, one-click shortlisting. Find the right intern in minutes, not days.', delay:160, accent:"rgba(232,230,225,0.10)"},
+            ].map(f=>{
+              const ic = f.accent.includes('43,127,212')?C.blue:f.accent.includes('43,127,212')?C.orange:C.white;
+              return (
+                <VxCard key={f.title} delay={f.delay} accentColor={f.accent}>
+                  <div style={{ padding:'40px 32px' }}>
+                    <div style={{ width:48, height:48, border:`1px solid ${f.accent}`, background:f.accent.replace(/[\d.]+\)$/,'0.05)'),
+                      display:'flex', alignItems:'center', justifyContent:'center', marginBottom:24,
+                      boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 rgba(0,0,0,0.28)` }}>
+                      <VxIcon pattern={f.icon} color={ic} size={3} />
+                    </div>
+                    <h3 style={{ fontFamily:SERIF, fontSize:22, fontWeight:600, color:C.white, marginBottom:12, lineHeight:1.25 }}>{f.title}</h3>
+                    <p style={{ fontSize:14, color:C.muted, lineHeight:1.8, fontFamily:SANS }}>{f.desc}</p>
+                    <div style={{ marginTop:24 }}><PxRuler length={36} color={f.accent} /></div>
+                  </div>
+                </VxCard>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section id="how-it-works" style={{ position:'relative', zIndex:1, padding:'0 48px 140px' }}>
+        <div style={{ maxWidth:900, margin:'0 auto' }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:32, opacity:0.5 }}>
+            <span style={{ fontFamily:MONO, fontSize:9, color:C.muted, letterSpacing:'0.12em', textTransform:'uppercase' }}>// SYS.04_WORKFLOW</span>
+            <PxRuler length={100} color="rgba(43,127,212,0.15)" />
+          </div>
+
+          <FadeUp>
+            <div style={{ textAlign:'center', marginBottom:72 }}>
+              <h2 style={{ fontFamily:SERIF, fontSize:52, fontWeight:600, color:C.white, marginBottom:20 }}>
+                Three steps to your<br /><em style={{ color:C.blue, fontStyle:'italic' }}>perfect internship</em>.
+              </h2>
+              <div style={{ display:'flex', justifyContent:'center' }}><PxRuler length={60} color={C.blueAccent} /></div>
+            </div>
+          </FadeUp>
+
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:18 }}>
+            {[
+              {step:'01', title:'Build Your Profile', desc:'Enter skills, education, domain preference and location. The AI creates your opportunity fingerprint.', color:C.blue},
+              {step:'02', title:'Get AI Matches',     desc:'NexYuva ranks thousands of internships and shows your top matches with scores, explained in plain language.', color:C.orange},
+              {step:'03', title:'Apply & Grow',       desc:'Apply in one click, track your pipeline, and follow your personalised skill roadmap to land the role.', color:C.white},
+            ].map((s,i)=>(
+              <FadeUp key={s.step} delay={i*100}>
+                <div style={{ position:'relative', background:C.panel, border:`1px solid ${C.border}`,
+                  borderTop:`2px solid ${s.color}20`, padding:'40px 28px',
+                  boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 ${C.blueMid},3px 3px 0 rgba(0,0,0,0.24)` }}>
+                  <VoxelCorner pos="tl" color={`${s.color}28`} size={14} depth={1} />
+                  <VoxelCorner pos="br" color={`${s.color}14`} size={10} depth={1} />
+                  <div style={{ fontFamily:SERIF, fontSize:56, fontWeight:300, color:`${s.color}08`, lineHeight:1, marginBottom:20, userSelect:'none' }}>{s.step}</div>
+                  <div style={{ width:8, height:8, background:s.color, marginBottom:16, boxShadow:'1px 1px 0 rgba(0,0,0,0.50),2px 2px 0 rgba(0,0,0,0.28)' }} />
+                  <h3 style={{ fontFamily:SERIF, fontSize:22, fontWeight:600, color:C.white, marginBottom:12 }}>{s.title}</h3>
+                  <p style={{ fontSize:14, color:C.muted, lineHeight:1.8, fontFamily:SANS }}>{s.desc}</p>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section style={{ position:'relative', zIndex:1, padding:'0 48px 140px' }}>
+        <div style={{ maxWidth:1100, margin:'0 auto' }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:32, opacity:0.5 }}>
+            <span style={{ fontFamily:MONO, fontSize:9, color:C.muted, letterSpacing:'0.12em', textTransform:'uppercase' }}>// SYS.05_TESTIMONIALS</span>
+            <PxRuler length={100} color="rgba(43,127,212,0.15)" />
+          </div>
+
+          <FadeUp>
+            <div style={{ textAlign:'center', marginBottom:72 }}>
+              <h2 style={{ fontFamily:SERIF, fontSize:52, fontWeight:600, color:C.white, marginBottom:16 }}>
+                What India&rsquo;s youth<br /><em style={{ color:C.blue, fontStyle:'italic' }}>is saying</em>.
+              </h2>
+              <div style={{ display:'flex', justifyContent:'center' }}><PxRuler length={60} color="rgba(43,127,212,0.14)" /></div>
+            </div>
+          </FadeUp>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:18 }}>
+            {[
+              {q:'Build a complete profile with your skills, location preference, and work mode to get matched instantly.',name:'Student Onboarding', role:'Register & Apply',init:'S',delay:0},
+              {q:'Companies post real opportunities with exact stipend, duration, and skill requirements for top talent.',name:'Employer Posting',  role:'Hire Interns',      init:'E',delay:100},
+              {q:'Real-time transparent recommendations with skill gap analysis to prepare you for your dream role.',name:'AI Match Engine',  role:'Smart Evaluation', init:'A',delay:200},
+            ].map(t=>(
+              <FadeUp key={t.name} delay={t.delay}>
+                <div style={{ position:'relative', background:C.panel, border:`1px solid ${C.border}`, padding:'36px 28px', height:'100%',
+                  boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 ${C.blueMid},3px 3px 0 rgba(0,0,0,0.24)` }}>
+                  <VoxelCorner pos="tl" color={C.blueAccent} size={14} depth={1} />
+                  <VoxelCorner pos="br" color={C.blueAccent} size={10} depth={1} />
+                  <div style={{ fontFamily:SERIF, fontSize:60, fontWeight:300, color:'rgba(43,127,212,0.06)', lineHeight:0.7, marginBottom:16, userSelect:'none' }}>&ldquo;</div>
+                  <p style={{ fontFamily:SERIF, fontSize:17, fontStyle:'italic', color:C.white, lineHeight:1.8, marginBottom:24 }}>{t.q}</p>
+                  <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                    <div style={{ width:36, height:36, background:C.blueDim, border:`1px solid ${C.blueAccent}`,
+                      display:'flex', alignItems:'center', justifyContent:'center', color:C.blue, fontWeight:600,
+                      fontSize:14, fontFamily:SERIF, boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 rgba(0,0,0,0.28)` }}>{t.init}</div>
+                    <div>
+                      <div style={{ fontWeight:600, fontSize:13, color:C.white }}>{t.name}</div>
+                      <div style={{ fontSize:11, color:C.muted, marginTop:2, fontFamily:MONO }}>{t.role}</div>
+                    </div>
+                  </div>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FOR COMPANIES */}
+      <section id="for-companies" style={{ position:'relative', zIndex:1, padding:'0 48px 140px' }}>
+        <div style={{ maxWidth:1100, margin:'0 auto' }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:32, opacity:0.5 }}>
+            <span style={{ fontFamily:MONO, fontSize:9, color:C.muted, letterSpacing:'0.12em', textTransform:'uppercase' }}>// SYS.06_ENTERPRISE</span>
+            <PxRuler length={100} color="rgba(43,127,212,0.15)" />
+          </div>
+
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:100, alignItems:'center' }}>
+          <FadeUp>
+            <div>
+              <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:28 }}>
+                <PxRuler length={20} color={C.blueAccent} />
+                <span style={{ fontFamily:MONO, fontSize:10, fontWeight:500, color:C.blue, letterSpacing:'0.08em',
+                  textTransform:'uppercase', padding:'4px 14px', border:`1px solid rgba(43,127,212,0.15)`,
+                  background:'rgba(43,127,212,0.02)', boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 rgba(0,0,0,0.18)` }}>Employer Platform</span>
+              </div>
+              <h2 style={{ fontFamily:SERIF, fontSize:48, fontWeight:600, color:C.white, lineHeight:1.08, marginBottom:24 }}>
+                Find the right intern.<br />Not just <em style={{ color:C.blue, fontStyle:'italic' }}>any</em> intern.
+              </h2>
+              <div style={{ marginBottom:28 }}><PxRuler length={60} color="rgba(43,127,212,0.16)" /></div>
+              <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, marginBottom:40, maxWidth:420, fontFamily:SANS }}>
+                Post opportunities and receive AI-ranked candidates scored specifically against your requirements. Cut sourcing time by 80%.
+              </p>
+              <Link href="/company/dashboard" className="vx-btn-blue" style={{
+                padding:'13px 28px', background:C.blue, color:C.bg,
+                fontFamily:MONO, fontSize:11, fontWeight:700, textDecoration:'none',
+                border:`1px solid ${C.blue}`, letterSpacing:'0.03em', textTransform:'uppercase',
+                display:'inline-flex', alignItems:'center', gap:8,
+              }}>Access Company Portal →</Link>
+            </div>
+          </FadeUp>
+
+          <FadeUp delay={150}>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14 }}>
+              {[
+                {label:'Instant Ranking',val:'AI Engine', color:C.blue},
+                {label:'Smart Sourcing',val:'Filters',  color:C.blue},
+                {label:'Direct Hiring',  val:'No Agency',color:C.blue},
+                {label:'Official Scheme',val:'Compliant',color:C.blue},
+              ].map(m=>(
+                <div key={m.label} style={{ position:'relative', background:C.panel,
+                  border:`1px solid ${C.border}`, borderTop:`2px solid ${m.color}22`, padding:'28px 20px',
+                  boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 ${C.blueMid},3px 3px 0 rgba(0,0,0,0.20)` }}>
+                  <VoxelCorner pos="tl" color={`${m.color}22`} size={10} depth={1} />
+                  <div style={{ fontFamily:SERIF, fontSize:22, fontWeight:700, color:m.color, lineHeight:1.2, marginBottom:8, textShadow:'1px 1px 0 rgba(0,0,0,0.40)' }}>{m.val}</div>
+                  <div style={{ fontFamily:MONO, fontSize:9, color:C.muted, letterSpacing:'0.06em', textTransform:'uppercase' }}>{m.label}</div>
+                </div>
+              ))}
+            </div>
+          </FadeUp>
+          </div>
+        </div>
+      </section>
+
+      {/* MINISTRY MODULE */}
+      <section id="ministry" style={{ position:'relative', zIndex:1, padding:'0 48px 140px' }}>
+        <div style={{ maxWidth:880, margin:'0 auto', textAlign:'center' }}>
+          <FadeUp>
+            <div style={{ position:'relative', background:C.panel, border:`1px solid rgba(43,127,212,0.07)`,
+              boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 ${C.blueMid},3px 3px 0 ${C.blueDark},4px 4px 0 #0a1e38,5px 5px 0 rgba(0,0,0,0.28),6px 6px 0 rgba(0,0,0,0.14),7px 7px 0 rgba(0,0,0,0.07)`,
+              padding:'88px 64px', overflow:'hidden' }}>
+              <Image src="/black-mode.png" alt="" fill className="hero-bg-dark-only" style={{ objectFit:'cover', zIndex:0, pointerEvents:'none' }} />
+              <Image src="/white-mode.png" alt="" fill className="hero-bg-light-only" style={{ objectFit:'cover', zIndex:0, pointerEvents:'none' }} />
+
+              <div style={{ position:'relative', zIndex:1 }}>
+              <VoxelCorner pos="tl" size={22} color={C.blueAccent}   depth={3} />
+              <VoxelCorner pos="tr" size={16} color={C.blueAccent}   depth={2} />
+              <VoxelCorner pos="bl" size={16} color={C.orangeAccent} depth={2} />
+              <VoxelCorner pos="br" size={22} color={C.orangeAccent} depth={3} />
+
+              <div style={{ display:'flex', justifyContent:'center', gap:8, marginBottom:40 }}>
+                {[C.blue,C.orange,C.white,C.orange,C.blue].map((c,i)=>(
+                  <div key={i} style={{ width:5, height:5, background:c, opacity:0.30, boxShadow:'1px 1px 0 rgba(0,0,0,0.50)' }} />
+                ))}
+              </div>
+
+              <h2 style={{ fontFamily:SERIF, fontSize:52, fontWeight:600, color:C.white, lineHeight:1.08, marginBottom:24 }}>
+                Backed by India&rsquo;s<br /><em style={{ color:C.orange, fontStyle:'italic' }}>PM Internship Scheme</em>.
+              </h2>
+              <p style={{ fontSize:15, color:C.muted, lineHeight:1.85, maxWidth:460, margin:'0 auto 52px', fontFamily:SANS }}>
+                A national initiative under the Ministry of Labour & Employment, empowering one crore youth through structured internships with India&rsquo;s top companies.
+              </p>
+
+              <div style={{ display:'flex', justifyContent:'center', gap:16, flexWrap:'wrap' }}>
+                <Link href="/register" className="vx-btn-blue" style={{
+                  padding:'13px 28px', background:C.white, color:C.bg,
+                  fontFamily:MONO, fontSize:11, fontWeight:700, textDecoration:'none',
+                  border:`1px solid ${C.white}`, letterSpacing:'0.03em', textTransform:'uppercase',
+                }}>Apply as Student</Link>
+                <Link href="/admin/dashboard" style={{
+                  padding:'13px 28px', background:'transparent', color:C.muted,
+                  fontFamily:MONO, fontSize:11, fontWeight:500, textDecoration:'none',
+                  textTransform:'uppercase', border:`1px solid ${C.borderHover}`,
+                  boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 ${C.blueMid},3px 3px 0 rgba(0,0,0,0.16)`,
+                  transition:'all 0.15s', letterSpacing:'0.03em',
+                }}>Ministry Dashboard →</Link>
+              </div>
+              </div>
+            </div>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer style={{ position:'relative', zIndex:1, padding:'0 48px 60px' }}>
+        <div style={{ maxWidth:1100, margin:'0 auto' }}>
+          <div style={{ position:'relative', background:C.panel, border:`1px solid ${C.border}`,
+            boxShadow:`1px 1px 0 ${C.blueDeep},2px 2px 0 ${C.blueMid},3px 3px 0 rgba(0,0,0,0.24),4px 4px 0 rgba(0,0,0,0.12)`,
+            padding:'52px 44px' }}>
+            <VoxelCorner pos="tl" size={14} color={C.blueAccent}   depth={2} />
+            <VoxelCorner pos="br" size={14} color={C.orangeAccent} depth={2} />
+
+            <div className="footer-grid" style={{ display:'grid', gridTemplateColumns:'minmax(220px,2fr) repeat(3, minmax(140px,1fr))', gap:40, marginBottom:44 }}>
+              <div style={{ minWidth:0 }}>
+                <Link href="/" className="flex items-center gap-3" style={{ display:'inline-flex', alignItems:'center', gap:14, textDecoration:'none', marginBottom:18 }}>
+                  <Image src="/nexyuva-light-logo.png" alt="NexYuva" width={170} height={44}
+                    className="logo-dark-only h-11 w-auto object-contain shrink-0"
+                    style={{ height:44, width:'auto', objectFit:'contain', flexShrink:0, }} priority />
+                  <Image src="/nexyuva-light-logo.png" alt="NexYuva" width={170} height={44}
+                    className="logo-light-only h-11 w-auto object-contain shrink-0"
+                    style={{ height:44, width:'auto', objectFit:'contain', flexShrink:0 }} priority />
+                </Link>
+                <p style={{ fontSize:13, color:C.mutedSoft, lineHeight:1.75, maxWidth:260, marginBottom:0, fontFamily:SANS }}>
+                  India&rsquo;s AI-powered internship platform under the PM Internship Scheme.
+                </p>
+                <div style={{ display:'flex', gap:4, marginTop:18 }}>
+                  {[C.blue,C.blueDeep,C.orange,C.white,C.charcoal].map((c,i)=>(
+                    <div key={i} style={{ width:5, height:5, background:c, boxShadow:'1px 1px 0 rgba(0,0,0,0.50)' }} />
+                  ))}
+                </div>
+              </div>
+              {[
+                {heading:'Platform',links:['For Students','For Companies','AI Features','Skill Analysis']},
+                {heading:'Ministry',links:['About the Scheme','Analytics','State Reports','Contact']},
+                {heading:'Legal',   links:['Privacy Policy','Terms of Service','Data Security','Grievance']},
+              ].map(col=>(
+                <div key={col.heading}>
+                  <h4 style={{ fontFamily:MONO, fontSize:9, fontWeight:600, letterSpacing:'0.10em', textTransform:'uppercase',
+                    color:C.muted, marginBottom:16, paddingBottom:8, borderBottom:`1px solid ${C.border}` }}>{col.heading}</h4>
+                  {col.links.map(l=>(
+                    <a key={l} href="#" style={{ display:'block', fontSize:13, color:C.mutedSoft, marginBottom:8,
+                      textDecoration:'none', transition:'color 0.15s', fontFamily:SANS }}>{l}</a>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div style={{ borderTop:`1px solid ${C.border}`, paddingTop:20, display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:8 }}>
+              <p style={{ fontFamily:MONO, fontSize:10, color:C.mutedSoft }}>
+                © 2025 NexYuva · Ministry of Labour & Employment, Government of India
+              </p>
+              <div style={{ display:'flex', gap:5, alignItems:'center' }}>
+                <VxDot size={3} color="rgba(43,127,212,0.20)" />
+                <VxDot size={3} color="rgba(43,127,212,0.20)" />
+                <VxDot size={3} color="rgba(232,230,225,0.07)" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  );
+}

@@ -1,0 +1,13 @@
+[
+  {"id": "da_e1", "difficulty": "easy", "question": "Which library is most commonly used for dataframes in Python?", "options": ["numpy", "pandas", "matplotlib", "requests"], "correct_index": 1},
+  {"id": "da_e2", "difficulty": "easy", "question": "What does SQL's GROUP BY clause do?", "options": ["Sorts rows", "Filters rows", "Groups rows sharing a value for aggregation", "Joins two tables"], "correct_index": 2},
+  {"id": "da_e3", "difficulty": "easy", "question": "What is the mean of [2, 4, 6, 8]?", "options": ["4", "5", "6", "20"], "correct_index": 1},
+  {"id": "da_e4", "difficulty": "easy", "question": "Which chart type best shows a trend over time?", "options": ["Pie chart", "Line chart", "Scatter plot", "Bar chart"], "correct_index": 1},
+  {"id": "da_m1", "difficulty": "medium", "question": "What does a p-value below 0.05 typically suggest?", "options": ["The null hypothesis is definitely true", "Statistically significant evidence against the null hypothesis", "The sample size is too small", "There is no correlation"], "correct_index": 1},
+  {"id": "da_m2", "difficulty": "medium", "question": "What is the primary purpose of normalization in a dataset?", "options": ["Remove duplicates", "Scale features to a comparable range", "Increase row count", "Encrypt data"], "correct_index": 1},
+  {"id": "da_m3", "difficulty": "medium", "question": "Which SQL join returns only matching rows from both tables?", "options": ["LEFT JOIN", "RIGHT JOIN", "INNER JOIN", "FULL OUTER JOIN"], "correct_index": 2},
+  {"id": "da_m4", "difficulty": "medium", "question": "What does a correlation coefficient close to 0 indicate?", "options": ["Strong positive relationship", "Strong negative relationship", "Little to no linear relationship", "Perfect causation"], "correct_index": 2},
+  {"id": "da_h1", "difficulty": "hard", "question": "What is multicollinearity in regression?", "options": ["When residuals are non-normal", "When predictor variables are highly correlated with each other", "When the sample size is too large", "When the target variable is categorical"], "correct_index": 1},
+  {"id": "da_h2", "difficulty": "hard", "question": "Which technique helps address class imbalance in a classification dataset?", "options": ["Increasing learning rate", "SMOTE oversampling", "Removing all outliers", "Reducing feature count to 1"], "correct_index": 1},
+  {"id": "da_h3", "difficulty": "hard", "question": "What does the curse of dimensionality refer to?", "options": ["Too few features to model anything", "Data becoming sparse and distances less meaningful as dimensions increase", "SQL query complexity", "Overfitting only in decision trees"], "correct_index": 1}
+]

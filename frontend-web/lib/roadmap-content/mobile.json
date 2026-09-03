@@ -1,0 +1,267 @@
+{
+  "Kotlin or Swift": {
+    "description": "Kotlin is a concise, multi-platform, and fun language developed by JetBrains. Learn how to use Kotlin for Android, server-side, and cross-platform development, and explore its features, news, and community. Kotlin is a statically-typed programming language that runs on the Java Virtual Machine (JVM) and can be used to develop all types of Android apps. It is Google's preferred language for Android app development.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit the Dedicaated Kotlin Roadmap",
+        "url": "https://roadmap.sh/kotlin"
+      },
+      {
+        "type": "official",
+        "label": "Kotlin",
+        "url": "https://kotlinlang.org/"
+      },
+      {
+        "type": "official",
+        "label": "Kotlin Docs",
+        "url": "https://kotlinlang.org/docs/getting-started.html"
+      }
+    ],
+    "sourceSlug": "basics-of-kotlin"
+  },
+  "Or: Dart / JavaScript": {
+    "description": "Dart is an open-source, general-purpose, object-oriented programming language with C-style syntax developed by Google in 2011. The purpose of Dart programming is to create a frontend user interfaces for the web and mobile apps. It can also be used to build server and desktop applications.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Dart Overview",
+        "url": "https://dart.dev/overview"
+      },
+      {
+        "type": "video",
+        "label": "What is Dart?",
+        "url": "https://www.youtube.com/watch?v=sOSd6G1qXoY"
+      },
+      {
+        "type": "video",
+        "label": "Dart in 100 Seconds",
+        "url": "https://www.youtube.com/watch?v=NrO0CJCbYLA"
+      },
+      {
+        "type": "feed",
+        "label": "Explore top posts about Dart",
+        "url": "https://app.daily.dev/tags/dart?ref=roadmapsh"
+      }
+    ],
+    "sourceSlug": "flutter/basics-of-dart"
+  },
+  "Git & GitHub": {
+    "description": "`Git` is a highly efficient and flexible distributed version control system that was created by **Linus Torvalds**, the creator of Linux. It allows multiple developers to work on a project concurrently, providing tools for non-linear development and tracking changes in any set of files. Git has a local repository with a complete history and version-tracking capabilities, allowing offline operations, unlike SVN. It ensures data integrity and provides strong support for non-linear development with features such as branching and merging.",
+    "resources": [
+      {
+        "type": "roadmap",
+        "label": "Visit the Dedicated Git and GitHub Roadmap",
+        "url": "https://roadmap.sh/git-github"
+      },
+      {
+        "type": "course",
+        "label": "Why use Git? (Interactive Lesson)",
+        "url": "https://inter-git.com/lessons/introduction"
+      },
+      {
+        "type": "article",
+        "label": "Git by Example - Learn Version Control with Bite-sized Lessons",
+        "url": "https://antonz.org/git-by-example/"
+      },
+      {
+        "type": "video",
+        "label": "Git & GitHub Crash Course For Beginners",
+        "url": "https://www.youtube.com/watch?v=vA5TTz6BXhY"
+      }
+    ],
+    "sourceSlug": "git"
+  },
+  "UI Fundamentals": {
+    "description": "The fundamentals cover the core programming and tooling concepts needed before building Android apps. This includes understanding Kotlin or Java basics, object-oriented programming principles, data structures and algorithms, Gradle as the build system, and how to set up a working development environment.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "The Fundamentals",
+        "url": "https://developer.android.com/guide/components/fundamentals"
+      }
+    ],
+    "sourceSlug": "android/the-fundamentals"
+  },
+  "A Framework": {
+    "description": "React Native is a popular open-source framework developed by Facebook for building mobile applications using JavaScript (or TypeScript) and React. It enables developers to build native mobile apps for iOS and Android platforms using a single codebase, which significantly speeds up development without compromising on the performance and usability of the apps. With React Native, you write components with JSX, a syntax that combines JavaScript and XML. These components can map to native UI elements like views, text, images, and more.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Getting Started with React Native",
+        "url": "https://reactnative.dev/docs/getting-started"
+      }
+    ],
+    "sourceSlug": "react-native/what-is-react-native"
+  },
+  "Local Storage": {
+    "description": "On Android devices, storage refers to where your data such as apps, photos, videos, and music are saved. It can be categorized into two types: internal and external storage. Internal Storage is where data is stored that's tied directly to your app. This data is private by default and not accessible by other apps. External Storage, on the other hand, is a shared space where all apps can read and write data. It can be further sub-categorized into Public and Private directories. Public directories are shared among all apps while private directories are specific to your app but can be accessed by other apps if they have the appropriate permissions.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Storage",
+        "url": "https://developer.android.com/guide/topics/data/data-storage"
+      }
+    ],
+    "sourceSlug": "storage"
+  },
+  "REST APIs": {
+    "description": "REST, or REpresentational State Transfer, is an architectural style for providing standards between computer systems on the web, making it easier for systems to communicate with each other.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is a REST API?",
+        "url": "https://www.redhat.com/en/topics/api/what-is-a-rest-api"
+      },
+      {
+        "type": "article",
+        "label": "Roy Fieldings dissertation chapter, Representational State Transfer (REST)",
+        "url": "https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm"
+      },
+      {
+        "type": "article",
+        "label": "Learn REST: A RESTful Tutorial",
+        "url": "https://restapitutorial.com/"
+      }
+    ],
+    "sourceSlug": "flutter/restful-apis"
+  },
+  "State Management": {
+    "description": "ViewModel state refers to the data held within a ViewModel class that persists across configuration changes, such as screen rotations. It allows your UI data to survive these changes, preventing the need to re-fetch or re-create it every time the activity or fragment is recreated. This data is typically observed by the UI, which updates itself automatically whenever the state changes, ensuring a consistent user experience. MVVM (Model-View-ViewModel) is an architectural pattern that separates the UI layer (View) from the business logic and state layer (ViewModel). The ViewModel exposes state and events, and the View observes and renders them reactively. Google recommends MVVM for Android apps and provides official support through ViewModel, LiveData, and StateFlow.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "ViewModel and State in Compose",
+        "url": "https://developer.android.com/codelabs/basic-android-kotlin-compose-viewmodel-and-state#0"
+      },
+      {
+        "type": "article",
+        "label": "Compose State vs ViewModel: Complete Android Developer Guide 2025",
+        "url": "https://www.brahimoubbad.com/2025/05/compose-state-vs-viewmodel-complete.html"
+      },
+      {
+        "type": "official",
+        "label": "Android Developers: View Model",
+        "url": "https://developer.android.com/topic/libraries/architecture/viewmodel"
+      },
+      {
+        "type": "article",
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel"
+      }
+    ],
+    "sourceSlug": "android/viewmodel-state, android/mvvm"
+  },
+  "Firebase": {
+    "description": "Firebase Distribution is a development tool within the Google Firebase suite that allows you to share pre-release versions of your Android apps with your development team. It enables you to distribute your app binaries to multiple testers and teams to get feedback before the app's official launch. Firebase Distribution supports both Android and iOS applications and works in tandem with other features, like Firebase Crashlytics, to effectively manage the testing and debugging aspects of your application's lifecycle.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Firebase Distribution",
+        "url": "https://firebase.google.com/docs/app-distribution"
+      }
+    ],
+    "sourceSlug": "firebase-distribution"
+  },
+  "Testing": {
+    "description": "Testing in Android ensures that app code behaves correctly and that UI interactions work as expected. JUnit is used for unit testing business logic, while Espresso handles UI testing by simulating user interactions on a device or emulator.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Testing",
+        "url": "https://developer.android.com/training/testing"
+      }
+    ],
+    "sourceSlug": "testing"
+  },
+  "Performance": {
+    "description": "Performance is a crucial aspect of any application, and React Native is no exception. Optimizing performance in your React Native apps will not only lead to a better user experience but also lessen the load on device resources.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Performance",
+        "url": "https://reactnative.dev/docs/performance"
+      }
+    ],
+    "sourceSlug": "react-native/performance"
+  },
+  "Offline-First Design": {
+    "description": "Flutter provides several options for persistent storage, some of which are as follow: *   SharedPreferences: A key-value store for small data. *   SQLite database: A relational database for structured data. *   File System: For storing large files and data. *   Firebase: A real-time database and backend as a service. All of these storage options are supported through third-party packages, which are easily integrated into a Flutter app.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Cloud Storage in Flutter",
+        "url": "https://firebase.flutter.dev/docs/storage/overview/"
+      },
+      {
+        "type": "video",
+        "label": "Storage - Flutter Tutorial",
+        "url": "https://www.youtube.com/watch?v=UpKrhZ0Hppks"
+      },
+      {
+        "type": "feed",
+        "label": "Explore top posts about Storage",
+        "url": "https://app.daily.dev/tags/storage?ref=roadmapsh"
+      }
+    ],
+    "sourceSlug": "flutter/storage"
+  },
+  "CI/CD for Mobile": {
+    "description": "CI/CD (Continuous Integration and Continuous Deployment) is a software development practice that helps to automate the process of building, testing, and deploying mobile apps, including Flutter apps. With CI/CD, developers can automate the build, test, and deployment process for their Flutter apps, making it easier to catch bugs and deploy new features quickly and efficiently.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "CI/CD - Flutter",
+        "url": "https://docs.flutter.dev/deployment/cd"
+      },
+      {
+        "type": "feed",
+        "label": "Explore top posts about CI/CD",
+        "url": "https://app.daily.dev/tags/cicd?ref=roadmapsh"
+      }
+    ],
+    "sourceSlug": "flutter/ci--cd"
+  },
+  "App Store Publishing": {
+    "description": "The Google Play Store is an online store for Android apps, games, and other digital content. It is operated by Google and is the official app store for Android devices.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "Build and Release an Android App",
+        "url": "https://docs.flutter.dev/deployment/android"
+      },
+      {
+        "type": "article",
+        "label": "Publish your App - Android Developer",
+        "url": "https://developer.android.com/studio/publish"
+      },
+      {
+        "type": "article",
+        "label": "Publishing Flutter App To PlayStore",
+        "url": "https://medium.flutterdevs.com/publishing-flutter-app-to-playstore-fa7543b61a7b"
+      }
+    ],
+    "sourceSlug": "flutter/appstore, flutter/playstore"
+  },
+  "Deep Linking": {
+    "description": "Deep linking in React Native allows your app to open and navigate to a specific screen or content when a user clicks on a URL or a custom URI scheme. It essentially creates a direct pathway into a particular section of your application, bypassing the typical app launch sequence and providing a more seamless user experience. This is useful for scenarios like opening a product page from a marketing email or directing users to a specific profile from a shared link.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Understanding deep linking in React Native",
+        "url": "https://blog.logrocket.com/understanding-deep-linking-in-react-native/"
+      },
+      {
+        "type": "article",
+        "label": "Deep Linking in React Native: Navigating to Specific App Screens",
+        "url": "https://clouddevs.com/react-native/deep-linking/"
+      },
+      {
+        "type": "article",
+        "label": "A Complete Guide to Deep Linking with Custom domain in React Native",
+        "url": "https://dev.to/amitkumar13/a-complete-guide-to-deep-linking-with-custom-domain-in-react-native-bj3"
+      }
+    ],
+    "sourceSlug": "react-native/deeplinking"
+  }
+}

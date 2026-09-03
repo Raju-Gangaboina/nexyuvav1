@@ -1,0 +1,19 @@
+
+> nexyuva@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by process 35716, using available port 3001 instead.
+▲ Next.js 16.2.11 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://10.83.178.30:3001
+- Environments: .env.local, .env
+✓ Ready in 2.3s
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          35716
+- Dir:          C:\Users\rajuy\Downloads\nexyuva_complete_v1\nexyuva\frontend-web
+- Log:          .next\dev\logs\next-development.log
+
+Run taskkill /PID 35716 /F to stop it.
+[?25h

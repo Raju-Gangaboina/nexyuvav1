@@ -1,0 +1,100 @@
+[
+  {
+    "id": "do_e1",
+    "difficulty": "easy",
+    "question": "What is the main purpose of Docker containers?",
+    "options": [
+      "To replace version control systems",
+      "To package an application with its dependencies so it runs consistently across environments",
+      "To write frontend UI code",
+      "To design database schemas"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "do_e2",
+    "difficulty": "easy",
+    "question": "What does CI/CD stand for?",
+    "options": [
+      "Code Integration / Code Distribution",
+      "Continuous Integration / Continuous Deployment (or Delivery)",
+      "Container Instance / Container Deployment",
+      "Central Index / Central Directory"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "do_e3",
+    "difficulty": "easy",
+    "question": "Which command lists all running Docker containers?",
+    "options": ["docker ls", "docker ps", "docker list", "docker show"],
+    "correct_index": 1
+  },
+  {
+    "id": "do_m1",
+    "difficulty": "medium",
+    "question": "In Kubernetes, what is the basic deployable unit that wraps one or more containers?",
+    "options": ["A Node", "A Pod", "A Cluster", "A Namespace"],
+    "correct_index": 1
+  },
+  {
+    "id": "do_m2",
+    "difficulty": "medium",
+    "question": "What problem does Infrastructure as Code (e.g. Terraform) primarily solve?",
+    "options": [
+      "It writes application business logic automatically",
+      "It lets infrastructure be defined declaratively in version-controlled files, so environments are reproducible and changes are reviewable instead of manual/undocumented",
+      "It replaces the need for a version control system",
+      "It only works for frontend deployments"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "do_m3",
+    "difficulty": "medium",
+    "question": "In a CI pipeline, what is the purpose of running automated tests on every pull request before merge?",
+    "options": [
+      "To slow down deployment intentionally",
+      "To catch regressions early, before broken code reaches the main branch or production",
+      "It's only useful for documentation generation",
+      "To reduce the number of contributors"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "do_h1",
+    "difficulty": "hard",
+    "question": "What is the main difference between a blue-green deployment and a rolling deployment?",
+    "options": [
+      "They are the same strategy with different names",
+      "Blue-green runs two full parallel environments and switches traffic all at once (fast rollback); rolling gradually replaces instances of the old version with the new one",
+      "Blue-green only works for databases, rolling only works for stateless services",
+      "Rolling deployments require downtime, blue-green never does"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "do_h2",
+    "difficulty": "hard",
+    "question": "Why does Kubernetes use a declarative desired-state model (vs imperative commands) for managing resources?",
+    "options": [
+      "It's simpler to implement internally, with no operational benefit",
+      "A controller continuously reconciles actual cluster state toward the declared desired state, so the system self-heals from drift or failures without manual intervention",
+      "Declarative configs run faster at the CPU level",
+      "It removes the need for monitoring entirely"
+    ],
+    "correct_index": 1
+  },
+  {
+    "id": "do_h3",
+    "difficulty": "hard",
+    "question": "What is the purpose of a readiness probe (as distinct from a liveness probe) in Kubernetes?",
+    "options": [
+      "Both probes do exactly the same thing",
+      "A readiness probe determines whether a pod should receive traffic right now; a liveness probe determines whether the pod should be restarted because it's stuck/unhealthy",
+      "Readiness probes only run once, at container startup",
+      "Liveness probes are deprecated in favor of readiness probes"
+    ],
+    "correct_index": 1
+  }
+]

@@ -1,0 +1,268 @@
+{
+  "Networking Fundamentals": {
+    "description": "Computer networking is the practice of connecting computers and devices to share data and resources. It involves the use of protocols like TCP/IP for communication, hardware such as routers and switches for directing traffic, and various network topologies (e.g., star, mesh, bus) for organizing connections. Networks can be categorized by size and scope, from small local area networks (LANs) to wide area networks (WANs) that span large geographical areas. Key concepts include IP addressing, subnetting, DNS for name resolution, and network security measures. Understanding networking basics is crucial for managing data flow, troubleshooting connectivity issues, and ensuring efficient communication in modern computing environments.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Networking basics - What you need to know",
+        "url": "https://www.cisco.com/c/en/us/solutions/small-business/resource-center/networking/networking-basics.html"
+      },
+      {
+        "type": "video",
+        "label": "Computer Networking in 100 seconds",
+        "url": "https://www.youtube.com/watch?v=keeqnciDVOo"
+      },
+      {
+        "type": "video",
+        "label": "Computer Networks: Crash Course Computer Science #28",
+        "url": "https://www.youtube.com/watch?v=3QhU9jd03a0"
+      }
+    ],
+    "sourceSlug": "basics-of-computer-networking"
+  },
+  "Operating Systems": {
+    "description": "**Operating systems (OS)** are software that manage computer hardware and provide a platform for applications to run. They handle essential functions such as managing memory, processing tasks, controlling input and output devices, and facilitating file management. Key examples include **Windows**, **macOS**, **Linux**, and **Unix**. Each operating system offers different features and interfaces, tailored to specific user needs or system requirements, from desktop computing to server management and embedded systems.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is an operating system? - IBM",
+        "url": "https://www.ibm.com/think/topics/operating-systems"
+      },
+      {
+        "type": "article",
+        "label": "What is a Operating System?",
+        "url": "https://en.wikipedia.org/wiki/Operating_system"
+      },
+      {
+        "type": "video",
+        "label": "What is an operating system as fast as possible",
+        "url": "https://www.youtube.com/watch?v=pVzRTmdd9j0"
+      }
+    ],
+    "sourceSlug": "operating-systems"
+  },
+  "Security Basics": {
+    "description": "CompTIA Security+ is a highly recognized and respected certification for individuals seeking to start their careers in the field of cybersecurity. This certification is vendor-neutral, meaning it doesn't focus on any specific technology or platform, and provides a solid foundation in cybersecurity principles, concepts, and best practices.",
+    "resources": [
+      {
+        "type": "course",
+        "label": "CompTIA SY0-701 Security+ Exam Course Playlist",
+        "url": "https://www.youtube.com/playlist?list=PLG49S3nxzAnl4QDVqK-hOnoqcSKEIDDuv"
+      },
+      {
+        "type": "course",
+        "label": "CompTIA Security+ Course",
+        "url": "https://www.youtube.com/watch?v=yLf2jRY39Rc&list=PLIhvC56v63IIyU0aBUed4qwP0nSCORAdB"
+      },
+      {
+        "type": "official",
+        "label": "CompTIA Security+ Website",
+        "url": "https://www.comptia.org/certifications/security"
+      }
+    ],
+    "sourceSlug": "comptia-security"
+  },
+  "Network Security": {
+    "description": "The CompTIA Network+ is a highly sought-after certification for IT professionals who aim to build a solid foundation in networking concepts and practices. This certification is vendor-neutral, meaning that it covers a broad range of knowledge that can be applied to various network technologies, products, and solutions. The Network+ certification is designed for beginners in the world of IT networking, and it is recommended that you first obtain the CompTIA A+ certification before moving on to Network+.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "CompTIA Network+",
+        "url": "https://www.comptia.org/certifications/network"
+      },
+      {
+        "type": "video",
+        "label": "CompTIA Network+ Course",
+        "url": "https://www.youtube.com/watch?v=xmpYfyNmWbw"
+      }
+    ],
+    "sourceSlug": "comptia-network"
+  },
+  "Web App Security": {
+    "description": "The OWASP Top 10 is a regularly updated list that highlights the most critical security risks facing web applications. These vulnerabilities are ranked based on exploitability, prevalence, detectability, and technical and business impact. Web-based attacks exploit these weaknesses to compromise applications, steal data, or disrupt services, often leveraging vulnerabilities in code, configuration, or design.",
+    "resources": [
+      {
+        "type": "official",
+        "label": "OWASP Top Ten",
+        "url": "https://owasp.org/www-project-top-ten/"
+      },
+      {
+        "type": "official",
+        "label": "OWASP Vulnerable Web Applications Directory (VWAD)",
+        "url": "https://vwad.owasp.org/"
+      },
+      {
+        "type": "video",
+        "label": "OWASP Top Ten",
+        "url": "https://youtube.com/playlist?list=PLyqga7AXMtPOguwtCCXGZUKvd2CDCmUgQ&si=ZYRbcDSRvqTOnDOo"
+      }
+    ],
+    "sourceSlug": "cyber-security/web-based-attacks-and-owasp10"
+  },
+  "Cryptography Basics": {
+    "description": "Hashing is a fundamental concept in computer science involving the use of a mathematical function (a hash function) to map data of arbitrary size to a fixed-size value, known as a hash or a hash code. This transformation is typically one-way, meaning it is computationally infeasible to reverse the process and recover the original data from the hash value alone. Hash functions are designed to be deterministic, ensuring that the same input always produces the same output. Public Key Infrastructure (PKI) is a system that uses digital certificates to verify and authenticate the identity of users, devices, and services. It relies on cryptographic keys – a public key for encrypting data and a corresponding private key for decrypting it. PKI establishes a trusted environment for secure electronic transactions and communication by managing digital certificates that bind a public key to an identity, ensuring that the communication is from a trusted party.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What is hashing and how does it work?",
+        "url": "https://www.techtarget.com/searchdatamanagement/definition/hashing"
+      },
+      {
+        "type": "article",
+        "label": "Hashing Algorithm Overview: Types, Methodologies & Usage",
+        "url": "https://www.okta.com/identity-101/hashing-algorithms/"
+      },
+      {
+        "type": "article",
+        "label": "Understanding Cryptography Types:",
+        "url": "https://geekflare.com/cybersecurity/cryptography-types/"
+      },
+      {
+        "type": "video",
+        "label": "Hashing Explained",
+        "url": "https://www.youtube.com/watch?v=EOe1XUykdP4"
+      },
+      {
+        "type": "article",
+        "label": "What is PKI?",
+        "url": "https://cpl.thalesgroup.com/faq/public-key-infrastructure-pki/what-public-key-infrastructure-pki"
+      },
+      {
+        "type": "article",
+        "label": "What Is Public Key Infrastructure (PKI) & How Does It Work?",
+        "url": "https://www.okta.com/identity-101/public-key-infrastructure/"
+      }
+    ],
+    "sourceSlug": "cyber-security/hashing, cyber-security/pki"
+  },
+  "Penetration Testing": {
+    "description": "Rules of Engagement (RoE) in penetration testing define the boundaries, scope, and limitations of the test. It's a documented agreement between the penetration tester and the client that outlines what systems are in scope, what testing techniques are permitted, a detailed schedule, and communication protocols during the engagement. This agreement ensures that the penetration test is conducted ethically, legally, and with minimal disruption to the client's business operations, preventing accidental damage or unintended consequences.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Why are Rules of Engagement Important to a Penetration Test?",
+        "url": "https://www.triaxiomsecurity.com/rules-of-engagement-important-to-penetration-test/"
+      },
+      {
+        "type": "video",
+        "label": "CompTIA Pentest+ : Rules of Engagement",
+        "url": "https://www.youtube.com/watch?v=Rt-4j8k6J2U"
+      }
+    ],
+    "sourceSlug": "penetration-testing-rules-of-engagement"
+  },
+  "SIEM Tools": {
+    "description": "Security Information and Event Management (SIEM) systems are tools that collect and analyze security logs and event data from various sources throughout an organization's IT infrastructure. This data is then correlated to identify potential security threats, vulnerabilities, and policy violations, providing security teams with a centralized view of their security posture and enabling them to respond to incidents more effectively.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "Security 101: What is a SIEM? - Microsoft",
+        "url": "https://www.microsoft.com/security/business/security-101/what-is-siem"
+      },
+      {
+        "type": "video",
+        "label": "SIEM Explained - Professor Messer",
+        "url": "https://www.youtube.com/watch?v=JEcETdy5WxU"
+      },
+      {
+        "type": "video",
+        "label": "Wazuh | Open source SIEM",
+        "url": "https://www.youtube.com/watch?v=3CaG2GI1kn0"
+      }
+    ],
+    "sourceSlug": "siem"
+  },
+  "Incident Response": {
+    "description": "Identification refers to the process of detecting and recognizing that a security breach or anomalous activity has occurred within a network or system. This is the initial step in the incident response process, where security tools, monitoring systems, or alert mechanisms, such as Intrusion Detection Systems (IDS), log analysis, or user reports, indicate potential malicious activity. Effective identification is critical as it determines the subsequent steps in addressing the incident, such as containment, eradication, and recovery. Prompt and accurate identification helps minimize the impact of the incident, reducing downtime, data loss, and the overall damage to the organization. Containment in cybersecurity refers to the process of limiting the impact of a security incident by isolating affected systems, networks, or data to prevent further spread or damage. When a breach or malware infection is detected, containment strategies are quickly implemented to halt the attack's progress, often by disconnecting compromised systems from the network, blocking malicious traffic, or restricting user access. Containment is a critical step in incident response, allowing security teams to control the situation while they investigate the root cause, assess the extent of the breach, and prepare for remediation. Effective containment minimizes the potential harm to the organization, preserving the integrity of unaffected systems and data. Eradication in the context of incident response involves completely removing the root cause of a security incident to prevent its recurrence. This phase goes beyond just containing the immediate effects of an attack; it focuses on identifying and eliminating the vulnerability, malware, or other underlying factors that allowed the incident to happen in the first place. This might include patching vulnerable systems, removing malicious software, resetting compromised credentials, or reconfiguring network devices. The recovery phase of incident response focuses on restoring affected systems and services to normal operation, which involves repairing systems, recovering data from backups, validating functionality, and communicating with stakeholders. This phase also includes conducting a post-incident review to document lessons learned and update response plans to improve future preparedness. The aim is to minimize downtime, ensure data integrity, and return to normal operations efficiently. The final step in incident response focuses on solidifying what was gained from the experience. It starts with a post-incident review, where the team dissects the incident timeline, actions taken, and overall effectiveness. A root cause analysis identifies the underlying vulnerabilities or weaknesses that allowed the incident to occur. The findings then inform updates to existing security policies and procedures to prevent similar incidents in the future. Employee training is updated to reflect these changes and improve awareness. Finally, the entire incident, including its root cause, response actions, and lessons learned, is thoroughly documented for future reference and continuous improvement.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "How to identify Cybersecurity vulnerabilities",
+        "url": "https://fieldeffect.com/blog/how-to-identify-cybersecurity-vulnerabilities"
+      },
+      {
+        "type": "article",
+        "label": "What is an Intrusion Detection System",
+        "url": "https://www.ibm.com/topics/intrusion-detection-system"
+      },
+      {
+        "type": "article",
+        "label": "Microsoft Security Incident Management: Containment, Eradication, and Recovery",
+        "url": "https://learn.microsoft.com/en-us/compliance/assurance/assurance-sim-containment-eradication-recovery"
+      },
+      {
+        "type": "article",
+        "label": "Containment - AWS",
+        "url": "https://docs.aws.amazon.com/whitepapers/latest/aws-security-incident-response-guide/containment.html"
+      },
+      {
+        "type": "article",
+        "label": "Eradication - AWS",
+        "url": "https://docs.aws.amazon.com/whitepapers/latest/aws-security-incident-response-guide/eradication.html"
+      },
+      {
+        "type": "article",
+        "label": "What is eradication in Cybersecurity?",
+        "url": "https://heimdalsecurity.com/blog/what-is-eradication-in-cybersecurity/"
+      },
+      {
+        "type": "article",
+        "label": "Incident Response Plan: Framework and Steps",
+        "url": "https://www.crowdstrike.com/cybersecurity-101/incident-response/incident-response-steps/"
+      },
+      {
+        "type": "video",
+        "label": "Incident Response Process",
+        "url": "https://www.youtube.com/watch?v=fU_w8Ou9RVg"
+      }
+    ],
+    "sourceSlug": "cyber-security/identification, cyber-security/containment, cyber-security/eradication, cyber-security/recovery, cyber-security/lessons-learned"
+  },
+  "Cloud Security": {
+    "description": "Cloud security encompasses the policies, technologies, and controls used to protect data, applications, and infrastructure associated with cloud computing. It addresses the unique security challenges presented by shared resources, remote access, and the distributed nature of cloud environments. It aims to ensure the confidentiality, integrity, and availability of cloud-based assets.",
+    "resources": [
+      {
+        "type": "article",
+        "label": "What Is Cloud Security? - Google Cloud",
+        "url": "https://cloud.google.com/learn/what-is-cloud-security"
+      },
+      {
+        "type": "article",
+        "label": "Cloud Security",
+        "url": "https://www.checkpoint.com/cyber-hub/cloud-security/what-is-cloud-security/"
+      },
+      {
+        "type": "video",
+        "label": "What is cloud security",
+        "url": "https://www.youtube.com/watch?v=jI8IKpjiCSM"
+      }
+    ],
+    "sourceSlug": "understand-the-concept-of-security-in-the-cloud"
+  },
+  "Malware Analysis": {
+    "description": "Malware, short for malicious software, refers to any program or code designed to harm, disrupt, or gain unauthorized access to computer systems, networks, or devices. This encompasses various forms like viruses that replicate themselves, worms that self-propagate across networks, Trojans disguised as legitimate software, ransomware that encrypts data for extortion, spyware that secretly monitors user activity, and adware that displays unwanted advertisements. Understanding the mechanisms and characteristics of different malware types is essential for effective detection, prevention, and mitigation of cyber threats.",
+    "resources": [],
+    "sourceSlug": "learn-how-malware-works-and-types"
+  },
+  "Security Certifications": {
+    "description": "CompTIA Security+ is a highly recognized and respected certification for individuals seeking to start their careers in the field of cybersecurity. This certification is vendor-neutral, meaning it doesn't focus on any specific technology or platform, and provides a solid foundation in cybersecurity principles, concepts, and best practices.",
+    "resources": [
+      {
+        "type": "course",
+        "label": "CompTIA SY0-701 Security+ Exam Course Playlist",
+        "url": "https://www.youtube.com/playlist?list=PLG49S3nxzAnl4QDVqK-hOnoqcSKEIDDuv"
+      },
+      {
+        "type": "course",
+        "label": "CompTIA Security+ Course",
+        "url": "https://www.youtube.com/watch?v=yLf2jRY39Rc&list=PLIhvC56v63IIyU0aBUed4qwP0nSCORAdB"
+      },
+      {
+        "type": "official",
+        "label": "CompTIA Security+ Website",
+        "url": "https://www.comptia.org/certifications/security"
+      }
+    ],
+    "sourceSlug": "comptia-security"
+  }
+}
