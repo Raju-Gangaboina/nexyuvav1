@@ -447,6 +447,55 @@ export async function uploadInterviewQuestionsPdf(internshipId: string, file: Fi
   return handle(res);
 }
 
+// --- Voice Screen (Module 5.7): async, one-way audio interview ---
+
+export interface VoiceScreenQuestionPublic { index: number; question: string; }
+export interface StartVoiceScreenResult { attempt_id: string; questions: VoiceScreenQuestionPublic[]; }
+export interface SubmitVoiceAnswerResult { graded: boolean; transcript: string | null; all_answered: boolean; }
+export interface VoiceScreenResult {
+  attempt_id: string; application_id: string; status: string;
+  questions: { question: string; transcript: string | null; score: number | null; notes: string | null }[];
+  final_score: number | null; passed: boolean | null;
+  started_at: string; completed_at: string | null;
+  student_name?: string | null; internship_title?: string | null;
+}
+
+export async function startVoiceScreen(applicationId: string): Promise<StartVoiceScreenResult> {
+  const res = await fetch(`${REAL_API_BASE}/students/applications/${applicationId}/voice-screen/start`, {
+    method: 'POST', headers: authHeaders(),
+  });
+  return handle(res);
+}
+
+export async function submitVoiceScreenAnswer(applicationId: string, questionIndex: number, audioBlob: Blob): Promise<SubmitVoiceAnswerResult> {
+  const token = getRealToken();
+  const formData = new FormData();
+  formData.append('audio', audioBlob, 'answer.webm');
+  const res = await fetch(
+    `${REAL_API_BASE}/students/applications/${applicationId}/voice-screen/answer?question_index=${questionIndex}`,
+    { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: formData },
+  );
+  return handle(res);
+}
+
+export async function getMyVoiceScreen(applicationId: string): Promise<VoiceScreenResult> {
+  const res = await fetch(`${REAL_API_BASE}/students/applications/${applicationId}/voice-screen`, {
+    headers: authHeaders(),
+  });
+  return handle(res);
+}
+
+export async function listVoiceScreens(internshipId?: string): Promise<VoiceScreenResult[]> {
+  const qs = internshipId ? `?internship_id=${internshipId}` : '';
+  const res = await fetch(`${REAL_API_BASE}/voice-screen${qs}`, { headers: authHeaders() });
+  return handle(res);
+}
+
+export async function getVoiceScreenDetail(attemptId: string): Promise<VoiceScreenResult> {
+  const res = await fetch(`${REAL_API_BASE}/voice-screen/${attemptId}`, { headers: authHeaders() });
+  return handle(res);
+}
+
 export async function updateAptitudeCheck(internshipId: string, enabled: boolean, difficulty?: string): Promise<{ aptitude_check_enabled: boolean; aptitude_difficulty: string }> {
   const res = await fetch(`${REAL_API_BASE}/organizations/internships/${internshipId}/aptitude-check`, {
     method: 'PATCH', headers: authHeaders(),
@@ -1587,6 +1636,20 @@ export async function getMyScheduledInterviews(): Promise<ScheduledInterview[]> 
   return handle(res);
 }
 
+// Status-only signal for whether a Module 5.6 Assisted (human) Interview
+// tied to this application has happened yet -- nothing else about the
+// session (notes/coverage/scorecard/turns) is ever exposed to a student,
+// by design (see backend route docstring).
+export type AssistedInterviewStatus = 'not_started' | 'in_progress' | 'completed';
+
+export async function getAssistedInterviewStatus(applicationId: string): Promise<AssistedInterviewStatus> {
+  const res = await fetch(`${REAL_API_BASE}/students/me/applications/${applicationId}/assisted-interview-status`, {
+    headers: authHeaders(),
+  });
+  const data = await handle(res);
+  return data.status;
+}
+
 export async function getOrgScheduledInterviews(internshipId?: string): Promise<ScheduledInterview[]> {
   const url = internshipId
     ? `${REAL_API_BASE}/scheduling/interviews?internship_id=${internshipId}`
@@ -1650,5 +1713,214 @@ export interface MyReport {
 
 export async function getMyReports(): Promise<MyReport[]> {
   const res = await fetch(`${REAL_API_BASE}/students/reports/mine`, { headers: authHeaders() });
+  return handle(res);
+}
+
+// --- Assisted Human Interview (Module 5.6): org interviewer runs a live
+// human interview and gets private AI-suggested follow-up questions in a
+// sidebar the candidate never sees. See
+// backend/app/services/assisted_interview/routes.py -- the AI never talks
+// to the candidate and never scores the interview (no score/passed field
+// exists anywhere in these types, by design). ---
+
+export interface AssistedInterviewSuggestion {
+  id: string;
+  question: string;
+}
+
+export interface AssistedInterviewTurn {
+  id: string;
+  sequence: number;
+  speaker: 'interviewer' | 'candidate';
+  text: string;
+  ai_suggestions: AssistedInterviewSuggestion[];
+  accepted_suggestion_id: string | null;
+  created_at: string;
+}
+
+export interface AssistedInterviewSession {
+  id: string;
+  application_id: string;
+  status: 'active' | 'ended';
+  turns: AssistedInterviewTurn[];
+  started_at: string;
+  ended_at: string | null;
+  student_name: string | null;
+  internship_title: string | null;
+  // V1.1 additions -- see backend/app/services/assisted_interview/schemas.py
+  coverage: Record<string, boolean>;
+  notes: AssistedInterviewNote[];
+  technical_knowledge: number | null;
+  problem_solving: number | null;
+  communication: number | null;
+  project_understanding: number | null;
+  role_specific_notes: string | null;
+  decision: 'strong_yes' | 'yes' | 'maybe' | 'no' | null;
+  scorecard_submitted_at: string | null;
+}
+
+export interface AssistedInterviewNote {
+  id: string;
+  text: string;
+  is_evidence: boolean;
+  created_at: string;
+}
+
+export interface CoverageArea {
+  key: string;
+  label: string;
+  covered: boolean;
+}
+
+export interface CandidateBriefAptitude {
+  status: string;
+  raw_score: number | null;
+  percentile: number | null;
+  badge_awarded: boolean;
+}
+
+export interface CandidateBrief {
+  candidate_name: string;
+  avatar_url: string | null;
+  role_title: string;
+  skills: string[];
+  top_projects: { title: string; tech_stack: string[] }[];
+  compatibility_score: number | null;
+  aptitude: CandidateBriefAptitude | null;
+}
+
+export async function startAssistedInterview(applicationId: string): Promise<{ session_id: string; status: string }> {
+  const res = await fetch(`${REAL_API_BASE}/assisted-interview/${applicationId}/start`, {
+    method: 'POST', headers: authHeaders(),
+  });
+  return handle(res);
+}
+
+export async function getAssistedInterviewSession(sessionId: string): Promise<AssistedInterviewSession> {
+  const res = await fetch(`${REAL_API_BASE}/assisted-interview/${sessionId}`, { headers: authHeaders() });
+  return handle(res);
+}
+
+export async function listAssistedInterviewSessions(internshipId: string): Promise<AssistedInterviewSession[]> {
+  const res = await fetch(
+    `${REAL_API_BASE}/assisted-interview?internship_id=${internshipId}`,
+    { headers: authHeaders() },
+  );
+  return handle(res);
+}
+
+export async function postAssistedInterviewExchange(
+  sessionId: string,
+  speaker: 'interviewer' | 'candidate',
+  text: string,
+): Promise<{ turn_id: string; sequence: number; suggestions: AssistedInterviewSuggestion[] }> {
+  const res = await fetch(`${REAL_API_BASE}/assisted-interview/${sessionId}/exchange`, {
+    method: 'POST', headers: authHeaders(),
+    body: JSON.stringify({ speaker, text }),
+  });
+  return handle(res);
+}
+
+export async function acceptAssistedInterviewSuggestion(
+  sessionId: string,
+  turnId: string,
+  suggestionId: string,
+): Promise<void> {
+  const res = await fetch(`${REAL_API_BASE}/assisted-interview/${sessionId}/suggestions/accept`, {
+    method: 'POST', headers: authHeaders(),
+    body: JSON.stringify({ turn_id: turnId, suggestion_id: suggestionId }),
+  });
+  // 204 No Content -- handle() calls res.json() unconditionally, which
+  // throws on an empty body, so this endpoint checks status directly.
+  if (!res.ok) {
+    let detail = `Request failed (${res.status})`;
+    try {
+      const body = await res.json();
+      detail = body.detail || detail;
+    } catch { /* ignore */ }
+    throw new Error(detail);
+  }
+}
+
+export async function endAssistedInterview(sessionId: string): Promise<AssistedInterviewSession> {
+  const res = await fetch(`${REAL_API_BASE}/assisted-interview/${sessionId}/end`, {
+    method: 'POST', headers: authHeaders(),
+  });
+  return handle(res);
+}
+
+// --- V1.1 additions: candidate brief, live transcription, coverage,
+// notes/evidence, and the human-only post-interview scorecard. ---
+
+export async function getAssistedInterviewBrief(applicationId: string): Promise<CandidateBrief> {
+  const res = await fetch(`${REAL_API_BASE}/assisted-interview/${applicationId}/brief`, { headers: authHeaders() });
+  return handle(res);
+}
+
+// Sends one recorded audio chunk to Groq Whisper via the existing
+// /transcribe endpoint. Returns null text if transcription failed or
+// GROQ_API_KEY isn't configured -- callers should fall back to letting the
+// interviewer type/edit the turn manually rather than blocking on this.
+export async function transcribeAssistedInterviewAudio(sessionId: string, audioBlob: Blob): Promise<string | null> {
+  const token = getRealToken();
+  const formData = new FormData();
+  formData.append('audio', audioBlob, 'chunk.webm');
+  const res = await fetch(`${REAL_API_BASE}/assisted-interview/${sessionId}/transcribe`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` }, // no Content-Type -- browser sets the multipart boundary
+    body: formData,
+  });
+  const data = await handle(res);
+  return data.text ?? null;
+}
+
+export async function getAssistedInterviewCoverage(sessionId: string): Promise<CoverageArea[]> {
+  const res = await fetch(`${REAL_API_BASE}/assisted-interview/${sessionId}/coverage`, { headers: authHeaders() });
+  return handle(res);
+}
+
+export async function updateAssistedInterviewCoverage(
+  sessionId: string,
+  areas: Record<string, boolean>,
+): Promise<CoverageArea[]> {
+  const res = await fetch(`${REAL_API_BASE}/assisted-interview/${sessionId}/coverage`, {
+    method: 'PATCH', headers: authHeaders(),
+    body: JSON.stringify({ areas }),
+  });
+  return handle(res);
+}
+
+export async function addAssistedInterviewNote(
+  sessionId: string,
+  text: string,
+  isEvidence: boolean,
+): Promise<AssistedInterviewNote> {
+  const res = await fetch(`${REAL_API_BASE}/assisted-interview/${sessionId}/notes`, {
+    method: 'POST', headers: authHeaders(),
+    body: JSON.stringify({ text, is_evidence: isEvidence }),
+  });
+  return handle(res);
+}
+
+export interface AssistedInterviewScorecardInput {
+  technical_knowledge: number | null;
+  problem_solving: number | null;
+  communication: number | null;
+  project_understanding: number | null;
+  role_specific_notes: string | null;
+  decision: 'strong_yes' | 'yes' | 'maybe' | 'no' | null;
+}
+
+// The ONLY client call that can ever set a score or hiring decision on an
+// assisted-interview session -- human-filled form submission, never called
+// from anywhere AI-suggestion-related in this file.
+export async function submitAssistedInterviewScorecard(
+  sessionId: string,
+  scorecard: AssistedInterviewScorecardInput,
+): Promise<AssistedInterviewSession> {
+  const res = await fetch(`${REAL_API_BASE}/assisted-interview/${sessionId}/scorecard`, {
+    method: 'POST', headers: authHeaders(),
+    body: JSON.stringify(scorecard),
+  });
   return handle(res);
 }

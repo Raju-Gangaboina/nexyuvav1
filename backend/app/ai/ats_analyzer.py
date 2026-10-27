@@ -34,15 +34,11 @@ import json
 import logging
 import re
 
-import httpx
-
+from app.ai.groq_client import post_chat_completion
 from app.ai.resume_parser import detect_sections, extract_links
 from app.core.config import settings
 
 logger = logging.getLogger("nexyuva.ats_analyzer")
-
-GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL = settings.GROQ_MODEL  # centralized in app/core/config.py; llama-3.1-8b-instant was decommissioned 2026-08-16
 
 # --- Real, documented ATS platform behaviors -------------------------------
 ATS_PLATFORMS = {
@@ -363,57 +359,52 @@ async def call_groq_for_mistakes(
     user_prompt = f"Rule-based findings so far:\n{findings_block}{jd_block}\n\nResume text:\n{text[:6000]}"
 
     try:
-        async with httpx.AsyncClient() as client:
-            resp = await client.post(
-                GROQ_API_URL,
-                headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
-                json={
-                    "model": GROQ_MODEL,
-                    "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_prompt},
-                    ],
-                    "max_tokens": 900,
-                    "temperature": 0.3,
-                    "response_format": {"type": "json_object"},
-                },
-                timeout=20.0,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            content = data["choices"][0]["message"]["content"]
-            parsed = json.loads(content)
-            mistakes = parsed.get("mistakes", [])
-            if not isinstance(mistakes, list):
-                return [], False
+        data = await post_chat_completion(
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            max_tokens=900,
+            temperature=0.3,
+            reasoning_effort=None,  # original call never set this
+            response_format={"type": "json_object"},
+            timeout=20.0,
+        )
+        if data is None:
+            return [], False
+        content = data["choices"][0]["message"]["content"]
+        parsed = json.loads(content)
+        mistakes = parsed.get("mistakes", [])
+        if not isinstance(mistakes, list):
+            return [], False
 
-            # Enforce, in code, what the prompt asks for but a fast small model
-            # won't reliably obey: every quote must be a real, verbatim,
-            # findable substring of the actual resume text (case-insensitive,
-            # whitespace-normalized). Anything else -- an invented quote, the
-            # literal string "None", or a paraphrase -- gets dropped rather
-            # than shown to the candidate as if it were grounded. Also collapse
-            # near-duplicate issues (same quote reused across entries), which
-            # is the other failure mode observed: the model padding toward 5
-            # by re-describing the same spot under a different issue title.
-            norm_text = re.sub(r"\s+", " ", text).lower()
-            verified: list[dict] = []
-            seen_quotes: set[str] = set()
-            for m in mistakes:
-                quote = (m.get("quote") or "").strip()
-                norm_quote = re.sub(r"\s+", " ", quote).lower()
-                if not norm_quote or norm_quote == "none":
-                    continue
-                if norm_quote in seen_quotes:
-                    continue
-                if norm_quote not in norm_text:
-                    continue
-                if not all(k in m for k in ("issue", "why_it_matters", "fix")):
-                    continue
-                seen_quotes.add(norm_quote)
-                verified.append(m)
+        # Enforce, in code, what the prompt asks for but a fast small model
+        # won't reliably obey: every quote must be a real, verbatim,
+        # findable substring of the actual resume text (case-insensitive,
+        # whitespace-normalized). Anything else -- an invented quote, the
+        # literal string "None", or a paraphrase -- gets dropped rather
+        # than shown to the candidate as if it were grounded. Also collapse
+        # near-duplicate issues (same quote reused across entries), which
+        # is the other failure mode observed: the model padding toward 5
+        # by re-describing the same spot under a different issue title.
+        norm_text = re.sub(r"\s+", " ", text).lower()
+        verified: list[dict] = []
+        seen_quotes: set[str] = set()
+        for m in mistakes:
+            quote = (m.get("quote") or "").strip()
+            norm_quote = re.sub(r"\s+", " ", quote).lower()
+            if not norm_quote or norm_quote == "none":
+                continue
+            if norm_quote in seen_quotes:
+                continue
+            if norm_quote not in norm_text:
+                continue
+            if not all(k in m for k in ("issue", "why_it_matters", "fix")):
+                continue
+            seen_quotes.add(norm_quote)
+            verified.append(m)
 
-            return verified[:5], True
+        return verified[:5], True
     except Exception:
         logger.exception("Groq ATS review call failed -- falling back to deterministic-only result")
         return [], False

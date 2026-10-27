@@ -275,6 +275,75 @@ SKILL_TAXONOMY: dict[str, dict] = {
     "critical thinking": {"category": "soft_skill", "variants": ["critical thinking"]},
 }
 
+# --- Free-text skill normalization (bug-audit item #6) ----------------------
+# The taxonomy above only gets applied automatically inside the resume-parse
+# pipeline (extract_skills_confirmed). Two other write paths accept skills as
+# free text and previously bypassed it entirely:
+#   - student manual skill entry (PATCH /me, services/student/routes.py)
+#   - recruiter-entered internship.required_skills / preferred_skills
+#     (POST /organization/internships, services/organization/routes.py)
+# Every downstream match (screening_agent, recommendation_engine, the
+# enterprise score breakdown in organization/routes.py) compares skill
+# strings with a bare .lower() — so "JS" typed on one side and "JavaScript"
+# typed on the other never match, even though extract_skills_confirmed would
+# have resolved both to the same canonical "javascript". Fixing this at the
+# two write sites (normalize once, on save) is more robust than patching
+# every comparison site, and mirrors the existing normalize_domain_label
+# pattern in app/core/domains.py: known variants resolve to the canonical
+# taxonomy name; anything not recognized passes through unchanged (trimmed)
+# rather than being force-fitted or dropped, since a genuinely new skill not
+# yet in SKILL_TAXONOMY is still valid free text, not an error.
+_SKILL_VARIANT_LOOKUP: dict[str, str] | None = None
+
+
+def _get_skill_variant_lookup() -> dict[str, str]:
+    """Lazily inverts SKILL_TAXONOMY into normalized-variant -> canonical
+    name, built once per process. Also maps the canonical name itself
+    (lowercased) to itself, so an already-canonical entry round-trips
+    unchanged."""
+    global _SKILL_VARIANT_LOOKUP
+    if _SKILL_VARIANT_LOOKUP is None:
+        lookup: dict[str, str] = {}
+        for canonical, info in SKILL_TAXONOMY.items():
+            lookup[canonical.lower()] = canonical
+            for variant in info["variants"]:
+                lookup[variant.lower()] = canonical
+        _SKILL_VARIANT_LOOKUP = lookup
+    return _SKILL_VARIANT_LOOKUP
+
+
+def normalize_skill_name(raw: str) -> str:
+    """Resolves one free-text skill entry to its canonical taxonomy name
+    when it's a recognized variant (case/whitespace-insensitive) — e.g.
+    "JS", "Js", " js " all resolve to "javascript". Unrecognized input is
+    returned trimmed but otherwise unchanged."""
+    if not raw:
+        return raw
+    key = " ".join(raw.strip().lower().split())
+    return _get_skill_variant_lookup().get(key, raw.strip())
+
+
+def normalize_skill_list(raw_list: list[str] | None) -> list[str]:
+    """Applies normalize_skill_name across a list (student profile.skills,
+    internship.required_skills/preferred_skills), de-duplicating case-
+    insensitively so "JS" + "JavaScript" entered side by side collapse into
+    one canonical entry instead of appearing as two distinct skills.
+    Preserves input order of first occurrence. Returns [] for None/empty
+    input rather than raising, so callers can pass an optional field
+    through unconditionally."""
+    if not raw_list:
+        return []
+    seen: set[str] = set()
+    result: list[str] = []
+    for raw in raw_list:
+        name = normalize_skill_name(raw)
+        key = name.lower()
+        if key and key not in seen:
+            seen.add(key)
+            result.append(name)
+    return result
+
+
 SECTION_HEADERS = [
     "education", "experience", "work experience", "projects",
     "skills", "technical skills", "certifications", "certificates",

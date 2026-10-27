@@ -3,13 +3,14 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft, CheckCircle2, Circle, Loader2, ShieldCheck, Brain, Award,
-  XCircle, AlertTriangle, Building2, MapPin, Briefcase, Lock, CalendarClock, Video,
+  XCircle, AlertTriangle, Building2, MapPin, Briefcase, Lock, CalendarClock, Video, Mic,
 } from 'lucide-react';
 import {
   getMyRealApplications, getInternshipDetailReal, getInterviewResult,
   getAtsAnalysisReal, withdrawRealApplication,
   getMyScheduledInterviews, selectInterviewSlot,
-  InternshipDetail, ATSAnalysisResult, ScheduledInterview,
+  getAssistedInterviewStatus, getMyVoiceScreen,
+  InternshipDetail, ATSAnalysisResult, ScheduledInterview, AssistedInterviewStatus,
 } from '@/lib/realApi';
 
 /**
@@ -28,6 +29,7 @@ import {
  */
 
 type InterviewStepStatus = 'none' | 'in_progress' | 'passed' | 'failed';
+type VoiceScreenStepStatus = 'none' | 'in_progress' | 'passed' | 'failed';
 
 const STATUS_LABEL: Record<string, string> = {
   APPLIED: 'Applied — awaiting review',
@@ -95,6 +97,11 @@ export default function ApplicationJourneyPage() {
   const [scheduledInterview, setScheduledInterview] = useState<ScheduledInterview | null>(null);
   const [selectingSlot, setSelectingSlot] = useState<number | null>(null);
   const [schedulingError, setSchedulingError] = useState('');
+  // Status-only signal so this step can stop showing the Meet link forever
+  // once the human interview has actually happened (5.6 co-pilot session
+  // is never otherwise visible to the student -- see backend docstring).
+  const [assistedStatus, setAssistedStatus] = useState<AssistedInterviewStatus>('not_started');
+  const [voiceScreenStatus, setVoiceScreenStatus] = useState<VoiceScreenStepStatus>('none');
 
   useEffect(() => {
     const load = async () => {
@@ -127,10 +134,26 @@ export default function ApplicationJourneyPage() {
         }
 
         try {
+          const vs = await getMyVoiceScreen(applicationId);
+          if (vs.status === 'completed') setVoiceScreenStatus(vs.passed ? 'passed' : 'failed');
+          else setVoiceScreenStatus('in_progress');
+        } catch {
+          // 404 -- no voice screen attempt yet, matches the 'none' default.
+        }
+
+        try {
           const scheduled = await getMyScheduledInterviews();
           setScheduledInterview(scheduled.find(s => s.application_id === applicationId) || null);
         } catch {
           // Non-fatal: this step just doesn't render if it fails to load.
+        }
+
+        try {
+          const status = await getAssistedInterviewStatus(applicationId);
+          setAssistedStatus(status);
+        } catch {
+          // Non-fatal: falls back to 'not_started', which just means the
+          // scheduled-interview card renders as it always has.
         }
       } catch (e: any) {
         setError(e.message || 'Could not load this application.');
@@ -201,6 +224,16 @@ export default function ApplicationJourneyPage() {
   const aptitudeEnabled = internship?.aptitude_check_enabled ?? false;
   const withdrawn = application.status === 'WITHDRAWN';
 
+  // Post-application pipeline order (locked in AI_HIRING_SUITE_PROGRESS.md):
+  // Applied -> Resume Match -> [Aptitude] -> Voice Screen -> AI Interview ->
+  // [Human Scheduling] -> Status. Computed here instead of hardcoded per
+  // StepRow so inserting Voice Screen didn't require touching every later
+  // ternary by hand.
+  const voiceScreenStepIndex = aptitudeEnabled ? 4 : 3;
+  const interviewStepIndex = voiceScreenStepIndex + 1;
+  const schedulingStepIndex = interviewStepIndex + 1;
+  const statusStepIndex = scheduledInterview ? schedulingStepIndex + 1 : interviewStepIndex + 1;
+
   return (
     <div style={{ padding: '32px 40px', maxWidth: 720, margin: '0 auto' }}>
       <button className="btn-secondary" onClick={() => router.push('/student/live-internships')} style={{ marginBottom: 20, fontSize: 12 }}>
@@ -267,8 +300,33 @@ export default function ApplicationJourneyPage() {
           </StepRow>
         )}
 
+        {/* Step: Voice Screen -- async audio screen, same pipeline slot as
+            the doc's locked post-application order (before the AI Interview). */}
+        <StepRow index={voiceScreenStepIndex} title="Voice Screen" state={withdrawn ? 'locked' : 'current'}>
+          <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 10 }}>
+            A short async voice screen -- record a spoken answer to each question, no live interviewer or camera.
+          </div>
+          {voiceScreenStatus === 'passed' ? (
+            <button className="btn-secondary" onClick={() => router.push(`/student/voice-screen/${applicationId}`)} style={{ borderColor: 'var(--accent-emerald)', color: 'var(--accent-emerald)', fontSize: 12 }}>
+              <CheckCircle2 size={13} style={{ marginRight: 6 }} /> Passed — View Result
+            </button>
+          ) : voiceScreenStatus === 'failed' ? (
+            <button className="btn-secondary" onClick={() => router.push(`/student/voice-screen/${applicationId}`)} style={{ borderColor: 'var(--accent-rose)', color: 'var(--accent-rose)', fontSize: 12 }}>
+              <XCircle size={13} style={{ marginRight: 6 }} /> View Result
+            </button>
+          ) : voiceScreenStatus === 'in_progress' ? (
+            <button className="btn-secondary" disabled={withdrawn} onClick={() => router.push(`/student/voice-screen/${applicationId}`)} style={{ fontSize: 12 }}>
+              <AlertTriangle size={13} style={{ marginRight: 6 }} /> Continue Voice Screen
+            </button>
+          ) : (
+            <button className="btn-secondary" disabled={withdrawn} onClick={() => router.push(`/student/voice-screen/${applicationId}`)} style={{ fontSize: 12 }}>
+              <Mic size={13} style={{ marginRight: 6 }} /> Start Voice Screen
+            </button>
+          )}
+        </StepRow>
+
         {/* Step 4: Interview / Stand-Out Badge */}
-        <StepRow index={aptitudeEnabled ? 4 : 3} title="Interview" state={withdrawn ? 'locked' : 'current'}>
+        <StepRow index={interviewStepIndex} title="Interview" state={withdrawn ? 'locked' : 'current'}>
           <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 10 }}>
             A short proctored interview. Passing earns your Stand-Out badge and moves you forward in the company's pipeline.
           </div>
@@ -294,8 +352,12 @@ export default function ApplicationJourneyPage() {
         {/* Step 4b: Human Interview Scheduling -- only appears once the company has
             actually proposed real-world time slots for this application. */}
         {scheduledInterview && (
-          <StepRow index={aptitudeEnabled ? 5 : 4} title="Schedule Your Interview" state={withdrawn ? 'locked' : 'current'}>
-            {scheduledInterview.status === 'confirmed' ? (
+          <StepRow index={schedulingStepIndex} title="Schedule Your Interview" state={withdrawn ? 'locked' : 'current'}>
+            {scheduledInterview.status === 'confirmed' && assistedStatus === 'completed' ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--accent-emerald)', fontWeight: 600 }}>
+                <CheckCircle2 size={15} /> Interview completed
+              </div>
+            ) : scheduledInterview.status === 'confirmed' ? (
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, fontSize: 13, color: 'var(--accent-emerald)', fontWeight: 600 }}>
                   <CheckCircle2 size={15} /> Confirmed
@@ -342,7 +404,7 @@ export default function ApplicationJourneyPage() {
         )}
 
         {/* Step 5: Status */}
-        <StepRow index={aptitudeEnabled ? (scheduledInterview ? 6 : 5) : (scheduledInterview ? 5 : 4)} title="Application Status" state={withdrawn ? 'locked' : 'current'}>
+        <StepRow index={statusStepIndex} title="Application Status" state={withdrawn ? 'locked' : 'current'}>
           <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: withdrawn ? 0 : 10 }}>
             {STATUS_LABEL[application.status] || application.status}
           </div>

@@ -30,6 +30,8 @@ from app.services.admin.analytics_routes import router as analytics_router
 from app.services.lookup.routes import router as lookup_router
 from app.services.luckship.routes import router as luckship_router
 from app.services.scheduling.routes import router as scheduling_router
+from app.services.assisted_interview.routes import router as assisted_interview_router
+from app.services.voice_screen.routes import router as voice_screen_router, org_router as voice_screen_org_router
 from app.services.notification.subscribers import register_notification_subscribers
 
 logging.basicConfig(level=logging.INFO)
@@ -88,6 +90,9 @@ app.include_router(analytics_router)
 app.include_router(lookup_router)
 app.include_router(luckship_router)
 app.include_router(scheduling_router)
+app.include_router(assisted_interview_router)
+app.include_router(voice_screen_router)
+app.include_router(voice_screen_org_router)
 
 # Serves uploaded avatars (and anything else future-uploaded here) directly
 # from disk -- no auth needed to view a public profile photo. Directory is

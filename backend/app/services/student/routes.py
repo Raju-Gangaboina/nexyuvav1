@@ -13,13 +13,15 @@ from app.ai.ats_analyzer import analyze_resume_ats
 from app.ai.chatbot import answer_question
 from app.ai.embeddings import build_student_profile_text, embed_text
 from app.ai.github_agent import GitHubRateLimitError, compute_github_score, fetch_public_profile
-from app.ai.resume_parser import extract_text, parse_resume
+from app.ai.resume_parser import extract_text, normalize_skill_list, parse_resume
 from app.ai.sentiment_analysis import analyze_feedback_sentiment
 from app.core.database import get_db
 from app.core.event_bus import publish
 from app.core.models import (
     Application,
     ApplicationStatus,
+    AssistedInterviewSession,
+    AssistedInterviewStatus,
     Feedback,
     Internship,
     Organization,
@@ -138,6 +140,13 @@ async def update_my_profile(
 ):
     profile = await _get_own_profile(user["user_id"], db)
     updates = payload.model_dump(exclude_unset=True)
+    # Bug-audit item #6: manual skill entry bypassed the resume-parser's
+    # alias/variant taxonomy entirely, so a hand-typed "JS" would never
+    # match a recruiter's "JavaScript" downstream. Normalize through the
+    # same SKILL_TAXONOMY resume parsing uses, so it doesn't matter which
+    # path (resume upload vs. manual entry) a skill came in through.
+    if "skills" in updates:
+        updates["skills"] = normalize_skill_list(updates["skills"])
     for field, value in updates.items():
         setattr(profile, field, value)
 
@@ -635,6 +644,49 @@ async def download_certificate(
         raise HTTPException(status_code=404, detail="Certificate file missing on disk")
 
     return FileResponse(cert_path, media_type="application/pdf", filename=cert_path.name)
+
+
+@router.get("/me/applications/{application_id}/assisted-interview-status")
+async def get_assisted_interview_status(
+    application_id: uuid.UUID,
+    user: dict = Depends(require_role("student")),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Status-only, candidate-facing signal for whether a Module 5.6 Assisted
+    (human) Interview tied to this application has happened yet -- added so
+    the "Schedule Your Interview" step on the post-apply journey page can
+    stop showing a Join Meet link forever once the interview is actually
+    over (frontend: /student/application/[applicationId]).
+
+    Deliberately the only assisted-interview surface a student can reach.
+    Everything else on AssistedInterviewSession -- coverage, notes,
+    scorecard, turns, ai_suggestions -- is interviewer-only per the 5.6
+    design rule (see app/services/assisted_interview/routes.py module
+    docstring: "the AI never talks to the candidate"). This route returns
+    a single derived status string and nothing else from the row, so that
+    rule can't be accidentally loosened by a later field being added here.
+    """
+    profile = await _get_own_profile(user["user_id"], db)
+    application = await db.get(Application, application_id)
+    if application is None or application.student_id != profile.id:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    result = await db.execute(
+        select(AssistedInterviewSession.status).where(
+            AssistedInterviewSession.application_id == application_id
+        )
+    )
+    session_status = result.scalar_one_or_none()
+
+    if session_status is None:
+        status = "not_started"
+    elif session_status == AssistedInterviewStatus.ENDED:
+        status = "completed"
+    else:
+        status = "in_progress"
+
+    return {"status": status}
 
 
 @router.post("/me/applications/{application_id}/feedback", response_model=SubmitFeedbackResponse)

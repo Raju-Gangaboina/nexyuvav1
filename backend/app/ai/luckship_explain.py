@@ -11,14 +11,11 @@ language) pointed in the opposite direction, matching the "company-side
 NexYuva finds candidates, Luckship finds opportunities" framing.
 """
 import logging
-import httpx
 
+from app.ai.groq_client import groq_chat
 from app.core.config import settings
 
 logger = logging.getLogger("nexyuva.luckship")
-
-GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL = settings.GROQ_MODEL
 
 
 def generate_fallback_explanation(
@@ -73,28 +70,12 @@ async def generate_student_explanation(
         f"OPPORTUNITY DESCRIPTION EXCERPT: {truncated_desc}"
     )
 
-    try:
-        async with httpx.AsyncClient() as client:
-            resp = await client.post(
-                GROQ_API_URL,
-                headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
-                json={
-                    "model": GROQ_MODEL,
-                    "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_prompt},
-                    ],
-                    "temperature": 0.3,
-                    "max_tokens": 90,
-                },
-                timeout=12.0,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            content = data["choices"][0]["message"]["content"]
-            if content and len(content.strip()) > 10:
-                return content.strip()
-    except Exception:
-        logger.exception("Luckship explanation generation failed for %s @ %s", title, company)
+    # reasoning_effort=None preserves this call's original behavior (it
+    # never set the field) now that it goes through the shared client.
+    content = await groq_chat(
+        system_prompt, user_prompt, max_tokens=90, temperature=0.3, reasoning_effort=None, timeout=12.0,
+    )
+    if content and len(content.strip()) > 10:
+        return content.strip()
 
     return fallback

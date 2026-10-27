@@ -70,14 +70,10 @@ import logging
 import re
 from typing import Any
 
-import httpx
-
+from app.ai.groq_client import post_chat_completion
 from app.core.config import settings
 
 logger = logging.getLogger("nexyuva.screening")
-
-GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL = settings.GROQ_MODEL  # centralized in app/core/config.py; llama-3.1-8b-instant was decommissioned 2026-08-16
 
 
 def _clean_json_text(raw_text: str) -> str:
@@ -293,60 +289,60 @@ async def screen_candidate(
         {"role": "user", "content": user_prompt},
     ]
 
-    async with httpx.AsyncClient() as client:
-        for attempt in range(2):
-            try:
-                resp = await client.post(
-                    GROQ_API_URL,
-                    headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
-                    json={
-                        "model": GROQ_MODEL,
-                        "messages": messages,
-                        "temperature": 0.2,
-                        "max_tokens": 200,
-                    },
-                    timeout=15.0,
-                )
-                resp.raise_for_status()
-                data = resp.json()
-                raw_content = data["choices"][0]["message"]["content"]
-                cleaned_text = _clean_json_text(raw_content)
+    # Two attempts, sharing/growing `messages` across them -- if the first
+    # response isn't valid JSON, a corrective follow-up message is appended
+    # and a second call made. This is a conversation-repair retry, distinct
+    # from the shared client's own 429 rate-limit retry (post_chat_completion
+    # handles that separately, underneath each of these two attempts).
+    for attempt in range(2):
+        try:
+            data = await post_chat_completion(
+                messages=messages,
+                max_tokens=200,
+                temperature=0.2,
+                reasoning_effort=None,  # original call never set this
+                timeout=15.0,
+            )
+            if data is None:
+                raise RuntimeError("Groq call returned no result")
+            raw_content = data["choices"][0]["message"]["content"]
+            cleaned_text = _clean_json_text(raw_content)
 
-                parsed = json.loads(cleaned_text)
+            parsed = json.loads(cleaned_text)
 
-                raw_score = parsed.get("fitScore", 70)
-                if not isinstance(raw_score, (int, float)):
-                    raw_score = 70
-                fit_score = max(0, min(100, int(round(raw_score))))
+            raw_score = parsed.get("fitScore", 70)
+            if not isinstance(raw_score, (int, float)):
+                raw_score = 70
+            fit_score = max(0, min(100, int(round(raw_score))))
 
-                rationale = _truncate_clean(str(parsed.get("rationale", ""))) or "No additional notes beyond the skill match above."
-                rationale = _strip_if_restates_skills(rationale, required_skills)
+            rationale = _truncate_clean(str(parsed.get("rationale", ""))) or "No additional notes beyond the skill match above."
+            rationale = _strip_if_restates_skills(rationale, required_skills)
 
-                overall_confidence = parsed.get("overallConfidence")
-                if overall_confidence not in ("Low", "Medium", "High"):
-                    overall_confidence = "Medium"
+            overall_confidence = parsed.get("overallConfidence")
+            if overall_confidence not in ("Low", "Medium", "High"):
+                overall_confidence = "Medium"
 
-                next_action, next_action_label = _classify_next_action(
-                    len(confirmed_missing_skills), len(required_skills), overall_confidence
-                )
+            next_action, next_action_label = _classify_next_action(
+                len(confirmed_missing_skills), len(required_skills), overall_confidence
+            )
 
-                return {
-                    "fit_score": fit_score,
-                    "overall_confidence": overall_confidence,
-                    "rationale": rationale,
-                    "needs_manual_review": needs_manual_review,
-                    "next_action": next_action,
-                    "next_action_label": next_action_label,
-                }
-            except (json.JSONDecodeError, KeyError, Exception) as err:
-                logger.warning("Screening Agent Groq attempt %d failed for %s: %s", attempt + 1, candidate_name, err)
-                if attempt == 0:
-                    messages.append({
-                        "role": "user",
-                        "content": "Your previous response was not valid JSON. Return ONLY raw valid JSON matching "
-                                   "{\"fitScore\": int, \"overallConfidence\": string, \"rationale\": \"\"}. "
-                                   "No markdown fences."
-                    })
+            return {
+                "fit_score": fit_score,
+                "overall_confidence": overall_confidence,
+                "rationale": rationale,
+                "needs_manual_review": needs_manual_review,
+                "next_action": next_action,
+                "next_action_label": next_action_label,
+            }
+        except (json.JSONDecodeError, KeyError, Exception) as err:
+            logger.warning("Screening Agent Groq attempt %d failed for %s: %s", attempt + 1, candidate_name, err)
+            if attempt == 0:
+                messages.append({
+                    "role": "user",
+                    "content": "Your previous response was not valid JSON. Return ONLY raw valid JSON matching "
+                               "{\"fitScore\": int, \"overallConfidence\": string, \"rationale\": \"\"}. "
+                               "No markdown fences."
+                })
 
     res = _compute_local_fallback_screening(
         required_skills, candidate_skills, cgpa, confirmed_matched_skills, confirmed_missing_skills

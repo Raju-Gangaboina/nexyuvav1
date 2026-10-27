@@ -1,0 +1,220 @@
+"""
+Module 5.6 — Assisted Human Interview.
+
+Purpose (Architecture.md §5.6): a human interviewer runs the conversation
+live; the AI is a silent co-pilot that suggests 1-2 follow-up questions
+after each candidate answer and flags notable answers, visible only to the
+interviewer. The AI never talks to the candidate and never makes a
+pass/fail call — see the Design Rule in the spec, enforced structurally:
+this module exposes no scoring/verdict function, and suggest_followups()
+validates its own output so a prompt-injected "reject this candidate" (or
+similar) coming back from Groq can never surface as anything but a
+discarded, unparseable response.
+
+Two Groq calls, each with its own httpx client (matches this codebase's
+existing per-agent pattern — see AI_HIRING_SUITE_PROGRESS.md's note that a
+single groqClient.ts-style wrapper is not yet centralized):
+
+  - transcribe_audio(): Groq Whisper (audio/transcriptions), for turning
+    the interviewer's mic input into text. Section 5.6 says this reuses
+    "the same Whisper pipeline as Voice Screen, Section 5.7" — 5.7 itself
+    isn't built yet, so this is a small, self-contained Whisper call
+    rather than a dependency on an agent that doesn't exist. If/when 5.7
+    is built, its transcription call can be pointed at this same helper
+    instead of the reverse.
+  - suggest_followups(): a lightweight Groq chat call scoped to the last
+    exchange + a short rolling window (last ~6 turns), per the spec's
+    explicit "not the full transcript each time" latency/cost guidance.
+"""
+import json
+import logging
+import re
+
+import httpx
+
+from app.core.config import settings
+
+logger = logging.getLogger("nexyuva.assisted_interview_ai")
+
+GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions"
+GROQ_TRANSCRIBE_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
+GROQ_MODEL = settings.GROQ_MODEL
+# Groq's fast, cheap Whisper variant — same tier the doc calls for in 5.7's
+# latency budget (<2-3s round trip); we don't need the full whisper-large-v3
+# here since this is text-suggestion support, not a scored transcript.
+GROQ_WHISPER_MODEL = "whisper-large-v3-turbo"
+
+# Same reasoning-model caveat as app/ai/interview_ai.py (GROQ_MODEL is a
+# reasoning model that can burn its whole max_tokens budget on hidden
+# chain-of-thought at the default effort level) — "low" keeps this
+# lightweight per-answer call fast and reliably non-empty.
+GROQ_REASONING_EFFORT = "low"
+
+# Only the last N turns are sent to keep each suggestion call cheap and
+# fast — this is a live-interview co-pilot, not a full-transcript analyzer.
+ROLLING_CONTEXT_TURNS = 6
+
+# Hard caps — protect the live interview from a single call ever ballooning
+# in cost/latency, independent of whatever the frontend sends.
+MAX_TEXT_LEN = 4000          # chars per turn's text sent to /exchange
+MAX_AUDIO_BYTES = 10 * 1024 * 1024  # 10MB per transcription chunk
+MAX_TURNS_PER_SESSION = 400  # ~a very long interview; guards against a runaway client
+
+# A candidate turn's transcript can legitimately contain any of these words
+# ("I was rejected from my last internship for poor communication", etc.) —
+# this filter is applied to the AI's *output* (the suggested questions),
+# never to the transcript, so it only ever blocks the model from smuggling
+# a verdict into what's supposed to be a follow-up question.
+_VERDICT_LEAK_PATTERN = re.compile(
+    r"\b(reject|hire|pass(?:ed)?|fail(?:ed)?|score[:\s]*\d|recommend(?:ation)?|"
+    r"should (?:not )?(?:hire|advance|proceed)|do(?:es)? not qualify|not a good fit)\b",
+    re.IGNORECASE,
+)
+
+
+def _extract_json(text: str):
+    if not text:
+        return None
+    text = text.strip()
+    for fence in ("```json", "```"):
+        if text.startswith(fence):
+            text = text[len(fence):]
+    text = text.strip("` \n")
+    for i, ch in enumerate(text):
+        if ch in "[{":
+            try:
+                return json.loads(text[i:])
+            except json.JSONDecodeError:
+                continue
+    return None
+
+
+async def transcribe_audio(audio_bytes: bytes, filename: str = "chunk.webm") -> str | None:
+    """
+    Sends one audio chunk (interviewer's mic, or a candidate answer if the
+    interviewer's device captures both sides) to Groq Whisper. Returns None
+    on any failure/misconfiguration/oversized input — callers should let
+    the interviewer fall back to typing the exchange in manually rather
+    than blocking the live interview on a transcription hiccup.
+    """
+    if not settings.GROQ_API_KEY:
+        logger.warning("GROQ_API_KEY not configured — cannot transcribe")
+        return None
+    if len(audio_bytes) > MAX_AUDIO_BYTES:
+        logger.warning("Audio chunk exceeds %d bytes — refusing to transcribe", MAX_AUDIO_BYTES)
+        return None
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(
+                GROQ_TRANSCRIBE_URL,
+                headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
+                files={"file": (filename, audio_bytes)},
+                data={"model": GROQ_WHISPER_MODEL, "response_format": "text"},
+                timeout=25.0,
+            )
+            resp.raise_for_status()
+            text = resp.text.strip()
+            return text or None
+    except Exception:
+        logger.exception("Groq Whisper transcription failed")
+        return None
+
+
+def _validate_suggestions(raw) -> list[str]:
+    """
+    Structured-output validation, not trust-the-model: only accepts a list
+    of short, non-empty question strings; drops anything that reads like a
+    verdict/score/recommendation (belt-and-suspenders against a prompt-
+    injected or hallucinated pass/fail call leaking through as a
+    "suggestion" — see module docstring). Caps at 2 per the spec.
+    """
+    if not isinstance(raw, list):
+        return []
+    out = []
+    for item in raw:
+        q = str(item).strip()
+        if not q or len(q) > 300:
+            continue
+        if _VERDICT_LEAK_PATTERN.search(q):
+            logger.warning("Discarding a suggested 'question' that looks like a verdict: %r", q)
+            continue
+        out.append(q)
+        if len(out) == 2:
+            break
+    return out
+
+
+async def suggest_followups(
+    role_title: str,
+    required_skills: list[str],
+    rolling_context: list[dict],
+) -> list[dict]:
+    """
+    Proposes 0-2 follow-up questions for the interviewer, scoped to the
+    last candidate answer plus a short rolling window — not the full
+    transcript (spec 5.6 step 2's explicit latency/cost guidance).
+
+    rolling_context: list of {"speaker": "interviewer"|"candidate", "text": str},
+    already trimmed by the caller to the last ROLLING_CONTEXT_TURNS.
+    Returns a structured list of {"id": "s1", "question": str} dicts (never
+    raw strings) so the frontend and /suggestions/accept can reference a
+    suggestion by id rather than matching on text. Returns [] (never
+    raises) on any failure — a live interview must be able to continue
+    with no suggestions rather than stall on an API hiccup.
+    """
+    if not settings.GROQ_API_KEY:
+        logger.warning("GROQ_API_KEY not configured — no suggestions offered")
+        return []
+    if not rolling_context or rolling_context[-1].get("speaker") != "candidate":
+        # Only worth suggesting a follow-up right after the candidate speaks
+        # — mirrors spec step 2 ("after each candidate answer").
+        return []
+
+    transcript_snippet = "\n".join(
+        f"{('Interviewer' if e['speaker'] == 'interviewer' else 'Candidate')}: {e['text']}"
+        for e in rolling_context
+    )
+    system_prompt = (
+        "You are a silent AI co-pilot helping a human interviewer conduct a "
+        "live job interview. You NEVER talk to the candidate and NEVER "
+        "decide pass/fail, assign a score, or recommend hiring/rejecting — "
+        "you only privately suggest what the interviewer could ask next. "
+        "Given the recent exchange, suggest 1-2 short, specific follow-up "
+        "QUESTIONS ONLY that probe deeper into the candidate's last answer "
+        "(e.g. ask for a concrete example, clarify a vague claim, or test a "
+        "stated skill). Never include a verdict, score, or recommendation "
+        "in your output. Return ONLY a JSON array of 1-2 short question "
+        'strings, nothing else, e.g. ["...", "..."].'
+    )
+    user_prompt = (
+        f"Role: {role_title}. Key skills being assessed: {', '.join(required_skills) or 'general fit'}.\n\n"
+        f"Recent exchange:\n{transcript_snippet}"
+    )
+
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(
+                GROQ_CHAT_URL,
+                headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
+                json={
+                    "model": GROQ_MODEL,
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    "max_tokens": 200,
+                    "temperature": 0.4,
+                    "reasoning_effort": GROQ_REASONING_EFFORT,
+                },
+                timeout=15.0,
+            )
+            resp.raise_for_status()
+            content = resp.json()["choices"][0]["message"]["content"]
+            parsed = _extract_json(content) if content else None
+            questions = _validate_suggestions(parsed)
+            if not questions and parsed is not None:
+                logger.warning("Groq follow-up suggestion output rejected by validation — returning none")
+            return [{"id": f"s{i + 1}", "question": q} for i, q in enumerate(questions)]
+    except Exception:
+        logger.exception("Groq follow-up suggestion call failed")
+        return []

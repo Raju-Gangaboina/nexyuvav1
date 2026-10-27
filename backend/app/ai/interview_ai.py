@@ -2,129 +2,27 @@
 AI Interview module — question-bank parsing, answer grading with resume
 cross-check (Groq), and webcam frame concern-detection (Gemini vision).
 Degrades gracefully per Rules.md 3 if either key is missing.
+
+Groq call mechanics (URL, retry-with-backoff, empty-content handling) now
+live in app/ai/groq_client.py (bug-audit item #8) rather than here --
+_groq_chat/_extract_json below are kept as thin aliases so this module's
+own call sites (and aptitude_engine.py, which imports them from here)
+don't need to change.
 """
-import asyncio
-import json
 import logging
 
 import httpx
 
+from app.ai.groq_client import extract_json as _extract_json
+from app.ai.groq_client import groq_chat as _groq_chat
 from app.core.config import settings
 
 logger = logging.getLogger("nexyuva.interview_ai")
 
-GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL = settings.GROQ_MODEL  # centralized in app/core/config.py; llama-3.1-8b-instant was decommissioned 2026-08-16
 GEMINI_API_URL = (
     "https://generativelanguage.googleapis.com/v1beta/models/"
     "gemini-2.0-flash:generateContent"
 )
-
-# Groq's free/on-demand tier enforces a tokens-per-minute budget (confirmed
-# live: 6000 TPM measured on the previous model, llama-3.1-8b-instant, before
-# its 2026-08-16 decommission -- re-verify this figure for GROQ_MODEL) that a
-# handful of calls in quick
-# succession can genuinely exhaust -- this is not a broken integration, it's
-# an expected 429 under normal multi-student use. Previously any single 429
-# was swallowed straight to None with no retry, surfacing as a hard "service
-# unavailable" to the caller even though the budget frees up within ~1-2s.
-# Bounded (3 retries, short waits) so a persistently-down Groq still fails
-# fast rather than hanging the request.
-_MAX_RATE_LIMIT_RETRIES = 3
-
-# GROQ_MODEL (openai/gpt-oss-20b) is a reasoning model: it spends part of
-# max_tokens on a hidden chain-of-thought before writing the actual answer,
-# and defaults to reasoning_effort="medium" if unset. Diagnosed live
-# 2026-09-03: at "medium" the reasoning alone regularly ate the whole
-# max_tokens budget on the 12-question Aptitude Check prompt, returning a
-# 200 with an EMPTY content field (generate_questions then correctly
-# treats that as unparseable and returns None -> the 503 "temporarily
-# unavailable" the frontend was showing) -- and the reasoning tokens still
-# count against the TPM budget, so the same call is also what was
-# triggering repeated 429s. Interview grading (max_tokens=200) hits the
-# identical failure mode, just surfacing as a silent "manual review
-# recommended" fallback instead of a visible error. "low" cuts reasoning
-# token usage sharply for these straightforward extraction/grading tasks,
-# which fixes both the empty-content case and eases the TPM pressure.
-GROQ_REASONING_EFFORT = "low"
-
-
-async def _groq_chat(system_prompt: str, user_prompt: str, max_tokens: int = 500) -> str | None:
-    if not settings.GROQ_API_KEY:
-        logger.warning("GROQ_API_KEY not configured")
-        return None
-    for attempt in range(_MAX_RATE_LIMIT_RETRIES + 1):
-        try:
-            async with httpx.AsyncClient() as client:
-                resp = await client.post(
-                    GROQ_API_URL,
-                    headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
-                    json={
-                        "model": GROQ_MODEL,
-                        "messages": [
-                            {"role": "system", "content": system_prompt},
-                            {"role": "user", "content": user_prompt},
-                        ],
-                        "max_tokens": max_tokens,
-                        "temperature": 0.3,
-                        "reasoning_effort": GROQ_REASONING_EFFORT,
-                    },
-                    timeout=25.0,
-                )
-                if resp.status_code == 429 and attempt < _MAX_RATE_LIMIT_RETRIES:
-                    # Groq's error body includes its own suggested wait time
-                    # (e.g. "Please try again in 1.3s") -- prefer that over a
-                    # fixed guess, falling back to a short default if it's
-                    # ever missing/unparseable.
-                    wait_seconds = 2.0
-                    try:
-                        detail = resp.json().get("error", {}).get("message", "")
-                        import re
-                        match = re.search(r"try again in ([\d.]+)s", detail)
-                        if match:
-                            wait_seconds = min(float(match.group(1)) + 0.2, 8.0)
-                    except Exception:
-                        pass
-                    logger.warning(
-                        "Groq rate-limited (attempt %d/%d) -- retrying in %.1fs",
-                        attempt + 1, _MAX_RATE_LIMIT_RETRIES, wait_seconds,
-                    )
-                    await asyncio.sleep(wait_seconds)
-                    continue
-                resp.raise_for_status()
-                content = resp.json()["choices"][0]["message"]["content"]
-                if not content:
-                    # Reasoning model returned a 200 but wrote nothing to
-                    # `content` (all of max_tokens went to reasoning before
-                    # it got to the answer). Treat exactly like a failed
-                    # call so callers fall back cleanly instead of trying
-                    # to JSON-parse an empty string.
-                    logger.warning("Groq returned empty content (reasoning likely exhausted max_tokens)")
-                    return None
-                return content
-        except Exception:
-            logger.exception("Groq call failed")
-            return None
-    return None
-
-
-def _extract_json(text: str):
-    """Groq sometimes wraps JSON in prose/fences — pull out the first {..} or [..] block."""
-    if not text:
-        return None
-    text = text.strip()
-    for fence in ("```json", "```"):
-        if text.startswith(fence):
-            text = text[len(fence):]
-    text = text.strip("` \n")
-    start_chars = "[{"
-    for i, ch in enumerate(text):
-        if ch in start_chars:
-            try:
-                return json.loads(text[i:])
-            except json.JSONDecodeError:
-                continue
-    return None
 
 
 async def parse_questions_from_text(raw_text: str, max_questions: int = 100) -> list[str]:

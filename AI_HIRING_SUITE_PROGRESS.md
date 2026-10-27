@@ -28,11 +28,11 @@ Next.js **frontend only** (`frontend-web/`). So:
 |---|-------|---------|----------|-------|
 | 5.1 | **Sourcing** | ✅ 100% complete, runtime-verified | ✅ Built (`company/candidates/page.tsx`) | See entries below |
 | 5.2 | **Screening** | ✅ 100% complete, runtime-verified (2026-08-10) | ✅ Confirmed — "Run Deep AI Screening (Module 2)" button on every candidate card | Full live E2E run: registered student+skills, org, posting, called `/screen`, got real Groq-backed fit_score/strengths/gaps/rationale back. See 2026-08-10 log entry |
-| 5.3 | **Assessment** | ✅ Built (`app/ai/assessment_engine.py` + `services/assessment/routes.py`) — predates this doc, was part of original 8-phase build | ✅ Likely built (student-side assessment flow referenced in memory) | Doc's "integrity requirement" (answer keys never sent to client) — **not verified**, worth an audit pass |
-| 5.4 | **Interview (AI-led)** | ✅ Built (`app/ai/interview_ai.py` + `services/interview/routes.py`) with MediaPipe FaceMesh proctoring, integrity flags now store per-occurrence timestamps (not just aggregate counts) | ✅ Built — company-facing review dashboard at `company/interviews/page.tsx`, nav-linked in `company/layout.tsx`. Shows transcript, scores, badge, and a chronological flag-event list (times, not a scrubbable video timeline — no raw video is stored) | Net-new item from Section 5.4's "already built vs new" table is now done. See 2026-08-09 (dashboard) log entry. Old-format DB row round-trip still **not live-tested** |
-| 5.5 | **Smart Scheduling** | ❌ Not built — no Google Calendar / OAuth / freebusy code found anywhere in `backend/app` | ❌ Not built | Full net-new agent. Doc Section 5.5 has the full OAuth flow spec'd, ready to implement |
-| 5.6 | **Assisted Human Interview** | ❌ Not built — no co-pilot/suggestion code found | ❌ Not built | Full net-new agent |
-| 5.7 | **Voice Screen** | ❌ Not built — no Whisper/voice_screen code found anywhere | ❌ Not built | Full net-new agent, doc flags this as highest complexity, build last (matches doc's own Phase 4 ordering) |
+| 5.3 | **Assessment** | ✅ Built (`app/ai/assessment_engine.py` + `services/assessment/routes.py`) — predates this doc, was part of original 8-phase build | ✅ Likely built (student-side assessment flow referenced in memory) | Answer-key-never-sent-to-client audited and confirmed clean, both by code review and a live response-body check (2026-09-08) |
+| 5.4 | **Interview (AI-led)** | ✅ Built (`app/ai/interview_ai.py` + `services/interview/routes.py`) with MediaPipe FaceMesh proctoring, integrity flags now store per-occurrence timestamps (not just aggregate counts) | ✅ Built — company-facing review dashboard at `company/interviews/page.tsx`, nav-linked in `company/layout.tsx`. Shows transcript, scores, badge, and a chronological flag-event list (times, not a scrubbable video timeline — no raw video is stored) | Net-new item from Section 5.4's "already built vs new" table is now done. Old-format DB row round-trip (missing `timestamps` key) verified clean on 2026-09-08 |
+| 5.5 | **Smart Scheduling** | ✅ Built (`app/core/google_calendar.py` + `services/scheduling/routes.py`) — Google OAuth, freebusy-checked slot proposals, Meet-linked confirmation, cancellation with calendar cleanup | ✅ Built — company "Propose Interview Slots" panel embedded in `company/interviews/page.tsx`, student "Pick a time" step in `student/application/[applicationId]/page.tsx` | Real Google OAuth credentials/live consent flow still not runtime-verified against actual Google APIs (needs a human to set up a Cloud project) — see 2026-09-03 entries |
+| 5.6 | **Assisted Human Interview** | ✅ Built (`app/ai/assisted_interview_ai.py` + `services/assisted_interview/routes.py`), fully E2E verified (2026-09-08) | ✅ Built — live co-pilot workspace embedded in `company/interviews/page.tsx` (candidate brief, mic transcription, AI follow-up suggestions, coverage checklist, notes, human-only scorecard) | See 2026-09-08 backend entry above; frontend was already present by the time this table was last touched |
+| 5.7 | **Voice Screen** | ✅ Built (`app/ai/voice_screen.py` + `services/voice_screen/routes.py`), fully E2E verified (2026-09-08) | ✅ Built — student recording flow at `student/voice-screen/[applicationId]/page.tsx`, company review dashboard at `company/voice-screens/page.tsx`, wired into the post-application stepper and company nav | Async, one-way audio interview — no live interviewer, no webcam proctoring. See 2026-09-08 log entry |
 
 **Doc's own roadmap (Section 9) says build order should be:**
 Phase 1: Scheduling, Sourcing, Screening → Phase 2: Assessment, Assisted Human Interview →
@@ -376,3 +376,155 @@ Candidate Applies -> AI Screening -> Aptitude -> Voice Screening -> AI Interview
   needing to visit the Candidates page toggle at all.
 - **Next recommended step:** confirm the student-side button now shows by default, then move to
   5.6 (Assisted Human Interview) or 5.7 (Voice Screen).
+
+### 2026-09-08 — Claude (5.6 Assisted Human Interview — backend built + fully E2E verified)
+- Built Module 5.6 (Assisted Human Interview) backend end-to-end: `app/core/models.py`
+  (`AssistedInterviewSession`, `AssistedInterviewTurn`, `AssistedInterviewStatus`),
+  `app/ai/assisted_interview_ai.py` (Groq-backed `suggest_followups()` returning structured
+  `{id, question}` suggestions, plus `transcribe_audio()`; hard limits `MAX_TEXT_LEN`,
+  `MAX_TURNS_PER_SESSION`, `ROLLING_CONTEXT_TURNS`), `app/services/assisted_interview/{schemas,routes}.py`
+  mounted at `/api/v1/assisted-interview`, registered in `main.py`. Migration
+  `c1d2e3f4a5b6_add_assisted_interview_sessions.py` chained after `9a1c2e5b7d34` (Smart
+  Scheduling) — **applied successfully against the real Neon DB** (`alembic upgrade head`,
+  confirmed `alembic current` == `c1d2e3f4a5b6 (head)`).
+- **Design Rule enforced structurally** (per Architecture.md §5.6): no score/passed/badge field
+  anywhere on the session or its turns — the AI only ever proposes follow-up questions in a
+  sidebar, never talks to the candidate, never makes a pass/fail call.
+- State machine: ACTIVE -> ENDED, `/start` idempotently returns the existing active session
+  instead of creating a duplicate, `/end` is idempotent (no double-set of `ended_at`), every
+  mutating endpoint 400s once ENDED.
+- Endpoints: `POST /{application_id}/start`, `POST /{session_id}/transcribe` (optional
+  mic-audio-to-text helper, rate-limited 60/min), `POST /{session_id}/exchange` (interviewer or
+  candidate turn; candidate turns trigger Groq suggestions using a rolling context window),
+  `POST /{session_id}/suggestions/accept` (idempotent metadata-only record of which suggestion
+  was asked, never rewrites the actual transcript turn), `POST /{session_id}/end`,
+  `GET /{session_id}`, `GET ""` (list, company-facing review, filterable by `internship_id`).
+- Fixed a real slowapi bug hit while booting the server this session: the rate-limited
+  `/transcribe` endpoint needed an explicit `Request` param for `@limiter.limit(...)` to work.
+- **Real bug found and fixed during E2E verification:** `GET`/`end`/list all 500'd with
+  `MissingGreenlet: greenlet_spawn has not been called`. Root cause: `_enrich()` in `routes.py`
+  called `AssistedInterviewSessionResponse.model_validate(session)` on the raw ORM object —
+  since the response schema declares a `turns` field, Pydantic tried to read `session.turns`
+  (a lazy SQLAlchemy relationship) *during* that validation call, before the manually-fetched
+  turns list was ever assigned a few lines later — triggering an implicit lazy-load outside any
+  async-safe context. **Fix:** `_enrich()` now constructs `AssistedInterviewSessionResponse`
+  field-by-field (passing the already-fetched `turns` list directly) instead of calling
+  `model_validate()` on the ORM object at all — sidesteps the lazy attribute entirely.
+- **Full live E2E run against the real backend/DB, all checks passed:** session start +
+  idempotent re-start, interviewer turn (no suggestions) vs candidate turn (real Groq-backed
+  suggestions returned), accept suggestion + idempotent accept + 404 on invalid suggestion id,
+  cross-org isolation (orgB gets 404 reading/mutating orgA's session — deliberately identical
+  404 whether the session doesn't exist or isn't yours), role gating (student -> 403,
+  unauthenticated -> 401), input validation (bad speaker -> 400, empty text -> 400), get/end/list
+  shape checks (turns ordered correctly, no score/passed field anywhere in the response), state
+  machine (exchange-after-end -> 400, idempotent end), list-sessions filter by internship_id.
+  Verification script (`_verify_assisted_interview.py`) and its org-verification helper
+  (`_verify_org.py`, force-approved test orgs via direct DB update to bypass the real
+  document-upload+admin-approval flow, which is orthogonal to what this session was testing)
+  were both throwaway and deleted after the run — same convention as prior sessions' `_check_*.py`
+  files.
+- Also had to restart the backend on `venv\Scripts\python.exe` — the previously-running process
+  had somehow launched from a system Python interpreter without `uvicorn` installed, so a
+  straight restart with the same command silently failed until pointed at the venv interpreter.
+  Worth using the venv interpreter explicitly next time this project's server needs a restart.
+- **Status: 5.6 Assisted Human Interview backend is now 100% built and runtime-verified.**
+  Frontend not built yet (company-side live-interview UI with the AI-suggestion sidebar).
+- **Next recommended step:** build the 5.6 frontend (company interviewer-facing live session UI:
+  start button on an application, transcript view with turns, suggestion sidebar with accept
+  buttons, end button), or pick up 5.7 (Voice Screen, highest complexity, doc says build last).
+
+### 2026-09-08 (continued) — Claude (5.7 Voice Screen — E2E verification, real bug fix, frontend built)
+- Picked up where the previous session in this thread hit a tool limit: backend
+  (`app/ai/voice_screen.py` + `app/services/voice_screen/{routes,schemas}.py`) and a throwaway
+  E2E script (`_verify_voice_screen_e2e.py`) already existed but had **not yet been run**.
+- **Fixed a bug in the throwaway script itself before it would even run:** it built its own
+  `create_async_engine(settings.DATABASE_URL)` instead of reusing `app.core.database.engine`,
+  so it hit the same raw Neon `sslmode` kwarg `TypeError` that `database.py`'s own docstring
+  describes fixing for the real app. Fixed by importing the app's engine directly.
+- **Real bug found and fixed via the E2E run, in `app/services/voice_screen/routes.py`:** both
+  the duplicate-answer rejection and the attempt-completion check used `transcript is not None`
+  as the "was this question answered" signal. But `transcribe_answer()` legitimately returns
+  `None` for silent/unclear audio (Whisper hallucination-filtering, by design — see
+  `app/ai/voice_screen.py`'s docstring) — so any answer Whisper couldn't transcribe would never
+  count as answered, meaning the candidate could re-submit the same question forever and the
+  attempt could never reach COMPLETED. Not just a synthetic-test artifact — this would hit real
+  candidates any time background noise or a quiet mic caused a null transcript. **Fix:** added an
+  explicit `answered: bool` field to each question's JSON blob, set `True` on grading regardless
+  of transcript content, and switched both checks to key off `answered` instead of `transcript`.
+- **Full E2E run against the real backend/DB, all checks passed** (after the fix): idempotent
+  start (capped to 5 of a 6-question bank), re-start correctly rejected, all 5 questions answered
+  and graded even with silent/no-transcript audio, `all_answered` correctly flips true on the
+  last one, duplicate-answer correctly rejected once ended, student result view, org list +
+  detail fetch, cross-org isolation (org B → 404, identical to "doesn't exist" per convention),
+  role gating (unauth → 401, student on org endpoint → 403), nonexistent application → 404.
+  `py_compile` clean on the edited route file. Verification script deleted after the run (same
+  throwaway convention as prior sessions).
+- **Frontend built** (previously entirely missing):
+  - `lib/realApi.ts`: added `startVoiceScreen`, `submitVoiceScreenAnswer` (multipart audio
+    upload, mirrors the existing resume/avatar upload pattern), `getMyVoiceScreen`,
+    `listVoiceScreens`, `getVoiceScreenDetail`, plus their response types.
+  - `student/voice-screen/[applicationId]/page.tsx` (new): mirrors the typed AI-interview
+    page's existing-attempt-check / intro / active / finished stage machine, but records audio
+    via `MediaRecorder` per question (record → stop → review → re-record or submit) instead of a
+    textarea, and has no webcam/proctoring UI at all (matches the backend's one-way, unproctored
+    design). No live per-question score shown, same convention as the AI interview.
+  - `company/voice-screens/page.tsx` (new): posting picker + stat chips + expandable
+    candidate-by-candidate transcript list, same shape as `company/interviews/page.tsx` but
+    simpler (no integrity-flag panel, since there's no proctoring signal to show).
+  - Nav-linked at `/company/voice-screens` (`Mic` icon, added to `company/layout.tsx`'s
+    `NAV_ITEMS`, right after "Interviews").
+  - Wired into the student post-application pipeline stepper
+    (`student/application/[applicationId]/page.tsx`): added a "Voice Screen" step between
+    Aptitude and the AI Interview (matching the locked pipeline order documented above),
+    fetching status via `getMyVoiceScreen` with the same 404-means-not-started pattern as the
+    existing interview step. Replaced the previous hardcoded step-index ternaries (which would
+    have needed manual updates at every later step) with computed
+    `voiceScreenStepIndex`/`interviewStepIndex`/`schedulingStepIndex`/`statusStepIndex`
+    variables so future step insertions don't require touching every downstream `StepRow`.
+  - `npx tsc --noEmit` across the whole frontend: **zero errors**.
+- **Not done this session:** no orchestrator wiring Voice Screen into the other pipeline stages
+  automatically (matches the rest of the suite — see "Post-application pipeline (locked)" section
+  above, still on-demand/manual triggers throughout). Real-microphone recording (as opposed to
+  the silent-WAV E2E test) has not been manually clicked through in a browser this session.
+- **Status: 5.7 Voice Screen is now considered fully built and E2E-verified on the backend, with
+  a complete frontend on both student and company sides.** This closes out all 7 agents from the
+  architecture doc's Section 5 table (5.1–5.4 previously complete, 5.5–5.7 completed across this
+  and the two preceding sessions in this thread).
+- **Next recommended step:** a real-browser click-through of the Voice Screen student flow
+  (actual mic recording, not synthetic silent audio) to catch anything the E2E script's use of a
+  silent WAV couldn't exercise (real transcript content, `MediaRecorder` mimetype quirks across
+  browsers). Otherwise, the suite's remaining open items are the frontend-only pieces flagged in
+  earlier entries: 5.6's live-session UI polish, and Assessment's answer-key-never-sent-to-client
+  audit.
+
+### 2026-09-08 (continued 2) — Claude (Assessment answer-key-never-sent-to-client audit — closed)
+- Closed the audit item flagged open since the very first 2026-08-09 entry in this log.
+- **Code review:** `app/ai/assessment_engine.py`'s `_public_question()` whitelists exactly
+  `id`/`difficulty`/`question`/`options` before a question dict (which includes `correct_index`
+  as loaded from the JSON question bank) ever leaves the module — both `pick_first_question()`
+  and `pick_next_question()` route through it, and `routes.py` only ever passes their output into
+  `QuestionPublic(**...)`, whose schema doesn't declare a `correct_index` field either (belt and
+  suspenders — Pydantic would silently drop it even if `_public_question` didn't). `grade_answer()`
+  is the only function that reads `correct_index` at all, and it returns a bare `bool`, never the
+  value itself.
+- **Live confirmation, not just code reading:** registered a real throwaway student, hit
+  `POST /api/v1/assessments/start` for `python_dev` against the running backend, and inspected
+  the raw JSON response body — confirmed it contains only `attempt_id`/`domain`/`question`
+  (`id`/`difficulty`/`question`/`options`), no `correct_index` or any other answer-key field
+  anywhere in the payload.
+- **Status: no bug found — the answer key genuinely never reaches the client**, at the code level
+  and confirmed live over the wire. This closes the last standing item from the Assessment (5.3)
+  row's "not verified, worth an audit pass" note.
+
+### 2026-09-08 (continued 3) — Claude (Interview old-format DB row round-trip — verified)
+- Closed the last remaining open item from the 2026-08-09 dashboard entry: whether a pre-existing
+  `interview_attempts.integrity_flags` row from before the `timestamps` field was added would
+  round-trip through `IntegrityFlagDetail(**f)` in `organization/routes.py` without error.
+- Found a real attempt row in the live DB whose `integrity_flags` already had no `timestamps` key
+  (organically old-format, not a fabricated case) and confirmed directly against
+  `app/services/organization/schemas.py`'s `IntegrityFlagDetail` that constructing it from a
+  `{flag_type, count}`-only dict (no `timestamps` key at all) succeeds cleanly, with the field
+  defaulting to `timestamps=[]` exactly as the schema's default was reasoned to handle back when
+  the field was added.
+- **Status: confirmed working, no bug found.** This closes the last open verification item listed
+  against Interview (5.4) in the status table above.

@@ -18,6 +18,15 @@ const LANDING_CSS = `
   --blue:#2155FF; --ink:#0A0A0A; --sun:#FFD93B; --paper:#FFFFFF; --red:#FF3B30;
   --shadow:8px 8px 0 var(--ink); --shadow-sm:4px 4px 0 var(--ink);
 }
+html[data-ui="classic"]{
+  --blue:#2B7FD4; --ink:#E8E6E1; --sun:#E8820A; --paper:#0A0A0B; --red:#ff6b6b;
+  --shadow:0 8px 30px rgba(0,0,0,0.5); --shadow-sm:0 4px 16px rgba(0,0,0,0.4);
+}
+html[data-ui="classic"] body{ font-family:'Inter',sans-serif; }
+html[data-ui="classic"] .pxf, html[data-ui="classic"] .slf{ font-family:'Inter',sans-serif; }
+html[data-ui="classic"] .btn{ border-radius:8px; }
+html[data-ui="classic"] .chip{ border-radius:6px; transform:none; }
+html[data-ui="classic"] .player-card, html[data-ui="classic"] .char, html[data-ui="classic"] .slot, html[data-ui="classic"] .card, html[data-ui="classic"] .agent, html[data-ui="classic"] .terminal, html[data-ui="classic"] .ladder, html[data-ui="classic"] .rules{ border-radius:12px; }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{
@@ -58,6 +67,8 @@ button{font-family:inherit;cursor:pointer;}
 .hud-item b{color:var(--blue);}
 #sndBtn{display:flex;align-items:center;gap:6px;background:var(--sun);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:5px 8px;font-family:'Press Start 2P',monospace;font-size:9px;}
 #sndBtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink);}
+#uiModeBtn{display:flex;align-items:center;gap:6px;background:var(--blue);color:#fff;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:5px 8px;font-family:'Press Start 2P',monospace;font-size:9px;cursor:pointer;}
+#uiModeBtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink);}
 
 /* ============ GENERIC BITS ============ */
 .chip{display:inline-block;font-family:'Press Start 2P',monospace;font-size:10px;border:3px solid var(--ink);padding:7px 11px;background:var(--sun);box-shadow:var(--shadow-sm);transform:rotate(-2deg);}
@@ -376,6 +387,7 @@ const LANDING_BODY = `
       <span class="hud-item">SCORE <b id="scoreVal">000000</b></span>
       <span class="hud-item">★×<b id="coinVal">00</b></span>
       <button id="sndBtn" aria-label="toggle sound"><span class="svg-sprite" data-sprite="spk" data-px="3"></span><span id="sndTxt">ON</span></button>
+      <button id="uiModeBtn" aria-label="toggle UI mode"><span id="uiModeTxt">ARCADE</span></button>
       <a href="/login" class="hud-item" id="loginHudBtn" style="text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:6px;">▸ LOG IN</a>
     </div>
   </div>
@@ -974,6 +986,23 @@ export default function Page() {
     const onBlip = () => SFX.blip();
     blipEls.forEach((el) => el.addEventListener('mouseenter', onBlip));
     cleanups.push(() => blipEls.forEach((el) => el.removeEventListener('mouseenter', onBlip)));
+
+    const uiModeBtn = root.querySelector<HTMLButtonElement>('#uiModeBtn');
+    const uiModeTxt = root.querySelector<HTMLElement>('#uiModeTxt');
+    const STORAGE_KEY = 'nexyuva-ui-mode';
+    const syncUiModeLabel = () => {
+      const isClassic = document.documentElement.getAttribute('data-ui') === 'classic';
+      if (uiModeTxt) uiModeTxt.textContent = isClassic ? 'CLASSIC' : 'ARCADE';
+    };
+    syncUiModeLabel();
+    const onUiModeClick = () => {
+      const next = document.documentElement.getAttribute('data-ui') === 'classic' ? 'arcade' : 'classic';
+      document.documentElement.setAttribute('data-ui', next);
+      try { window.localStorage.setItem(STORAGE_KEY, next); } catch { /* ignore */ }
+      syncUiModeLabel();
+    };
+    uiModeBtn?.addEventListener('click', onUiModeClick);
+    if (uiModeBtn) cleanups.push(() => uiModeBtn.removeEventListener('click', onUiModeClick));
 
     const sndBtn = root.querySelector<HTMLButtonElement>('#sndBtn');
     const sndTxt = root.querySelector<HTMLElement>('#sndTxt');

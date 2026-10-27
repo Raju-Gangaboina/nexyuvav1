@@ -504,3 +504,79 @@ input[type="range"].ai-slider::-moz-range-thumb {
 .px-btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink,#0A0A0A);}
 .px-input{font-family:'Inter',sans-serif;border:2px solid var(--px-border-color);background:var(--bg-elevated);}
 .px-tab{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.5px;text-transform:uppercase;}
+
+
+/* ═══════════════════════════════════════════════
+   CLASSIC UI MODE — restores the pre-arcade dark
+   glass/voxel look for shared component classes.
+   Toggled via <html data-ui="classic">, driven by
+   app/components/UIMode.tsx + the ThemeToggle button.
+   Arcade stays the default (data-ui="arcade" or unset).
+   ═══════════════════════════════════════════════ */
+html[data-ui="classic"] body {
+  background-color: #0A0A0B;
+  color: #E8E6E1;
+}
+html[data-ui="classic"] .glass,
+html[data-ui="classic"] .glass-card {
+  background: rgba(17,17,20,0.85);
+  border: 1px solid rgba(232,230,225,0.08);
+  border-radius: 8px;
+  color: #E8E6E1;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.40);
+  backdrop-filter: blur(6px);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+html[data-ui="classic"] .glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.50);
+}
+html[data-ui="classic"] .btn-primary {
+  background: #2B7FD4; color: #fff; border: 1px solid #2B7FD4;
+  border-radius: 6px; box-shadow: 0 2px 10px rgba(43,127,212,0.30);
+  font-family: 'Inter', sans-serif; text-transform: none; letter-spacing: normal;
+}
+html[data-ui="classic"] .btn-primary:hover { background: #1E65D6; box-shadow: 0 4px 16px rgba(43,127,212,0.40); transform: none; }
+html[data-ui="classic"] .btn-secondary {
+  background: rgba(255,255,255,0.04); color: #E8E6E1; border: 1px solid rgba(232,230,225,0.16);
+  border-radius: 6px; box-shadow: none; font-family: 'Inter', sans-serif; text-transform: none;
+}
+html[data-ui="classic"] .btn-secondary:hover { background: rgba(255,255,255,0.08); transform: none; }
+html[data-ui="classic"] .btn-ghost { color: #5BA3E8; }
+html[data-ui="classic"] .badge {
+  border-radius: 999px; border: 1px solid rgba(232,230,225,0.14);
+  font-family: 'Inter', sans-serif; letter-spacing: normal; font-weight: 600;
+}
+html[data-ui="classic"] .badge-primary, html[data-ui="classic"] .badge-cyan { background: rgba(43,127,212,0.16); color: #5BA3E8; border-color: rgba(43,127,212,0.30); }
+html[data-ui="classic"] .badge-emerald { background: rgba(45,122,95,0.16); color: #4FBF97; border-color: rgba(45,122,95,0.30); }
+html[data-ui="classic"] .badge-amber { background: rgba(232,130,10,0.16); color: #F0A94E; border-color: rgba(232,130,10,0.30); }
+html[data-ui="classic"] .badge-rose { background: rgba(192,64,64,0.16); color: #E88888; border-color: rgba(192,64,64,0.30); }
+html[data-ui="classic"] .input-field, html[data-ui="classic"] .select-field {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(232,230,225,0.14);
+  border-radius: 6px; color: #E8E6E1; font-family: 'Inter', sans-serif;
+}
+html[data-ui="classic"] .input-field::placeholder { color: #6B6B70; }
+html[data-ui="classic"] .input-field:focus, html[data-ui="classic"] .select-field:focus { box-shadow: 0 0 0 2px rgba(43,127,212,0.35); }
+html[data-ui="classic"] .stat-card { background: rgba(17,17,20,0.85); border: 1px solid rgba(232,230,225,0.08); border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.35); }
+html[data-ui="classic"] .stat-card:hover { transform: translateY(-3px); }
+html[data-ui="classic"] .sidebar { background: #0A0A0B; border-right: 1px solid rgba(232,230,225,0.08); }
+html[data-ui="classic"] .sidebar-item { color: #9A9A9E; border-radius: 6px; font-weight: 500; text-transform: none; }
+html[data-ui="classic"] .sidebar-item:hover { background: rgba(255,255,255,0.05); border-color: transparent; color: #E8E6E1; }
+html[data-ui="classic"] .sidebar-item.active { background: rgba(43,127,212,0.16); color: #5BA3E8; border-color: transparent; }
+html[data-ui="classic"] .progress-bar { background: rgba(255,255,255,0.06); border: none; border-radius: 999px; }
+html[data-ui="classic"] .progress-fill { background: #2B7FD4; border-radius: 999px; transition: width 0.4s ease; }
+html[data-ui="classic"] .tag { background: rgba(255,255,255,0.04); border: 1px solid rgba(232,230,225,0.14); border-radius: 999px; color: #E8E6E1; font-family: 'Inter', sans-serif; }
+html[data-ui="classic"] .tag:hover { background: rgba(255,255,255,0.08); }
+html[data-ui="classic"] .tag.matched { background: rgba(45,122,95,0.20); border-color: transparent; color: #4FBF97; }
+html[data-ui="classic"] .tag.missing { background: rgba(192,64,64,0.20); border-color: transparent; color: #E88888; }
+html[data-ui="classic"] .divider { background: rgba(232,230,225,0.10); }
+html[data-ui="classic"] .notif-dot { border-color: #0A0A0B; }
+html[data-ui="classic"] .tooltip-wrapper .tooltip { background: #1a1a1d; border: 1px solid rgba(232,230,225,0.14); border-radius: 6px; color: #E8E6E1; font-family: 'Inter', sans-serif; }
+html[data-ui="classic"] .status-applied     { background: rgba(232,130,10,0.18); color: #F0A94E; border: 1px solid rgba(232,130,10,0.30); }
+html[data-ui="classic"] .status-shortlisted { background: rgba(43,127,212,0.18); color: #5BA3E8; border: 1px solid rgba(43,127,212,0.30); }
+html[data-ui="classic"] .status-selected    { background: rgba(45,122,95,0.18); color: #4FBF97; border: 1px solid rgba(45,122,95,0.30); }
+html[data-ui="classic"] .status-rejected    { background: rgba(192,64,64,0.18); color: #E88888; border: 1px solid rgba(192,64,64,0.30); }
+html[data-ui="classic"] .chat-bubble-user { background: #2B7FD4; border-radius: 14px 14px 2px 14px; border: none; box-shadow: none; }
+html[data-ui="classic"] .chat-bubble-bot  { background: rgba(255,255,255,0.05); border: 1px solid rgba(232,230,225,0.10); border-radius: 14px 14px 14px 2px; box-shadow: none; color: #E8E6E1; }
+html[data-ui="classic"] .recharts-tooltip-wrapper .recharts-default-tooltip { background: #1a1a1d !important; border: 1px solid rgba(232,230,225,0.14) !important; border-radius: 8px !important; color: #E8E6E1 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important; }
+html[data-ui="classic"] h1, html[data-ui="classic"] h2, html[data-ui="classic"] h3, html[data-ui="classic"] h4 { color: #E8E6E1; }

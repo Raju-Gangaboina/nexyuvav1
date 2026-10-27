@@ -18,16 +18,14 @@ didn't exist yet; that gap is closed.
 """
 import logging
 
-import httpx
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.ai.groq_client import groq_chat
 from app.core.config import settings
 from app.core.models import KnowledgeBaseSnippet
 
 logger = logging.getLogger("nexyuva.chatbot")
-
-GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 # Rule-based FAQ bank: (required_keywords_any_order, answer). Each entry
 # matches if ALL keyword groups are present anywhere in the question,
@@ -140,30 +138,18 @@ async def generate_rag_answer(question: str, context_snippets: list[str]) -> str
         f"Context:\n{context_block}\n\nQuestion: {question}" if context_block else question
     )
 
-    try:
-        async with httpx.AsyncClient() as client:
-            resp = await client.post(
-                GROQ_API_URL,
-                headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
-                json={
-                    "model": settings.GROQ_MODEL,  # llama-3.1-8b-instant was decommissioned 2026-08-16
-                    "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_prompt},
-                    ],
-                    "max_tokens": 300,
-                },
-                timeout=15.0,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            return data["choices"][0]["message"]["content"]
-    except Exception:
-        logger.exception("Groq generation failed")
+    # temperature=1.0 / reasoning_effort=None preserve this call's original
+    # behavior (it never set either, unlike interview_ai/aptitude_engine's
+    # reasoning-heavy prompts) now that it goes through the shared client.
+    result = await groq_chat(
+        system_prompt, user_prompt, max_tokens=300, temperature=1.0, reasoning_effort=None, timeout=15.0,
+    )
+    if result is None:
         return (
             "I'm having trouble answering that right now. Please try again "
             "shortly or check the FAQ section."
         )
+    return result
 
 
 async def answer_question(

@@ -15,6 +15,7 @@ from app.ai.embeddings import build_internship_text, embed_text
 from app.ai.github_agent import get_cached_languages
 from app.ai.interview_ai import parse_questions_from_text
 from app.ai.recommendation_engine import RecommendationWeights, compute_hybrid_score, content_similarity
+from app.ai.resume_parser import normalize_skill_list
 from app.ai.screening_agent import screen_candidate
 from app.ai.skill_confidence import compute_recommendation_confidence, compute_skill_confidence
 from app.ai.sourcing_pitch import generate_clean_fallback_explanation, generate_recruiter_pitch
@@ -420,6 +421,16 @@ async def post_internship(
     # one of the 7 known labels.
     payload_fields = payload.model_dump()
     payload_fields["domain"] = normalize_domain_label(payload_fields["domain"])
+    # Bug-audit item #6: recruiter-entered required_skills/preferred_skills
+    # bypassed the resume-parser's alias/variant taxonomy entirely, so a
+    # posting listing "JS" would never match a candidate profile whose
+    # resume-parsed skill is "javascript" (or vice versa for a manually
+    # entered candidate skill). Normalize both fields the same way
+    # student skills are normalized on PATCH /me, so matching downstream
+    # (screening_agent, recommendation_engine, the enterprise score
+    # breakdown below) compares like-for-like canonical names.
+    payload_fields["required_skills"] = normalize_skill_list(payload_fields.get("required_skills"))
+    payload_fields["preferred_skills"] = normalize_skill_list(payload_fields.get("preferred_skills")) or None
 
     internship = Internship(
         organization_id=org.id,

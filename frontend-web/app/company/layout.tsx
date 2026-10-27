@@ -3,19 +3,18 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
-import { LayoutDashboard, Plus, Users, BarChart3, Building2, LogOut, Menu, X, Webhook, Clock, ShieldAlert, RefreshCw, Upload, FileCheck, Loader2, MessageSquare, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, Plus, Users, BarChart3, Building2, LogOut, Menu, X, Webhook, Clock, ShieldAlert, RefreshCw, Upload, FileCheck, Loader2, MessageSquare, ShieldCheck, Mic } from 'lucide-react';
 import { getMyOrgVerification, uploadVerificationDocument, getRealToken, clearRealToken, OrgVerificationInfo } from '@/lib/realApi';
 import ThemeToggle from '@/app/components/ThemeToggle';
 import { useArcadeFX } from '@/app/components/ArcadeFX';
-
-const ink = '#0A0A0A';
-const blue = '#2155FF';
+import { useUIMode } from '@/app/components/UIMode';
 
 const NAV_ITEMS = [
   { href: '/company/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/company/post-internship', icon: Plus, label: 'Post Internship' },
   { href: '/company/candidates', icon: Users, label: 'Candidates' },
   { href: '/company/interviews', icon: MessageSquare, label: 'Interviews' },
+  { href: '/company/voice-screens', icon: Mic, label: 'Voice Screens' },
   { href: '/company/analytics', icon: BarChart3, label: 'Analytics' },
   { href: '/company/integrations', icon: Webhook, label: 'ATS Integration' },
   { href: '/company/verification', icon: ShieldCheck, label: 'Verification' },
@@ -24,6 +23,18 @@ const NAV_ITEMS = [
 export default function CompanyLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { mode } = useUIMode();
+  const isArcade = mode === 'arcade';
+  const ink = isArcade ? '#0A0A0A' : '#E8E6E1';
+  const blue = isArcade ? '#2155FF' : '#2B7FD4';
+  const paper = isArcade ? '#fff' : '#0A0A0B';
+  const paperAlt = isArcade ? '#fafafa' : '#0D0D0F';
+  const borderW = isArcade ? 4 : 1;
+  const borderW3 = isArcade ? 3 : 1;
+  const borderW2 = isArcade ? 2 : 1;
+  const borderW1 = isArcade ? 1 : 1;
+  const shadow = (px: number) => isArcade ? `${px}px ${px}px 0 ${ink}` : 'none';
+  const font = isArcade ? "'JetBrains Mono', monospace" : "'Inter', sans-serif";
   const { toast, playSound, ArcadeToasts } = useArcadeFX();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [checking, setChecking] = useState(true);
@@ -228,19 +239,15 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
   }
 
   // verification.status === 'approved' -> the real dashboard chrome
-  // (rebuilt to match the pixel/arcade design system used by
-  // app/student/layout.tsx — see globals.css .sidebar/.sidebar-item and
-  // the "Pixel Shadows" tokens; this was the piece of the company portal
-  // that never got ported over when that redesign happened.)
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#fff', color: ink, fontFamily: "'JetBrains Mono', monospace" }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: paper, color: ink, fontFamily: font }}>
       {ArcadeToasts}
 
       {/* ── Sidebar ── */}
       <aside style={{
         width: sidebarOpen ? 256 : 68,
-        background: '#fff',
-        borderRight: `4px solid ${ink}`,
+        background: paper,
+        borderRight: `${borderW}px solid ${ink}`,
         display: 'flex', flexDirection: 'column',
         position: 'fixed', top: 0, bottom: 0, left: 0, zIndex: 50,
         transition: 'width 0.2s steps(6)',
@@ -249,22 +256,22 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
         {/* Logo */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: sidebarOpen ? 'flex-start' : 'center',
-          gap: 10, padding: '14px 16px', borderBottom: `3px solid ${ink}`, height: 68,
+          gap: 10, padding: '14px 16px', borderBottom: `${borderW3}px solid ${ink}`, height: 68,
           minWidth: sidebarOpen ? 256 : 68,
         }}>
           {sidebarOpen ? (
-            <Image src="/nexyuva-light-logo.png" alt="NexYuva" width={150} height={44} style={{ height: 40, width: 'auto', objectFit: 'contain', flexShrink: 0 }} />
+            <Image src="/nexyuva-light-logo.png" alt="NexYuva" width={150} height={44} style={{ height: 40, width: 'auto', objectFit: 'contain', flexShrink: 0, filter: isArcade ? 'none' : 'invert(1)' }} />
           ) : (
-            <div style={{ width: 38, height: 38, background: blue, border: `2px solid ${ink}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Cormorant Garamond',serif", fontSize: 18, fontWeight: 700, color: '#fff' }}>N</div>
+            <div style={{ width: 38, height: 38, background: blue, border: `${borderW2}px solid ${ink}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Cormorant Garamond',serif", fontSize: 18, fontWeight: 700, color: '#fff' }}>N</div>
           )}
         </div>
 
         {/* Company Portal badge */}
         {sidebarOpen && (
-          <div style={{ padding: '10px 14px', borderBottom: `3px solid ${ink}` }}>
+          <div style={{ padding: '10px 14px', borderBottom: `${borderW3}px solid ${ink}` }}>
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-              padding: '5px 10px', background: blue, color: '#fff', border: `2px solid ${ink}`,
+              padding: '5px 10px', background: blue, color: '#fff', border: `${borderW2}px solid ${ink}`,
               fontSize: 10, fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase',
             }}>
               <Building2 size={11} /> Company Portal
@@ -283,7 +290,7 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
                   display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px',
                   color: isActive ? '#fff' : ink,
                   background: isActive ? blue : 'transparent',
-                  border: isActive ? `2px solid ${ink}` : '2px solid transparent',
+                  border: isActive ? `${borderW2}px solid ${ink}` : `${borderW2}px solid transparent`,
                   textDecoration: 'none', fontWeight: 700, fontSize: 12,
                   marginBottom: 4, whiteSpace: 'nowrap', textTransform: 'uppercase', letterSpacing: 0.3,
                 }}
@@ -296,15 +303,15 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
         </nav>
 
         {/* Bottom: company + sign out */}
-        <div style={{ padding: '10px 8px', borderTop: `3px solid ${ink}` }}>
+        <div style={{ padding: '10px 8px', borderTop: `${borderW3}px solid ${ink}` }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: sidebarOpen ? '8px 6px' : '8px 0', justifyContent: sidebarOpen ? 'flex-start' : 'center' }}>
-            <div style={{ width: 30, height: 30, background: blue, border: `2px solid ${ink}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', flexShrink: 0 }}>
+            <div style={{ width: 30, height: 30, background: blue, border: `${borderW2}px solid ${ink}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', flexShrink: 0 }}>
               {verification.company_name.slice(0, 2).toUpperCase()}
             </div>
             {sidebarOpen && (
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 12, fontWeight: 700, color: ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{verification.company_name}</div>
-                <div style={{ fontSize: 10, color: '#666', textTransform: 'uppercase', letterSpacing: 0.3 }}>Employer</div>
+                <div style={{ fontSize: 10, color: isArcade ? '#666' : '#9A9A9E', textTransform: 'uppercase', letterSpacing: 0.3 }}>Employer</div>
               </div>
             )}
           </div>
@@ -325,16 +332,16 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
       <main style={{
         flex: 1, marginLeft: sidebarOpen ? 256 : 68,
         transition: 'margin-left 0.2s steps(6)',
-        minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#fafafa',
+        minHeight: '100vh', display: 'flex', flexDirection: 'column', background: paperAlt,
       }}>
         {/* Topbar */}
         <header style={{
-          height: 68, background: '#fff', borderBottom: `4px solid ${ink}`,
+          height: 68, background: paper, borderBottom: `${borderW}px solid ${ink}`,
           display: 'flex', alignItems: 'center', padding: '0 20px', gap: 12,
           position: 'sticky', top: 0, zIndex: 40,
         }}>
           <button onClick={() => setSidebarOpen(!sidebarOpen)} onMouseEnter={playSound.blip}
-            style={{ background: '#fff', border: `2px solid ${ink}`, cursor: 'pointer', color: ink, padding: 7 }}
+            style={{ background: paper, border: `${borderW2}px solid ${ink}`, cursor: 'pointer', color: ink, padding: 7 }}
           >
             {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -345,13 +352,13 @@ export default function CompanyLayout({ children }: { children: React.ReactNode 
 
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px',
-            background: '#fff', border: `2px solid ${ink}`, boxShadow: `3px 3px 0 ${ink}`,
+            background: paper, border: `${borderW2}px solid ${ink}`, boxShadow: shadow(3),
           }}>
-            <div style={{ width: 24, height: 24, background: blue, border: `1px solid ${ink}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color: '#fff' }}>
+            <div style={{ width: 24, height: 24, background: blue, border: `${borderW1}px solid ${ink}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color: '#fff' }}>
               {verification.company_name.slice(0, 2).toUpperCase()}
             </div>
             <span style={{ fontSize: 12, fontWeight: 700, color: ink }}>{verification.company_name}</span>
-            <span style={{ padding: '2px 8px', background: '#2D7A5F', color: '#fff', border: `1px solid ${ink}`, fontSize: 9, fontWeight: 800, letterSpacing: '0.05em' }}>VERIFIED</span>
+            <span style={{ padding: '2px 8px', background: '#2D7A5F', color: '#fff', border: `${borderW1}px solid ${ink}`, fontSize: 9, fontWeight: 800, letterSpacing: '0.05em' }}>VERIFIED</span>
           </div>
         </header>
 

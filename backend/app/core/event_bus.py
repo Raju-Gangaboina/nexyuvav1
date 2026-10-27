@@ -25,9 +25,21 @@ _redis_client: aioredis.Redis | None = None
 
 def _get_redis_url() -> str | None:
     """Prefers UPSTASH_REDIS_URL (production); falls back to a local
-    redis:// URL for dev/sandbox testing when Upstash isn't configured."""
+    redis:// URL for dev/sandbox testing when Upstash isn't configured.
+
+    In production (ENV=production) we do NOT silently fall back to
+    localhost — that host never exists on Render and previously caused
+    _get_client() to fail every single call with an unhelpful traceback.
+    Instead we log one clear warning and return None so _get_client()
+    skips straight to graceful degradation."""
     if settings.UPSTASH_REDIS_URL:
         return settings.UPSTASH_REDIS_URL
+    if settings.ENV == "production":
+        logger.warning(
+            "UPSTASH_REDIS_URL is not set in production — event bus will "
+            "stay disabled until it's added in Render's Environment tab."
+        )
+        return None
     return "redis://localhost:6379"
 
 
@@ -41,9 +53,12 @@ async def get_redis_client() -> aioredis.Redis | None:
 async def _get_client() -> aioredis.Redis | None:
     global _redis_client
     if _redis_client is None:
+        url = _get_redis_url()
+        if url is None:
+            return None
         try:
             _redis_client = aioredis.from_url(
-                _get_redis_url(), decode_responses=True, socket_timeout=10.0
+                url, decode_responses=True, socket_timeout=10.0
             )
             await _redis_client.ping()
         except Exception:

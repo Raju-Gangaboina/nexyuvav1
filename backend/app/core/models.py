@@ -879,3 +879,193 @@ class Notification(Base):
     is_read: Mapped[bool] = mapped_column(default=False)
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     read_at: Mapped[datetime | None] = mapped_column(nullable=True)
+
+
+# ---------------------------------------------------------------------------
+# Module 5.6 — Assisted Human Interview
+# ---------------------------------------------------------------------------
+#
+# Two-table design (session + turn), not one JSON-blob column, per a design
+# review before this ever touched the real DB (2026-09-08): querying "last
+# N exchanges" against a normalized turns table is a plain indexed query
+# instead of slicing a growing JSON array, and it gives the review dashboard
+# a natural per-turn row to render instead of unpacking a blob.
+
+class AssistedInterviewStatus(str, enum.Enum):
+    ACTIVE = "active"
+    ENDED = "ended"
+
+
+class AssistedInterviewSession(Base):
+    """
+    Module 5.6 (Assisted Human Interview) — a human interviewer runs the
+    live conversation; the AI is a silent co-pilot suggesting follow-up
+    questions, never speaking to the candidate and never scoring the
+    interview (see Architecture.md §5.6's Design Rule). Distinct from
+    InterviewAttempt (5.4, AI *is* the interviewer) and ScheduledInterview
+    (5.5, only books the meeting time).
+
+    No score/passed/badge field exists anywhere in this session or its
+    turns, by design — that's what keeps the "AI never makes a pass/fail
+    call" rule structural rather than just a prompt instruction.
+    """
+    __tablename__ = "assisted_interview_sessions"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    application_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("applications.id"))
+    organization_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id"))
+    student_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("student_profiles.id"))
+    internship_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("internships.id"))
+
+    status: Mapped[AssistedInterviewStatus] = mapped_column(
+        SAEnum(AssistedInterviewStatus), default=AssistedInterviewStatus.ACTIVE
+    )
+
+    started_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    ended_at: Mapped[datetime | None] = mapped_column(nullable=True)
+
+    turns: Mapped[list["AssistedInterviewTurn"]] = relationship(
+        "AssistedInterviewTurn",
+        primaryjoin="AssistedInterviewSession.id == AssistedInterviewTurn.session_id",
+        order_by="AssistedInterviewTurn.sequence",
+        viewonly=True,
+    )
+
+    # Interviewer-only checklist (V1.1, spec 5.6 Priority 4) -- which
+    # predefined topic areas have been explored so far. Deliberately a
+    # plain interviewer-toggled dict {area_key: bool}, never AI-inferred or
+    # AI-written -- "a simple interviewer aid, not an AI score" per the
+    # spec. Keys are the fixed COVERAGE_AREAS list in the schemas module;
+    # unset areas simply aren't present in the dict (falsy by absence).
+    coverage: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    # Private interviewer notes taken during the live interview (V1.1,
+    # spec 5.6 Priority 5) -- [{"id": str, "text": str, "is_evidence":
+    # bool, "created_at": iso str}, ...]. Human-authored only; nothing in
+    # app/ai/assisted_interview_ai.py ever writes to this list.
+    notes: Mapped[list[dict]] = mapped_column(JSON, default=list)
+
+    # Post-interview structured scorecard (V1.1, spec 5.6 Priority 5) --
+    # filled in exclusively by the human interviewer via POST .../scorecard
+    # after the session ends. Every field here is nullable because a
+    # session can be ENDED with no scorecard yet (interviewer fills it in
+    # afterward) -- there's no code path anywhere, AI or otherwise, that
+    # writes a value into decision/scores except that one interviewer-only
+    # endpoint. This is what keeps "AI never scores or recommends hiring"
+    # structural rather than just a prompt instruction, same reasoning as
+    # the missing score field on the turns themselves.
+    technical_knowledge: Mapped[int | None] = mapped_column(nullable=True)  # 1-5
+    problem_solving: Mapped[int | None] = mapped_column(nullable=True)  # 1-5
+    communication: Mapped[int | None] = mapped_column(nullable=True)  # 1-5
+    project_understanding: Mapped[int | None] = mapped_column(nullable=True)  # 1-5
+    role_specific_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    decision: Mapped[str | None] = mapped_column(String(20), nullable=True)  # strong_yes|yes|maybe|no
+    scorecard_submitted_at: Mapped[datetime | None] = mapped_column(nullable=True)
+
+
+class AssistedInterviewTurn(Base):
+    """
+    One utterance in the live interview — either the interviewer or the
+    candidate. When speaker == 'candidate', ai_suggestions may hold 0-2
+    AI-proposed follow-ups generated right after this turn (spec 5.6 step
+    2: "after each candidate answer"). accepted_suggestion_id records
+    *which* suggestion (if any) the interviewer used as-is or as a
+    starting point — it is never overwritten with the interviewer's actual
+    wording, so the audit trail always reads "AI suggested X" as a
+    separate fact from "interviewer then asked Y" (Y is simply the next
+    turn, speaker='interviewer'). This is what keeps AI-suggested and
+    human-asked questions from ever being conflated into one field.
+    """
+    __tablename__ = "assisted_interview_turns"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    session_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("assisted_interview_sessions.id"))
+    # Monotonic per-session order — assigned server-side (count of existing
+    # turns at insert time), never client-supplied, so ordering can't be
+    # spoofed by a retried/out-of-order request.
+    sequence: Mapped[int] = mapped_column()
+    speaker: Mapped[str] = mapped_column(String(20))  # "interviewer" | "candidate"
+    text: Mapped[str] = mapped_column(Text)
+
+    # [{"id": "s1", "question": str}, ...] — 0-2 entries, only ever set on a
+    # candidate turn. Structured (not free-form model output) so the
+    # frontend and /suggestions/accept can reference a suggestion by id
+    # instead of matching on question text.
+    ai_suggestions: Mapped[list[dict]] = mapped_column(JSON, default=list)
+    # The suggestion id (from ai_suggestions above) the interviewer chose to
+    # ask, if any — set via POST /suggestions/accept. Null if the
+    # interviewer asked their own question instead.
+    accepted_suggestion_id: Mapped[str | None] = mapped_column(String(20), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+
+
+# ---------------------------------------------------------------------------
+# Module 5.7 — Voice Screen
+# ---------------------------------------------------------------------------
+#
+# Async, ONE-WAY voice interview: no live human or AI interviewer. The
+# candidate is presented with a fixed set of questions and records an
+# unattended voice answer to each. Distinct from InterviewAttempt (5.4,
+# AI-led, webcam-proctored, live-graded turn by turn) and
+# AssistedInterviewSession (5.6, human-led, AI only suggests follow-ups,
+# never scores) — this module both transcribes (Groq Whisper, reusing the
+# same pipeline as app/ai/assisted_interview_ai.py's transcribe_audio, per
+# that module's docstring) AND scores each answer (Groq chat), the way
+# 5.4's grade_answer does, but with no live interviewer/proctoring at all.
+#
+# Question source: reuses Internship.interview_question_bank (the same
+# company-uploaded bank 5.4 draws from — see services/interview/routes.py)
+# rather than introducing a second, parallel question-bank field/upload UI
+# for what is conceptually the same "company's interview questions for
+# this role" data. A random subset (QUESTIONS_PER_VOICE_SCREEN, capped
+# below QUESTIONS_PER_INTERVIEW's 10 since recording+uploading audio per
+# question is a heavier candidate ask than typing) is selected per attempt.
+#
+# Single JSON-column design (like InterviewAttempt, not the two-table
+# design used for 5.6): unlike 5.6's live, indefinitely-growing turn
+# stream, a voice screen has a small, fixed, known-in-advance question
+# count per attempt, so a JSON list mirrors InterviewAttempt.questions
+# exactly and needs no separate queryable-turns table.
+
+class VoiceScreenStatus(str, enum.Enum):
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+
+
+class VoiceScreenAttempt(Base):
+    """
+    Per-internship-application async voice screen. No webcam proctoring
+    (unlike 5.4) — this is an unattended, one-way recording flow, not a
+    live monitored session. Each entry in `questions` is:
+    {"question": str, "transcript": str|None, "score": float|None,
+     "notes": str|None}. Raw audio bytes are never persisted anywhere —
+    each recording is transcribed in-memory via Groq Whisper the moment it
+    is uploaded (see app/ai/voice_screen.py) and only the resulting text is
+    stored, matching this codebase's existing "aggregated... never raw
+    video" convention for InterviewAttempt.
+    """
+    __tablename__ = "voice_screen_attempts"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    application_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("applications.id"))
+    student_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("student_profiles.id"))
+    internship_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("internships.id"))
+
+    status: Mapped[VoiceScreenStatus] = mapped_column(
+        SAEnum(VoiceScreenStatus), default=VoiceScreenStatus.IN_PROGRESS
+    )
+
+    questions: Mapped[list[dict]] = mapped_column(JSON, default=list)
+
+    final_score: Mapped[float | None] = mapped_column(nullable=True)
+    passed: Mapped[bool | None] = mapped_column(nullable=True)
+
+    started_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    completed_at: Mapped[datetime | None] = mapped_column(nullable=True)
